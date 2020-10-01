@@ -1,24 +1,22 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
 import { ROLES } from './utils/constants'
-import messages from './pages/DefaultLayout/messages'
 
 export default {
   items: [
     {
-      // name: <FormattedMessage {...messages.Dashboard} />,
+      //     name: '',
       // url: '/dashboard',
       // icon: 'icon-speedometer',
       // rolesAccess: [],
     },
     {
-      // name: <FormattedMessage {...messages.Bookings} />,
+      // name: '',
       // url: '/bookings',
       // icon: 'fa fa-list-alt',
       // rolesAccess: [],
       // children: [
       //   {
-      //     name: <FormattedMessage {...messages.NewBooking} />,
+      //     name: '',
       //     url: '/bookings/create',
       //     icon: 'fa fa-circle',
       //     rolesAccess: [ROLES.CLINIC_ADMIN, ROLES.MODERATOR, ROLES.SALE, ROLES.RECEPTIONIST],

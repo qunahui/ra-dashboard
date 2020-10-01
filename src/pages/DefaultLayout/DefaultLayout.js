@@ -27,11 +27,11 @@ export class DefaultLayout extends Component {
     )
 
   render() {
-    const { intl, warning, user } = this.props
+    const { warning, user } = this.props
 
     return (
       <div className="app" style={{ height: '10000px' }}>
-        <DefaultHeader intl={intl} warning={warning} />
+        <DefaultHeader warning={warning} />
         {/* <Container fluid> */}
         <Suspense fallback={<Spinners pulse />}>
           <Switch>

@@ -5,7 +5,7 @@ const REDUX_PERSIST = {
   key: 'root',
   storage,
   version: '1.0',
-  whitelist: ['user', 'language', 'app'],
+  whitelist: ['user', 'app'],
   transforms: [immutableTransform()],
 }
 

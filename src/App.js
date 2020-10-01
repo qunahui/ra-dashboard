@@ -6,17 +6,12 @@ const DefaultLayout = React.lazy(() => import('./pages/DefaultLayout'))
 
 class App extends Component {
   render() {
-    const { intl } = this.props
     return (
       <div>
         <Suspense fallback={<Spinners pulse />}>
           <Switch>
             <Route exact path="/404" name="Page 404" render={(props) => <Page404 {...props} />} />
-            <Route
-              path="/"
-              name="Slide"
-              render={(props) => <DefaultLayout {...props} intl={intl} />}
-            />
+            <Route path="/" name="Slide" render={(props) => <DefaultLayout {...props} />} />
           </Switch>
         </Suspense>
       </div>
