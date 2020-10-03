@@ -1,5 +1,5 @@
 import { all } from 'redux-saga/effects'
-import BarSaga from '../components/Bar/BarSaga'
+import { UserSaga } from '../redux/user'
 export default function* root() {
-  yield all([BarSaga()])
+  yield all([UserSaga()])
 }

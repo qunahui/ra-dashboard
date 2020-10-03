@@ -2,25 +2,32 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import BarActions, { reducer } from './BarRedux'
-import saga from './BarSaga'
-import { Button } from 'antd'
+import Creators from '../../redux/user'
 
-class Bar extends Component {
-  render() {
-    return <div></div>
-  }
+const Bar = (props) => {
+  console.log('Rendering component.....')
+  return (
+    <div>
+      <button
+        onClick={() => {
+          props.logout()
+        }}
+      >
+        logout
+      </button>
+    </div>
+  )
 }
 
 Bar.propTypes = {
   // name: PropTypes.string,
 }
 
-const mapStateToProps = (state) => ({
-  name: state.bar.toJS(),
-})
+const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  logout: () => dispatch(Creators.userLogout()),
+})
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 

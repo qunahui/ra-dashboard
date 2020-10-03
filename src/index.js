@@ -7,8 +7,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { ConnectedRouter } from 'connected-react-router/immutable'
 import history from './utils/history'
 
-import 'antd/dist/antd.css'
-
 // Create redux store with history
 const initialState = {}
 const { store, persistor } = configureStore(initialState, history)

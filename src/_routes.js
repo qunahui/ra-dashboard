@@ -1,15 +1,40 @@
 import React from 'react'
-// import messages from './containers/DefaultLayout/messages'
-
-const Bar = React.lazy(() => import('./components/Bar'))
+import { Redirect } from 'react-router-dom'
+const LoginView = React.lazy(() => import('./views/LoginView'))
+const RegisterView = React.lazy(() => import('./views/RegisterView'))
+const DashboardView = React.lazy(() => import('./views/DashboardView'))
 
 const routes = [
   {
-    path: '/',
-    // name: '',
-    component: Bar,
+    path: '/app/dashboard',
+    name: 'Dashboard',
+    component: DashboardView,
     rolesAccess: [''],
   },
 ]
 
-export default routes
+const authRoutes = [
+  {
+    path: '/login',
+    name: 'auth login',
+    component: LoginView,
+    rolesAccess: [''],
+  },
+  {
+    path: '/register',
+    name: 'auth register',
+    component: RegisterView,
+    rolesAccess: [''],
+  },
+  {
+    path: '/',
+    name: 'Redirect',
+    component: Redirect,
+    componentProps: {
+      to: '/app/dashboard',
+    },
+    rolesAccess: [''],
+  },
+]
+
+export { routes, authRoutes }
