@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from 'react'
 import Spinners from './components/Spinners'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 // app components
 const Page404 = React.lazy(() => import('./views/Page404'))

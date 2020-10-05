@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import { useForm } from 'react-hook-form'
+import Title from '../Title'
 
 function Copyright() {
   return (
@@ -48,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles()
+  const [loading, setLoading] = useState(false)
+  const { register, handleSubmit, errors, watch } = useForm()
+
+  const onSubmit = (data) => {
+    setLoading(true)
+    console.log(data)
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,58 +68,164 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <Title>Your infomations</Title> <br />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
-                required
                 fullWidth
                 id="firstName"
-                label="First Name"
+                label="First Name (3-16)"
                 autoFocus
+                inputRef={register({
+                  required: 'Firstname is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Firstname must be longer than 3',
+                  },
+                  maxLength: {
+                    value: 16,
+                    message: 'Firstname must be fewer than 16',
+                  },
+                  pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    message: 'Lastname only contain texts',
+                  },
+                })}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 id="lastName"
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                inputRef={register({
+                  required: 'Lastname is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Lastname must be longer than 3',
+                  },
+                  maxLength: {
+                    value: 16,
+                    message: 'Lastname must be fewer than 16',
+                  },
+                  pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    message: 'Lastname only contain texts',
+                  },
+                })}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                required
+                fullWidth
+                type="number"
+                id="phone"
+                label="Phone"
+                name="phone"
+                autoComplete="phone"
+                inputRef={register({
+                  required: 'Phone is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Phone must be longer than 3',
+                  },
+                  maxLength: {
+                    value: 16,
+                    message: 'Phone must be fewer than 16',
+                  },
+                })}
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                id="address"
+                label="Address"
+                name="address"
+                autoComplete="address"
+                inputRef={register({
+                  required: 'Address is required',
+                })}
+                error={!!errors.address}
+                helperText={errors.address?.message}
+              />
+            </Grid>
+          </Grid>
+          <br />
+          <Title>Login details</Title> <br />
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
                 fullWidth
                 id="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                inputRef={register({
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Invalid email address',
+                  },
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputRef={register({
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be longer than 6',
+                  },
+                })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+              <TextField
+                variant="outlined"
+                fullWidth
+                name="confirmPassword"
+                label="Confirm password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="confirm-password"
+                inputRef={register({
+                  required: 'Confirm password is required',
+                  validate: (value) =>
+                    value !== watch('password')
+                      ? 'Confirm password must be match with password field'
+                      : null,
+                })}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
               />
             </Grid>
           </Grid>

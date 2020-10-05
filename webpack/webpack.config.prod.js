@@ -10,7 +10,7 @@ const paths = {
 // Webpack configuration
 module.exports = (env) => {
   return {
-    mode: 'development',
+    mode: 'production',
     entry: ['babel-polyfill', path.join(paths.SRC, 'index.js')],
     output: {
       path: paths.DIST,

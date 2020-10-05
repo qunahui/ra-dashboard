@@ -32,7 +32,8 @@
     "reselect": "^4.0.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --port 3000 --config ./webpack/webpack.config.dev.js"
+    "start": "webpack-dev-server --port 3000 --env.NODE_ENV=production --config ./webpack/webpack.config.prod.js",
+    "dev": "webpack-dev-server --port 3000 --env.NODE_ENV=development --config ./webpack/webpack.config.dev.js"
   },
   "eslintConfig": {
     "extends": "react-app"

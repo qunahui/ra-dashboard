@@ -7,16 +7,17 @@ const request = axios.create()
 request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 request.defaults.timeout = 60000
 if (isProduction) {
-  request.defaults.baseURL = constants.DEV_SERVER_URL
-} else {
   request.defaults.baseURL = constants.PROD_SERVER_URL
+} else {
+  request.defaults.baseURL = constants.DEV_SERVER_URL
 }
+
+console.log('base URL: ', request.defaults.baseURL)
 
 request.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response) {
-      console.log('axios...', error.response)
       return Promise.reject({
         code: error.response.status,
         message: error.response.data.error.message,

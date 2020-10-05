@@ -76,7 +76,6 @@ function SignIn(props) {
     }
     if (error) {
       setOpen(true)
-      props.clearError()
     }
   }, [props.auth])
 
@@ -92,6 +91,7 @@ function SignIn(props) {
 
     setOpen(false)
     setLoading(false)
+    props.clearError()
   }
 
   return (
@@ -104,11 +104,10 @@ function SignIn(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             id="email"
             label="Email Address"
@@ -116,12 +115,19 @@ function SignIn(props) {
             autoComplete="email"
             autoFocus
             disabled={loading}
-            inputRef={register}
+            inputRef={register({
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
           />
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
@@ -129,7 +135,11 @@ function SignIn(props) {
             id="password"
             autoComplete="current-password"
             disabled={loading}
-            inputRef={register}
+            inputRef={register({
+              required: 'Password is required',
+            })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
           />
           <Button
             type="submit"
@@ -163,7 +173,7 @@ function SignIn(props) {
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
-          {props.auth.error && props.auth.error.message}
+          {props.auth.error?.message}
         </Alert>
       </Snackbar>
       <Box mt={8}>
