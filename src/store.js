@@ -6,7 +6,7 @@ import createSagaMiddleware from 'redux-saga'
 import createReducer from './reducers'
 import persistConfig from './config/ReduxPersist'
 import rootSagas from './sagas'
-import customMiddleware from './config/reduxMiddleware'
+import customMiddleware from './config/ReduxMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 
