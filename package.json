@@ -39,7 +39,7 @@
     "start": "webpack-dev-server --config ./webpack/webpack.config.dev.js",
     "dev": "webpack-dev-server --port 3000 --https --env.NODE_ENV=development --config ./webpack/webpack.config.dev.js",
     "build": "webpack --config ./webpack/webpack.config.dev.js",
-    "heroku-postbuild": "cd client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn build"
+    "heroku-postbuild": "yarn install --no-shrinkwrap && yarn build"
   },
   "eslintConfig": {
     "extends": "react-app"
