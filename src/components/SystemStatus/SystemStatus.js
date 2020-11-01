@@ -1,5 +1,6 @@
 import React from 'react'
-import {request} from '../../config/axios'
+import { sendoRequest } from '../../config/axios'
+import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Title from '../Title'
@@ -19,23 +20,44 @@ const useStyles = makeStyles((theme) =>({
 
 export default function SystemStatus() {
   const classes = useStyles()
-  const [status, setStatus] = React.useState(false);
+  const [status, setSystemStatus] = React.useState({
+    fetching: true,
+    success: false, 
+  })
   React.useEffect(() => {
-    request.post('https://open.sendo.vn/login', JSON.stringify({
-      shop_key: "25d5bdee6f8a41ada2a362c9579df9c2",
-      secret_key: "3de7a9a2e5aa483db23a1cce5d4da45d",
-    })).then(res => console.log(res)).catch(err => console.log(err))
+    sendoRequest.post('', {
+      targetUrl: 'https://open.sendo.vn/login',
+      data: {
+        shop_key: process.env.SENDO_SHOP_KEY,
+        secret_key: process.env.SENDO_SECRET_KEY
+    }
+    }).then(res => {
+      console.log(res)
+      if(res.code === 200) {
+        return setSystemStatus({
+          fetching: false,
+          success: true
+        })
+      } else {
+        return setSystemStatus({
+          fetching: false,
+          success: false
+        })
+      }
+    }).catch(err => setSystemStatus({
+      fetching: false,
+      success: false
+    }))
   }, [])
   return (
     <div className={classes.root}>
       <Title>System status</Title>
-      { !status ? (
+      { status.fetching === true ? (
         <div className={classes.content}>
           <CircularProgress/>
         </div>
-      ) : (
-        <div>Ok</div>
-      )}
+      ) : status.success === true ? "Connected" : "Failed"
+      }
     </div>
   )
 }
