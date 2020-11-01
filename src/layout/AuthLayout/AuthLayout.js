@@ -1,13 +1,14 @@
-import React, { Component, Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { connect } from 'react-redux'
+import { push } from 'connected-react-router'
 import { Switch, Route, Redirect } from 'react-router-dom'
 //routes
 import { authRoutes as routes } from '../../_routes'
 //app components
 import Spinners from '../../components/Spinners'
 
-export class AuthLayout extends Component {
-  renderRoutes = (routes = {}, userRole = '') =>
+const AuthLayout = (props) => {
+  const renderRoutes = (routes = {}, userRole = '') =>
     routes.map(({ key, component: Component, componentProps, path, name, exact, rolesAccess }) => {
       return Component && rolesAccess.includes(userRole) ? (
         <Route
@@ -19,26 +20,29 @@ export class AuthLayout extends Component {
         />
       ) : null
     })
+  useEffect(() => {
+    const { isLogin } = props
+    if(isLogin) {
+      props.push('/app/dashboard')
+    }
+  }, [props.isLogin])
 
-  render() {
-    console.log('Rendering auth layout......')
-    return (
+  return (
       <div className="auth-layout">
         <Suspense fallback={<Spinners pulse />}>
           <Switch>
-            {this.renderRoutes(routes)}
+            {renderRoutes(routes)}
             <Redirect to="/404" />
           </Switch>
         </Suspense>
         <Suspense fallback={<Spinners pulse />}></Suspense>
       </div>
     )
-  }
 }
 AuthLayout.propTypes = {}
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  isLogin: state.auth.toJS().isLogin
+})
 
-const mapDispatchToProps = (dispatch) => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AuthLayout)
+export default connect(mapStateToProps, { push })(AuthLayout)

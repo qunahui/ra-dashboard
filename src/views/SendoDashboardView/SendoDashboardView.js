@@ -12,10 +12,7 @@ import Link from '@material-ui/core/Link'
 // import MenuIcon from '@material-ui/icons/Menu'
 
 //App components
-import Chart from '../../components/Chart'
-import Deposits from '../../components/Deposits'
-import Orders from '../../components/Orders'
-import { getCurrentUser } from '../../utils/firebase'
+import SystemStatus from '../../components/SystemStatus'
 
 function Copyright() {
   return (
@@ -43,29 +40,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function DashboardView() {
+export default function SendoDashboardView() {
   const classes = useStyles()
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   
   return (
     <div>
       <Grid container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={8} lg={9}>
-          <Paper className={fixedHeightPaper}>
-            <Chart />
-          </Paper>
-        </Grid>
-        {/* Recent Deposits */}
+        {/* System status */}
         <Grid item xs={12} md={4} lg={3}>
           <Paper className={fixedHeightPaper}>
-            <Deposits />
-          </Paper>
-        </Grid>
-        {/* Recent Orders */}
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <Orders />
+            <SystemStatus />
           </Paper>
         </Grid>
       </Grid>

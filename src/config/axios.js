@@ -1,5 +1,5 @@
 import axios from 'axios'
-import constants from './constants'
+import * as constants from '../utils/constants'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const request = axios.create()
@@ -15,7 +15,12 @@ if (isProduction) {
 console.log('base URL: ', request.defaults.baseURL)
 
 request.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    return {
+      code: response.status,
+      data: response.data,
+    }
+  },
   (error) => {
     if (error.response) {
       return Promise.reject({
@@ -23,7 +28,7 @@ request.interceptors.response.use(
         message: error.response.data.error.message,
       }) // eslint-disable-line
     }
-    if (error.request) return Promise.reject({ message: 'No response was received' }) // eslint-disable-line
+    if (error.request) return Promise.reject({ message: 'No response was received. Something went wrong wih server. Please try again next time !' }) // eslint-disable-line
     return Promise.reject(error)
   },
 )

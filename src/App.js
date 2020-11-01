@@ -1,13 +1,15 @@
-import React, { Component, Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
+import { connect } from 'react-redux'
 import Spinners from './components/Spinners'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route,withRouter } from 'react-router-dom'
+import Creators from './redux/app'
 
 // app components
 const Page404 = React.lazy(() => import('./views/Page404'))
 const AuthLayout = React.lazy(() => import('./layout/AuthLayout'))
 const DashboardLayout = React.lazy(() => import('./layout/DashboardLayout'))
 
-const App = (props) => {
+const App = (props) => {  
   return (
     <Suspense fallback={<Spinners pulse />}>
       <Switch>
@@ -19,4 +21,6 @@ const App = (props) => {
   )
 }
 
-export default App
+export default connect(null, dispatch => ({
+  appOnload: () => dispatch(Creators.appOnload())
+}))(App);

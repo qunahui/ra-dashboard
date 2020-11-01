@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-class Page404 extends Component {
-  render() {
+const Page404 = () => {
     return <>404 Page</>
-  }
 }
 
 Page404.propTypes = {}

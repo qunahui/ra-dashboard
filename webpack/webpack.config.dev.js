@@ -1,6 +1,9 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+// const dotenv = require('dotenv').config({path: path.resolve(__dirname,'../.env') });
+const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const DefinePlugin = require('webpack/lib/DefinePlugin')
 // Constant with our paths
 const paths = {
   DIST: path.resolve(__dirname, '../dist'),
@@ -56,18 +59,15 @@ module.exports = (env) => {
           ],
         },
         {
-          test: /\.(png|jpg|jpeg|gif|ico)$/,
+          test: /\.(png|jpg|jpeg|gif|ico|svg)$/,
           use: [
             {
               loader: 'file-loader',
-              options: {
-                name: '/images/[name].[hash].[ext]',
-              },
             },
           ],
         },
         {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
           loader: 'file-loader',
           options: {
             name: '/fonts/[name].[hash].[ext]',
@@ -90,6 +90,10 @@ module.exports = (env) => {
         template: path.join(paths.PUB, 'index.html'),
       }),
       new MiniCssExtractPlugin({ filename: 'style.bundle.css' }),
+      // new DefinePlugin({
+      //   "process.env": dotenv.parsed
+      // }),
+      new Dotenv()
     ],
   }
 }

@@ -59,7 +59,7 @@ const AppbarMenu = (props) => {
 
   const onLogout = () => {
     console.log('Begin logout')
-    props.userLogout()
+    props.signOutStart()
   }
 
   return (
@@ -115,5 +115,5 @@ const AppbarMenu = (props) => {
 }
 
 export default connect(undefined, (dispatch) => ({
-  userLogout: () => dispatch(Creators.userLogout()),
+  signOutStart: () => dispatch(Creators.signOutStart()),
 }))(AppbarMenu)

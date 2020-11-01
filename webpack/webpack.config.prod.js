@@ -1,6 +1,8 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
 // Constant with our paths
 const paths = {
   DIST: path.resolve(__dirname, '../dist'),
@@ -90,6 +92,7 @@ module.exports = (env) => {
         template: path.join(paths.PUB, 'index.html'),
       }),
       new MiniCssExtractPlugin({ filename: 'style.bundle.css' }),
+      new BundleAnalyzerPlugin(),
     ],
   }
 }
