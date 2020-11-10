@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import { routerMiddleware } from 'connected-react-router/immutable'
 import createSagaMiddleware from 'redux-saga'
+import history from './utils/history'
 
 import createReducer from './reducers'
 import persistConfig from './config/ReduxPersist'
@@ -10,7 +11,7 @@ import customMiddleware from './config/ReduxMiddleware'
 
 const sagaMiddleware = createSagaMiddleware()
 
-export default function configureStore(initialState = {}, history) {
+export function configureStore(initialState = {}, history) {
   /*
     Create the store with two middlewares
     1. sagaMiddleware: Makes redux-sagas work
@@ -54,3 +55,9 @@ export default function configureStore(initialState = {}, history) {
 
   return { store, persistor }
 }
+
+const initialState = {}
+const { store, persistor } = configureStore(initialState, history)
+
+export default store;
+export { persistor }

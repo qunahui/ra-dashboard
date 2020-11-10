@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 // Material-UI
-import Snackbar from '@material-ui/core/Snackbar'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -17,7 +16,6 @@ import Container from '@material-ui/core/Container'
 //app components
 import GoogleIcon from '../../assets/google.svg'
 import FacebookIcon from '../../assets/facebook.svg'
-import Alert from '../Alert'
 import Creators from '../../redux/user'
 
 function Copyright() {
@@ -57,26 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 function SignIn(props) {
   const [loading, setLoading] = useState(false)
-  const [open, setOpen] = React.useState(false) // notify
   const classes = useStyles()
-
-  useEffect(() => {
-    console.log("Auth state changed....")
-    const { error } = props.auth
-    if (error) {
-      setOpen(true)
-    }
-  }, [props.auth])
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-
-    setOpen(false)
-    setLoading(false)
-    props.clearError()
-  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -111,11 +90,6 @@ function SignIn(props) {
             <img src={FacebookIcon} className={classes.googleIcon}/>&nbsp;Sign in with Facebook
           </Button>
       </Container>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          {props.auth.error?.message}
-        </Alert>
-      </Snackbar>
       <Box mt={8}>
         <Copyright />
       </Box>
@@ -130,7 +104,6 @@ export default connect(
   (dispatch) => ({
     facebookSignInStart: () => dispatch(Creators.facebookSignInStart()),
     googleSignInStart: () => dispatch(Creators.googleSignInStart()),
-    clearError: () => dispatch(Creators.clearError()),
   }),
 )(withRouter(SignIn))
 

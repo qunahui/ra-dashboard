@@ -6,10 +6,8 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ConnectedRouter } from 'connected-react-router/immutable'
 import history from './utils/history'
+import store, { persistor } from './store'
 
-// Create redux store with history
-const initialState = {}
-const { store, persistor } = configureStore(initialState, history)
 const MOUNT_NODE = document.getElementById('root') //eslint-disable-line
 
 ReactDOM.render(

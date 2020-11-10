@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Spinners from './components/Spinners'
 import { Switch, Route,withRouter } from 'react-router-dom'
 import Creators from './redux/app'
+import Alert from './components/Alert'
 
 // app components
 const Page404 = React.lazy(() => import('./views/Page404'))
@@ -17,10 +18,9 @@ const App = (props) => {
         <Route path="/app" name="Default" render={(props) => <DashboardLayout {...props} />} />
         <Route path="/" name="Auth" render={(props) => <AuthLayout {...props} />} />
       </Switch>
+      <Alert/>
     </Suspense>
   )
 }
 
-export default connect(null, dispatch => ({
-  appOnload: () => dispatch(Creators.appOnload())
-}))(App);
+export default connect(null, dispatch => ({}))(App);

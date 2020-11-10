@@ -6,15 +6,18 @@ import { fromJS } from 'immutable'
 const { Types, Creators } = createActions({
   googleSignInStart: [],
   facebookSignInStart: [],
-  emailSignInStart: ['user'],
   getUserSuccess: ['user'],
   getUserFailure: ['error'],
   signOutStart: [],
   signOutSuccess: [],
   clearError: [],
+  setError: ['error'],
   checkUserSessionStart: [],
   checkUserSessionSuccess: [],
   checkUserSessionFailure: ['error'],
+  signInSendoStart: [],
+  signInSendoSuccess: ['payload'],
+  signInSendoFailure: ['error'],
 })
 
 export const UserTypes = Types
@@ -28,6 +31,8 @@ export const INITIAL_STATE = fromJS({
   isLogin: false,
   error: null,
   token: null,
+  isGettingSendoKey: false,
+  sendoToken: undefined,
 })
 
 /* ------------- Reducers ------------- */
@@ -54,27 +59,45 @@ const clearError = (state) =>
   state.merge({
     error: null,
   })
+const setError = (state, { error }) =>
+  state.merge({
+    error
+  })
 const checkUserSessionSuccess = (state) => state.merge({
   isLogin: true,
   isGettingUser: false
 })
-const checkUserSessionFailure = (state) => state.merge({
+const checkUserSessionFailure = (state, {error}) => state.merge({
   user: {},
   isGettingUser: false,
   isLogin: false,
   token: null,
-  error: 'Check user session failed'
+  error
+})
+const signInSendoStart = (state) => state.merge({
+  isGettingSendoKey: true
+})
+const signInSendoSuccess = (state, { payload : { sendoToken } }) => state.merge({
+    sendoToken,
+    isGettingSendoKey: false
+})
+const signInSendoFailure = (state, {error}) => state.merge({
+  error,
+  isGettingSendoKey: false
 })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GOOGLE_SIGN_IN_START]: signInStart,
   [Types.FACEBOOK_SIGN_IN_START]: signInStart,
-  [Types.EMAIL_SIGN_IN_START]: signInStart,
   [Types.GET_USER_SUCCESS]: getUserSuccess,
   [Types.GET_USER_FAILURE]: getUserFailure,
+  [Types.SIGN_IN_SENDO_START]: signInSendoStart,
+  [Types.SIGN_IN_SENDO_SUCCESS]: signInSendoSuccess,
+  [Types.SIGN_IN_SENDO_FAILURE]: signInSendoFailure,
   [Types.SIGN_OUT_SUCCESS]: signOutSuccess,
   [Types.CLEAR_ERROR]: clearError,
+  [Types.SET_ERROR]: setError,
   [Types.CHECK_USER_SESSION_START]: checkUserSessionStart,
   [Types.CHECK_USER_SESSION_SUCCESS]: checkUserSessionSuccess,
   [Types.CHECK_USER_SESSION_FAILURE]: checkUserSessionFailure,

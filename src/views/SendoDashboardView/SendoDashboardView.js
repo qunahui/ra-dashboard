@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 
 //material ui
 import { makeStyles } from '@material-ui/core/styles'
@@ -12,6 +13,7 @@ import Link from '@material-ui/core/Link'
 // import MenuIcon from '@material-ui/icons/Menu'
 
 //App components
+import Creators from '../../redux/user'
 import SystemStatus from '../../components/SystemStatus'
 
 function Copyright() {
@@ -29,28 +31,41 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
     borderRadius: '20px',
   },
   fixedHeight: {
-    height: 240,
+ 
   },
 }))
 
-export default function SendoDashboardView() {
+function SendoDashboardView(props) {
   const classes = useStyles()
+  const [loading, setLoading] = React.useState(true);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+
+  React.useEffect(() => {
+    if(!props.auth.isGettingUser){
+      props.signInSendoStart()
+    }
+  }, [props.auth.isGettingUser])
   
+  React.useEffect(() => {
+    if(!props.auth.isGettingUser && !props.auth.isGettingSendoKey) {
+      setLoading(false);
+    }
+  }, [props.auth.isGettingUser, props.auth.isGettingSendoKey])
+
   return (
     <div>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {/* System status */}
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={3}>
           <Paper className={fixedHeightPaper}>
-            <SystemStatus />
+            <SystemStatus loading={loading}/>
           </Paper>
         </Grid>
       </Grid>
@@ -60,3 +75,9 @@ export default function SendoDashboardView() {
     </div>
   )
 }
+
+export default connect(state => ({
+  auth: state.auth.toJS()
+}), dispatch => ({
+  signInSendoStart: () => dispatch(Creators.signInSendoStart())
+}))(SendoDashboardView)

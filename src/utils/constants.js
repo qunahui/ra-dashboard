@@ -1,5 +1,5 @@
-export const DEV_SERVER_URL = 'http://localhost:5000/'
-export const PROD_SERVER_URL = 'http://r-clothing-apis.herokuapp.com/'
+export const DEV_SERVER_URL = 'http://localhost:5000'
+export const PROD_SERVER_URL = 'http://r-clothing-apis.herokuapp.com'
 
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount'
 export const DAEMON = '@@saga-injector/daemon'

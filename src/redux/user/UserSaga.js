@@ -1,5 +1,5 @@
-import { all, call, put, fork, delay, select, takeLatest } from 'redux-saga/effects'
-import { request, setToken } from '../../config/axios'
+import { all, call, put, fork, delay, select, takeLatest, take } from 'redux-saga/effects'
+import { request, sendoRequest, setToken } from '../../config/axios'
 import Creators, { UserTypes } from './User'
 import { push } from 'connected-react-router'
 
@@ -15,6 +15,7 @@ import {
 
 // }
 export const getToken = (state) => state.auth.toJS().token
+export const getSendoToken = (state) => state.auth.toJS().sendoToken
 
 export function* getSnapshotFromUserAuth(userAuth) {
   try {
@@ -39,7 +40,6 @@ export function* signInWithGoogle() {
     const userSnapshotData = yield getSnapshotFromUserAuth(user);
     userSnapshotData.uid = uid;
     delete userSnapshotData.email
-    console.log(userSnapshotData)
     // create token from mongo
     const result = yield request.post('/users/sign-in', {uid}).then(res => res)
     if(result.code === 200) {
@@ -60,7 +60,7 @@ export function* signInWithFacebook() {
       const userSnapshotData = yield getSnapshotFromUserAuth(user);
       userSnapshotData.uid = uid;
       // create token from mongo
-      const result = yield request.post('/users/sign-in', {uid}).then(res => res)
+      const result = yield request.post('/users/sign-in', {uid}).then(res => res).catch(err => err)
       if(result.code === 200) {
         yield put(Creators.getUserSuccess({user: userSnapshotData, token: result.data.token }));
       }
@@ -88,18 +88,27 @@ export function* isUserAuthenticated() {
     const token = yield select(getToken);
     setToken(token);
     console.log("Token setted: ", token)
-    const mongoAuth = yield call(request.get,'/users/me');
 
+    const mongoAuth = yield call(request.get,'/users/me');
     if (!userAuth || mongoAuth.code !== 200) {
-      signOut();
-      yield put(Creators.checkUserSessionFailure())
-      return;
+      throw new Error("User session expired !")
     }
     yield put(Creators.checkUserSessionSuccess())
+
   } catch (error) {
-    
   } 
 }
+
+//Sendo sagas
+export function* signInSendo() {
+  const result = yield request.post('/api/sendo/login').then(res => res).catch(err => err);
+  if(result.code >= 200 && result.code <= 300) {
+    yield put(Creators.signInSendoSuccess({ sendoToken: result.data.sendoToken}))
+    return;
+  }
+  yield put(Creators.signInSendoFailure(result))
+}
+//End Sendo sagas
 
 export function* onGoogleSignInStart() {
   yield takeLatest(UserTypes.GOOGLE_SIGN_IN_START, signInWithGoogle);
@@ -117,9 +126,16 @@ export function* onCheckUserSession() {
   yield takeLatest(UserTypes.CHECK_USER_SESSION_START, isUserAuthenticated);
 }
 
-export function* onCheckUserSessionSucess() {
+export function* onSignInSendoStart() {
+  yield takeLatest(UserTypes.SIGN_IN_SENDO_START, signInSendo);
+}
+
+export function* onCheckUserSessionSuccess() {
 yield takeLatest(UserTypes.CHECK_USER_SESSION_SUCCESS, function*() {
   console.log("on check user session end.")
+  yield all([
+    call(onSignInSendoStart)
+  ])
 });
 }
 
@@ -127,12 +143,9 @@ function* userRootSagas() {
   yield all([
     call(onGoogleSignInStart),
     call(onFacebookSignInStart),
-    call(onLogoutStart), 
     call(onCheckUserSession),
-    call(onCheckUserSessionSucess),
-    // call(onEmailSignInStart), 
-    // call(onSignUpStart), 
-    // call(onSignUpSuccess)
+    call(onLogoutStart), 
+    call(onCheckUserSessionSuccess),
   ])
 }
 
