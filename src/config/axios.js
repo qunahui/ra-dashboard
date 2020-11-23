@@ -18,7 +18,6 @@ if (isProduction) {
   request.defaults.baseURL = constants.DEV_SERVER_URL
 }
 
-
 request.interceptors.response.use((response) => {
   return {
     code: response.status,
@@ -27,6 +26,7 @@ request.interceptors.response.use((response) => {
 },
 (error) => {
   if (error.response) {
+    console.log("Run into this", error.response)
     const errorSerialized = {
       code: error.response.status,
       message: error.response.data.error.message,

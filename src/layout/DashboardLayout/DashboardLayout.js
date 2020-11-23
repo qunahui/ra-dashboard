@@ -1,8 +1,8 @@
 import React, { Component, Suspense, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Redirect, useRoutes } from 'react-router-dom'
+import { push } from 'connected-react-router'
 //routes
-import navigation from '../../_navs'
 import { routes } from '../../_routes'
 //material ui
 import { makeStyles } from '@material-ui/core/styles'
@@ -28,7 +28,7 @@ import AppbarMenu from '../../components/AppbarMenu'
 import Spinners from '../../components/Spinners'
 import PrivateRoute from '../../privateRoute'
 import { MainListItems, SecondaryListItems } from '../../components/listItems'
-import Creators from '../../redux/user'
+import UserCreators from '../../redux/user'
 
 //
 const drawerWidth = 240
@@ -81,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    cursor: 'pointer'
   },
   drawerPaper: {
     position: 'relative',
@@ -124,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
 const DashboardLayout = (props) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(true)
-  const [theme, setTheme] = React.useState(true)
+  const [theme, setTheme] = React.useState(props.auth.user.theme || true)
   const appliedTheme = createMuiTheme(theme ? light : dark)
 
   const handleDrawerOpen = () => {
@@ -132,6 +133,10 @@ const DashboardLayout = (props) => {
   }
   const handleDrawerClose = () => {
     setOpen(false)
+  }
+  const handleThemeChange = () => {
+      props.setTheme(!theme)
+      setTheme(!theme)
   }
 
   const renderRoutes = (routes = {}, userRole = '') =>
@@ -141,12 +146,7 @@ const DashboardLayout = (props) => {
       ) : null,
     )
 
-  const { warning, user } = props
   console.log('Rendering layout......')
-
-  useEffect(() => {
-    props.checkUserSessionStart()
-  }, [])
 
   return (
     <ThemeProvider theme={appliedTheme}>
@@ -163,10 +163,10 @@ const DashboardLayout = (props) => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title} onClick={() => props.push('/app/dashboard')}>
               Dashboard
             </Typography>
-            <IconButton color="inherit" onClick={() => setTheme(!theme)}>
+            <IconButton color="inherit" onClick={handleThemeChange}>
               {!theme ? <Brightness7Icon/> : <Brightness4Icon/>}
             </IconButton>
             <AppbarMenu />
@@ -213,7 +213,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  checkUserSessionStart: () => dispatch(Creators.checkUserSessionStart())
+  push: (location) => dispatch(push(location)),
+  setTheme: (theme) => dispatch(UserCreators.setTheme(theme))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout)

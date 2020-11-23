@@ -22,6 +22,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   const snapShot = await userRef.get();
 
+
   if (!snapShot.exists) {
     const { displayName, email } = userAuth;
     const createdAt = new Date();
@@ -35,6 +36,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     } catch (error) {
       console.log('error creating user', error.message);
     }
+  } else {
+    //set new token
+    try {
+      if(additionalData) {
+        const {token} = additionalData
+        await userRef.update({
+          token
+        })
+      }
+    } catch(error){
+      console.log('error setting new token', error.message)
+    }
   }
 
   return userRef;
@@ -42,7 +55,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
 export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
   const collectionRef = firestore.collection(collectionKey);
-  console.log(collectionRef);
 
   const batch = firestore.batch();
   objectToAdd.forEach((obj) => {

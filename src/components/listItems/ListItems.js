@@ -6,6 +6,8 @@ import PeopleIcon from '@material-ui/icons/People'
 import BarChartIcon from '@material-ui/icons/BarChart'
 import LayersIcon from '@material-ui/icons/Layers'
 import AssignmentIcon from '@material-ui/icons/Assignment'
+import StorageIcon from '@material-ui/icons/Storage'
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -33,48 +35,59 @@ export function MainListItems(props) {
   return (
     <div>
       <LinkItemLink icon={<DashboardIcon />} primary="Dashboard" to="/app/dashboard" />
-      <LinkItemLink icon={<PeopleIcon />} primary="Customers" to="/app/customers" />
     </div>
   )
 }
 
 export function SecondaryListItems(props){
   const classes = useStyles();
-  const [openSendo, setOpenSendo] = React.useState(false);
-  const [openTiki, setOpenTiki] = React.useState(false);
+  const [openProducts, setOpenProducts] = React.useState(false);
+  const [openInventory, setOpenInventory] = React.useState(false);
+  const [openOrders, setOpenOrders] = React.useState(false);
 
   return (
     <div className={classes.root}>
-        <ListItem button onClick={() => setOpenSendo(!openSendo)}>
+        <ListItem button onClick={() => setOpenProducts(!openProducts)}>
           <ListItemIcon>
             <ShoppingCartIcon/>
           </ListItemIcon>
-          <ListItemText primary="Sendo" />
-          {openSendo ? <ExpandLess /> : <ExpandMore />}
+          <ListItemText primary="Products" />
+          {openProducts ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={openSendo} timeout="auto" unmountOnExit>
+        <Collapse in={openProducts} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <LinkItemLink primary="Dashboard" to="/app/sendo/dashboard"/>
-            <LinkItemLink primary="Orders" to="/app/dashboard"/>
-            <LinkItemLink primary="Products" to="/app/dashboard"/>
-            <LinkItemLink primary="Customers" to="/app/dashboard"/>
-            <LinkItemLink primary="Reports" to="/app/dashboard"/>
+            <LinkItemLink primary="All products" to="/app/sendo/dashboard"/>
+            <LinkItemLink primary="Create product" to="/app/dashboard"/>
+            <LinkItemLink primary="Edit multiple products" to="/app/dashboard"/>
+            <LinkItemLink primary="Create multiple products" to="/app/dashboard"/>
           </List>
         </Collapse>
-        <ListItem button onClick={() => setOpenTiki(!openTiki)}>
+        <ListItem button onClick={() => setOpenInventory(!openInventory)}>
           <ListItemIcon>
-            <ShoppingCartIcon/>
+            <StorageIcon/>
           </ListItemIcon>
-          <ListItemText primary="Tiki" />
-          {openTiki ? <ExpandLess /> : <ExpandMore />}
+          <ListItemText primary="Inventory" />
+          {openInventory ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={openTiki} timeout="auto" unmountOnExit>
+        <Collapse in={openInventory} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <LinkItemLink primary="Dashboard" to="/app/dashboard"/>
-            <LinkItemLink primary="Orders" to="/app/dashboard"/>
-            <LinkItemLink primary="Products" to="/app/dashboard"/>
-            <LinkItemLink primary="Customers" to="/app/dashboard"/>
-            <LinkItemLink primary="Reports" to="/app/dashboard"/>
+            <LinkItemLink primary="All products" to="/app/sendo/dashboard"/>
+            <LinkItemLink primary="Create product" to="/app/dashboard"/>
+            <LinkItemLink primary="Edit multiple products" to="/app/dashboard"/>
+            <LinkItemLink primary="Create multiple products" to="/app/dashboard"/>
+          </List>
+        </Collapse>
+        <ListItem button onClick={() => setOpenOrders(!openOrders)}>
+          <ListItemIcon>
+            <ShoppingBasketIcon/>
+          </ListItemIcon>
+          <ListItemText primary="Orders" />
+          {openOrders ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={openOrders} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <LinkItemLink primary="All orders" to="/app/sendo/dashboard"/>
+            <LinkItemLink primary="Create order" to="/app/dashboard"/>
           </List>
         </Collapse>
     </div>

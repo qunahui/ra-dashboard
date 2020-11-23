@@ -39,37 +39,27 @@ const useStyles = makeStyles((theme) =>({
 function SystemStatus(props) {
   const { register, handleSubmit, watch, errors } = useForm()
   const classes = useStyles()
-  const [status, setSystemStatus] = React.useState({
-    success: false,
-    reason: ''
-  })
+  const [status, setStatus] = React.useState(false)
 
   const onSubmit = async (data) => {
     const result = await request.patch('/users/update', {
       sendoCredentials: data
     })
-
-    props.signInSendoStart();
+    if(result.code <= 200 || result.code <= 300) {
+      props.signInSendoStart();
+      return;
+    }
   }
 
   React.useEffect(() => {
-    // // try login sendo
-    if(!props.auth.isGettingSendoKey) {
-      if(props.auth.sendoToken) {
-        console.log("Done, sendo token setted")
-        setSystemStatus({
-          success: true,
-          reason: ''
-        })
-      } else {
-        console.log("Done, sendo token not setted")
-        setSystemStatus({
-          success: false,
-          reason: props.auth.error?.message
-        })
+    const { isGettingSendoToken, isSendoRegistered } = props.app;
+    if(!isGettingSendoToken){
+      if(isSendoRegistered) {
+        setStatus(true)
+        return;
       }
     }
-  }, [props.auth.isGettingSendoKey])
+  }, [props.app.isGettingSendoToken])
 
   return (
     <div className={clsx(props.loading ? classes.content : classes.root)}>
@@ -79,7 +69,7 @@ function SystemStatus(props) {
         </div>
       ) : 
       <div>
-          { (!status.success || !props.auth.sendoToken) ?
+          { (!status) ?
             <>
               <Title>Connect to SendoAPI</Title>
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -109,8 +99,8 @@ function SystemStatus(props) {
             </> : 
             <>
                 <Title>System Status</Title>
-                <Typography>Status: <span className={clsx(status.success ? classes.successText : failText)}>{status.success ? "Connected" : "Failed"}</span></Typography> <br/>
-                <Button variant="outlined" size="small" onClick={() => setSystemStatus({ success: false, reason: 'Change shop credentials'})}>Change shop Credentials</Button>
+                <Typography>Status: <span className={clsx(status ? classes.successText : failText)}>{status ? "Connected" : "Failed"}</span></Typography> <br/>
+                <Button variant="outlined" size="small" onClick={() => setStatus(false)}>Change shop Credentials</Button>
             </>
           }
       </div>
@@ -121,6 +111,7 @@ function SystemStatus(props) {
 
 export default connect(state => ({
   auth: state.auth.toJS(),
+  app: state.app.toJS(),
 }), dispatch => ({
   signInSendoStart: () => dispatch(Creators.signInSendoStart())
 }))(SystemStatus)

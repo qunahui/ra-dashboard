@@ -1,5 +1,5 @@
 import { createReducer, createActions } from 'reduxsauce'
-import { fromJS } from 'immutable'
+import { fromJS, Map } from 'immutable'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -13,11 +13,9 @@ const { Types, Creators } = createActions({
   clearError: [],
   setError: ['error'],
   checkUserSessionStart: [],
-  checkUserSessionSuccess: [],
+  checkUserSessionSuccess: ['user'],
   checkUserSessionFailure: ['error'],
-  signInSendoStart: [],
-  signInSendoSuccess: ['payload'],
-  signInSendoFailure: ['error'],
+  setTheme: ['theme']
 })
 
 export const UserTypes = Types
@@ -30,9 +28,6 @@ export const INITIAL_STATE = fromJS({
   isGettingUser: false,
   isLogin: false,
   error: null,
-  token: null,
-  isGettingSendoKey: false,
-  sendoToken: undefined,
 })
 
 /* ------------- Reducers ------------- */
@@ -53,7 +48,8 @@ const getUserFailure = (state, { error }) =>
   })
 const signOutSuccess = (state) => state.merge(INITIAL_STATE)
 const checkUserSessionStart = state => state.merge({
-  isGettingUser: true
+  isGettingUser: true,
+  isLogin: false,
 })
 const clearError = (state) =>
   state.merge({
@@ -63,28 +59,23 @@ const setError = (state, { error }) =>
   state.merge({
     error
   })
-const checkUserSessionSuccess = (state) => state.merge({
+const checkUserSessionSuccess = (state, { user }) => state.merge({
   isLogin: true,
-  isGettingUser: false
+  isGettingUser: false,
+  ...user
 })
 const checkUserSessionFailure = (state, {error}) => state.merge({
   user: {},
   isGettingUser: false,
   isLogin: false,
-  token: null,
   error
 })
-const signInSendoStart = (state) => state.merge({
-  isGettingSendoKey: true
+const setTheme = (state, {theme}) => state.mergeDeep({
+  user: {
+    theme
+  }
 })
-const signInSendoSuccess = (state, { payload : { sendoToken } }) => state.merge({
-    sendoToken,
-    isGettingSendoKey: false
-})
-const signInSendoFailure = (state, {error}) => state.merge({
-  error,
-  isGettingSendoKey: false
-})
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -92,13 +83,11 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.FACEBOOK_SIGN_IN_START]: signInStart,
   [Types.GET_USER_SUCCESS]: getUserSuccess,
   [Types.GET_USER_FAILURE]: getUserFailure,
-  [Types.SIGN_IN_SENDO_START]: signInSendoStart,
-  [Types.SIGN_IN_SENDO_SUCCESS]: signInSendoSuccess,
-  [Types.SIGN_IN_SENDO_FAILURE]: signInSendoFailure,
   [Types.SIGN_OUT_SUCCESS]: signOutSuccess,
   [Types.CLEAR_ERROR]: clearError,
   [Types.SET_ERROR]: setError,
   [Types.CHECK_USER_SESSION_START]: checkUserSessionStart,
   [Types.CHECK_USER_SESSION_SUCCESS]: checkUserSessionSuccess,
   [Types.CHECK_USER_SESSION_FAILURE]: checkUserSessionFailure,
+  [Types.SET_THEME]: setTheme,
 })

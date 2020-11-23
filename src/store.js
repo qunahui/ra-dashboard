@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import { routerMiddleware } from 'connected-react-router/immutable'
 import createSagaMiddleware from 'redux-saga'
+import logger from 'redux-logger'
 import history from './utils/history'
 
 import createReducer from './reducers'
@@ -32,7 +33,6 @@ export function configureStore(initialState = {}, history) {
 
   // Create reducer with redux-persist
   const persistedReducer = persistReducer(persistConfig, createReducer())
-
   // Create store
   const store = createStore(persistedReducer, initialState, composeEnhancers(...enhancers))
   // Create persistor
@@ -42,7 +42,6 @@ export function configureStore(initialState = {}, history) {
   store.runSaga = sagaMiddleware.run
   store.injectedReducers = {} // Reducer registry
   store.injectedSagas = {} // Saga registry
-
   sagaMiddleware.run(rootSagas)
 
   // Make reducers hot reloadable, see http://mxs.is/googmo
@@ -52,11 +51,10 @@ export function configureStore(initialState = {}, history) {
       store.replaceReducer(persistReducer(persistConfig, createReducer(store.injectedReducers)))
     })
   }
-
   return { store, persistor }
 }
-
 const initialState = {}
+
 const { store, persistor } = configureStore(initialState, history)
 
 export default store;

@@ -2,7 +2,6 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 const LoginView = React.lazy(() => import('./views/LoginView'))
 const DashboardView = React.lazy(() => import('./views/DashboardView'))
-const SendoDashboardView = React.lazy(() => import('./views/SendoDashboardView'))
 const CustomerListView = React.lazy(() => import('./views/CustomerListView'))
 
 const routes = [
@@ -16,12 +15,6 @@ const routes = [
     path: '/app/customers',
     name: 'Dashboard',
     component: CustomerListView,
-    rolesAccess: [''],
-  },
-  {
-    path: '/app/sendo/dashboard',
-    name: 'SendoDashboard',
-    component: SendoDashboardView,
     rolesAccess: [''],
   },
 ]
