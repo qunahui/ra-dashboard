@@ -1,5 +1,4 @@
 const path = require('path');
-// const dotenv = require('dotenv').config({path: path.resolve(__dirname,'../.env') });
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -9,12 +8,13 @@ const paths = {
   DIST: path.resolve(__dirname, '../dist'),
   SRC: path.resolve(__dirname, '../src'),
   PUB: path.resolve(__dirname, '../src'),
+  WBP: path.resolve(__dirname, '../webpack')
 }
-// Webpack configuration
+
 module.exports = (env) => {
   return {
     mode: 'development',
-    entry: ['babel-polyfill', path.join(paths.SRC, 'index.js')],
+    entry: [ 'react-hot-loader/patch', 'babel-polyfill', path.join(paths.SRC, 'index.js')],
     output: {
       path: paths.DIST,
       filename: 'app.bundle.js',
@@ -30,9 +30,11 @@ module.exports = (env) => {
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-          },
+          use: [
+            {
+            loader: 'babel-loader'
+            },
+          ]
         },
         {
           test: /\.css$/,
@@ -59,7 +61,7 @@ module.exports = (env) => {
           ],
         },
         {
-          test: /\.(png|jpg|jpeg|gif|ico|svg)$/,
+          test: /\.(png|jpg|jpeg|gif|ico)$/,
           use: [
             {
               loader: 'file-loader',
@@ -73,6 +75,21 @@ module.exports = (env) => {
             name: '/fonts/[name].[hash].[ext]',
           },
         },
+        {
+          test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: 'babel-loader',
+            },
+            {
+              loader: '@svgr/webpack',
+              options: {
+                babel: false,
+                icon: true,
+              },
+            },
+          ],
+        }
       ],
     },
     resolve: {
@@ -84,6 +101,7 @@ module.exports = (env) => {
       contentBase: paths.SRC,
       historyApiFallback: true,
       compress: true,
+      open: true
     },
     plugins: [
       new HtmlWebpackPlugin({

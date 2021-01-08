@@ -17,9 +17,8 @@ import { fromJS, Map } from 'immutable';
 const REDUX_PERSIST = {
   key: 'root',
   storage,
-  whitelist: [],
+  whitelist: ['auth'],
   transforms: [immutableTransform()],
-  // whitelist: ['app'],
 }
 
 export default REDUX_PERSIST

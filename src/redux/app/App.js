@@ -4,9 +4,10 @@ import { fromJS } from 'immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  signInSendoStart: [],
-  signInSendoSuccess: ['payload'],
-  signInSendoFailure: ['error'],
+  fetchShopsStart: [''],
+  fetchShopsSuccess: ['payload'],
+  loadStorage: ['payload'],
+  addPlatformCredentials: ['payload'],
 })
 
 export const AppTypes = Types
@@ -15,42 +16,38 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = fromJS({
-  sendoToken: null,
-  isGettingSendoToken: false,
-  isSendoRegistered: false,
-  lazadaToken: null,
-  isGettingLazadaToken: false,
-  isLazadaRegistered: false,
+  storage: {},
+  isGettingShops: false
 })
 
 /* ------------- Reducers ------------- */
-const signInSendoStart = (state) => state.merge({
-  isGettingSendoToken: true
+const fetchShopsStart = (state) => state.merge({
+  isGettingShops: true
 })
-
-const signInSendoSuccess = (state, { payload: { sendoToken }}) => state.merge({
-  sendoToken, 
-  isGettingSendoToken: false,
-  isSendoRegistered: true,
-})
-
-const signInSendoFailure = (state, { error }) => {
-  if(error.code === 400) {
-    return state.merge({
-      isGettingSendoToken: false,
-      isSendoRegistered: false
-    })
-  } 
-
+const loadStorage = (state, { payload: { storage } }) => {
   return state.merge({
-    isGettingSendoToken: false
+    storage
+  })
+}
+const addPlatformCredentials = (state, { payload }) => {
+  console.log("payload: ", payload)
+  let platformCredentials = state.toJS().platformCredentials
+  if(platformCredentials) {
+    platformCredentials = platformCredentials.push(payload)
+  } else {
+    platformCredentials = [payload]
+  }
+  return state.mergeDeep({
+    storage: {
+      platformCredentials
+    }
   })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SIGN_IN_SENDO_START] : signInSendoStart,
-  [Types.SIGN_IN_SENDO_SUCCESS] : signInSendoSuccess,
-  [Types.SIGN_IN_SENDO_FAILURE] : signInSendoFailure,
+  [Types.FETCH_SHOPS_START] : fetchShopsStart,
+  [Types.LOAD_STORAGE] : loadStorage,
+  [Types.ADD_PLATFORM_CREDENTIALS] : addPlatformCredentials,
 })

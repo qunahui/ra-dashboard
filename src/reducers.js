@@ -9,12 +9,6 @@ import history from './utils/history'
 import { reducer as User } from './redux/user'
 import { reducer as App } from './redux/app'
 
-// const authPersistConfig = {
-//   key: 'auth',
-//   storage: storage,
-//   blacklist: ['isLogin'],
-// }
-
 export default (injectedReducers = {}) =>
   connectRouter(history)(
     combineReducers({

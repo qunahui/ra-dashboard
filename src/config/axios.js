@@ -32,8 +32,8 @@ request.interceptors.response.use((response) => {
       message: error.response.data.error.message,
     }
     if(error.response.status === 401) {
-      store.dispatch(push('/login'))
-      store.dispatch(Creators.checkUserSessionFailure(new Error('User session expired')))
+      // store.dispatch(push('/login'))
+      store.dispatch(Creators.signInFailure('User session expired'))
     } else if(error.response.status >= 400 && error.response.status <= 600) {
       store.dispatch(Creators.setError(errorSerialized))
     }

@@ -40,9 +40,8 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     //set new token
     try {
       if(additionalData) {
-        const {token} = additionalData
         await userRef.update({
-          token
+          ...additionalData
         })
       }
     } catch(error){

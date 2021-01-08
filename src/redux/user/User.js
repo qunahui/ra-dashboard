@@ -6,16 +6,20 @@ import { fromJS, Map } from 'immutable'
 const { Types, Creators } = createActions({
   googleSignInStart: [],
   facebookSignInStart: [],
-  getUserSuccess: ['user'],
-  getUserFailure: ['error'],
+  emailSignInStart: ['payload'],
+  signInSuccess: ['payload'],
+  signInFailure: ['payload'],
+  signUpStart: ['payload'],
+  signUpSuccess: ['payload'],
+  signUpFailure: ['payload'],
   signOutStart: [],
   signOutSuccess: [],
   clearError: [],
   setError: ['error'],
   checkUserSessionStart: [],
-  checkUserSessionSuccess: ['user'],
-  checkUserSessionFailure: ['error'],
-  setTheme: ['theme']
+  checkUserSessionSuccess: ['mongoAuth'],
+  setTheme: ['theme'],
+  reset: []
 })
 
 export const UserTypes = Types
@@ -35,21 +39,36 @@ const signInStart = (state) =>
   state.merge({
     isGettingUser: true,
   })
-const getUserSuccess = (state, { user }) =>
+const signUpFailure = (state, { error }) => state.merge({
+  isGettingUser: false,
+  error
+})
+const signInSuccess = (state, { payload: { user } }) =>
   state.merge({
     isGettingUser: false,
     isLogin: true,
-    ...user,
+    user,
   })
-const getUserFailure = (state, { error }) =>
+const signUpSuccess = (state, { payload: {user} }) =>
   state.merge({
     isGettingUser: false,
-    error,
+    isLogin: true,
+    user,
   })
-const signOutSuccess = (state) => state.merge(INITIAL_STATE)
+const signInFailure = (state, { payload: { error }}) => {
+  return state.merge({
+    ...INITIAL_STATE,
+    error: error,
+  })
+}
+const signOutSuccess = (state) => INITIAL_STATE
 const checkUserSessionStart = state => state.merge({
   isGettingUser: true,
   isLogin: false,
+})
+const checkUserSessionSuccess = (state) => state.mergeDeep({
+  isGettingUser: false,
+  isLogin: true,
 })
 const clearError = (state) =>
   state.merge({
@@ -59,35 +78,29 @@ const setError = (state, { error }) =>
   state.merge({
     error
   })
-const checkUserSessionSuccess = (state, { user }) => state.merge({
-  isLogin: true,
-  isGettingUser: false,
-  ...user
-})
-const checkUserSessionFailure = (state, {error}) => state.merge({
-  user: {},
-  isGettingUser: false,
-  isLogin: false,
-  error
-})
 const setTheme = (state, {theme}) => state.mergeDeep({
   user: {
     theme
   }
 })
 
+const reset = (state) => INITIAL_STATE
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GOOGLE_SIGN_IN_START]: signInStart,
   [Types.FACEBOOK_SIGN_IN_START]: signInStart,
-  [Types.GET_USER_SUCCESS]: getUserSuccess,
-  [Types.GET_USER_FAILURE]: getUserFailure,
+  [Types.EMAIL_SIGN_IN_START]: signInStart,
+  [Types.SIGN_UP_SUCCESS]: signUpSuccess,
+  [Types.SIGN_UP_FAILURE]: signUpFailure,
+  [Types.SIGN_IN_SUCCESS]: signInSuccess,
+  [Types.SIGN_IN_FAILURE]: signInFailure,
   [Types.SIGN_OUT_SUCCESS]: signOutSuccess,
   [Types.CLEAR_ERROR]: clearError,
   [Types.SET_ERROR]: setError,
   [Types.CHECK_USER_SESSION_START]: checkUserSessionStart,
   [Types.CHECK_USER_SESSION_SUCCESS]: checkUserSessionSuccess,
-  [Types.CHECK_USER_SESSION_FAILURE]: checkUserSessionFailure,
   [Types.SET_THEME]: setTheme,
+  [Types.RESET]: reset,
 })

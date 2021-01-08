@@ -47,7 +47,7 @@ export function configureStore(initialState = {}, history) {
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
   if (module.hot) {
-    module.hot.accept('./reducers', () => {
+    module.hot.accept('./reducers.js', () => {
       store.replaceReducer(persistReducer(persistConfig, createReducer(store.injectedReducers)))
     })
   }
