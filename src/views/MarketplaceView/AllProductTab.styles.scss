@@ -1,0 +1,22 @@
+.marketplace-children-row {
+  background-color: #fafafa;
+}
+
+.all-marketplace-product-table .ant-table-tbody > tr.ant-table-row-level-1:hover > td {
+  background-color: #e6f7ff;
+}
+tr.ant-table-expanded-row:hover > td {
+  background-color: #e6f7ff;
+}
+
+tr.ant-table-expanded-row > td {
+  background: #fff;
+}
+
+.all-marketplace-product-table .ant-table-tbody > tr.ant-table-row-level-0:hover > td {
+  background: unset;
+}
+
+.cursor-row {
+  cursor: pointer;
+}

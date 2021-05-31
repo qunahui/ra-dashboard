@@ -1,0 +1,33 @@
+@import '../../styles/global';
+
+.connect-paper {
+  height: 200px;
+  background: #4e54c8; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #69c0ff, #1890ff); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to left,
+    #69c0ff,
+    #1890ff
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
+}
+
+.paper-image {
+  background-image: url('../../assets/teamwork.png');
+  background-size: 90% 100%;
+  background-repeat: no-repeat;
+}
+
+.paper-text {
+  padding: 20px;
+  h2,
+  h4 {
+    color: white !important;
+    margin-top: 10px !important;
+  }
+}
+
+.paper-button {
+  color: #1890ff;
+  font-weight: 500;
+}

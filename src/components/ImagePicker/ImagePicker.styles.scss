@@ -1,0 +1,18 @@
+.image-item {
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.image-chosen {
+  border: 1px solid rgb(17, 202, 79) !important;
+}

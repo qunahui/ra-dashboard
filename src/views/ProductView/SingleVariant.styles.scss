@@ -1,0 +1,76 @@
+.variant-info {
+  background: #fff;
+  padding: 8px 16px !important;
+  border: 1px solid #ddd;
+
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.padding {
+  padding: 8px 16px !important;
+}
+
+.variant-info__item {
+  margin-bottom: 15px;
+}
+
+.variant-info__item--text {
+  margin: 0;
+  margin-left: 5px;
+}
+
+// .show {
+//   display: flex;
+// }
+
+// .hide {
+//   display: none;
+// }
+
+.variant-avatar {
+  padding: 16px 16px !important;
+  border: 1px solid #ddd;
+
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+.variant-picker-header {
+  width: 100%;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fafafa;
+}
+
+.variant-picker {
+  padding: 0 !important;
+  border: 1px solid #ddd;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.05);
+  // margin-bottom: 16px;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.variant {
+  width: 100%;
+  padding: 16px 16px !important;
+  // border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  background-color: white;
+}
+
+.chosen-variant {
+  background: #1890ff;
+  color: white;
+}

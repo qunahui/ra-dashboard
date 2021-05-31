@@ -1,0 +1,3 @@
+import CreateProductFromPlatformModal from './CreateProductFromPlatformModal'
+
+export default CreateProductFromPlatformModal
