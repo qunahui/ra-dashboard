@@ -16,8 +16,12 @@ const { Option } = Select
 
 export const MarketplaceOrderView = (props) => {
   const INITIAL_FILTER =  {
-    dateFrom: new Date().setDate(new Date().getDate() - 14),
-    orderStatus: 'Chờ xác nhận'
+    dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
+    dateTo: new Date(),
+    orderStatus: 'Chờ xác nhận',
+    orderId: '',
+    customerName: '',
+    customerPhone: '',
   }
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(false)
@@ -38,15 +42,20 @@ export const MarketplaceOrderView = (props) => {
 
   
   useEffect(() => {
-    fetchMarketplaceOrders()
+    fetchMarketplaceOrders(filter)
   }, [])
 
-  async function fetchMarketplaceOrders() {
+  async function fetchMarketplaceOrders(filter) {
     setLoading(true)
+    const submitFilter = { ... filter }
+    submitFilter.dateFrom = isNaN(parseFloat(submitFilter.dateFrom)) ? new Date(submitFilter.dateFrom).getTime() : submitFilter.dateFrom
+    submitFilter.dateTo = isNaN(parseFloat(submitFilter.dateTo)) ? new Date(submitFilter.dateTo).getTime() : submitFilter.dateTo
+
+    alert(JSON.stringify(submitFilter, null, 2))
     try { 
       const response = await request.get('/orders/marketplace', {
         params: {
-          ...filter
+          ...submitFilter,
         },
         paramsSerializer: params => {
           return qs.stringify(params)
@@ -88,17 +97,31 @@ export const MarketplaceOrderView = (props) => {
                 defaultActiveKey="Chờ xác nhận" 
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
-                  <Button type="primary" key="Tạo đơn hàng" onClick={() => history.push('/app/orders/create')}>Tạo đơn hàng</Button>,
                 ]}
+                onTabClick={key => {
+                  setFilter({ orderStatus: key })
+                  fetchMarketplaceOrders({ ...filter, orderStatus: key })
+                }}
               >
-                <TabPane tab="Chờ xác nhận" key="Chờ xác nhận">
-                  <FilterPanel filter={filter} onChange={(newFilter) => setFilter({ ...newFilter })}/>
-                  <AllMarketplaceOrderTable orders={orderList} loading={loading}/>
-                </TabPane>
-                <TabPane tab="Đang giao dịch" key="Đang giao dịch">
-                  {/* <LinkedFailProductTab/> */}
-                </TabPane>
+                <TabPane tab="Chờ xác nhận" key="Chờ xác nhận"/>
+                <TabPane tab="Đang xử lý" key="Đang xử lý"/>
+                <TabPane tab="Đang giao hàng" key="Đang giao hàng"/>
+                <TabPane tab="Đã giao hàng" key="Đã giao hàng"/>
+                <TabPane tab="Đã hủy" key="Đã hủy"/>
+                <TabPane tab="Gặp sự cố" key="Gặp sự cố"/>
+                <TabPane tab="Đang hoàn trả" key="Đang hoàn trả"/>
+                <TabPane tab="Đã hoàn trả" key="Đã hoàn trả"/>
+                <TabPane tab="Mất hàng" key="Mất hàng"/>
               </Tabs>
+              <FilterPanel filter={filter} handleFilterSubmit={(values) => {
+                setFilter({ 
+                  ...values,
+                  dateFrom: values.dateFrom ? new Date(values.dateFrom) : filter.dateFrom,
+                  dateTo: values.dateTo ? new Date(values.dateTo) : filter.dateTo,
+                })
+                fetchMarketplaceOrders(values)
+              }}/>
+              <AllMarketplaceOrderTable orders={orderList} loading={loading}/>
             </Col>
           </Row>
         ) : (

@@ -44,7 +44,7 @@
   "scripts": {
     "analyze": "source-map-explorer public/dist/*.app.bundle.js",
     "start": "webpack-dev-server --config ./webpack/webpack.config.dev.js",
-    "dev": "webpack-dev-server --port 3000 --env.NODE_ENV=development --config ./webpack/webpack.config.dev.js",
+    "dev": "webpack-dev-server --port 3001 --env.NODE_ENV=development --config ./webpack/webpack.config.dev.js",
     "build": "webpack --config ./webpack/webpack.config.dev.js",
     "heroku-postbuild": "yarn install --no-shrinkwrap && yarn build"
   },

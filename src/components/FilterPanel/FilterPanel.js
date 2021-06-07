@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { useSelector } from 'react-redux'
+import _ from 'lodash'
 import { Input, Select, Row, Col, Typography, DatePicker, Dropdown, Menu, Button, Divider, Tooltip } from 'antd'
 import Icon, { BarcodeOutlined, UserOutlined, CalendarOutlined, FilterOutlined, PhoneOutlined, UndoOutlined, HddOutlined } from '@ant-design/icons'
 import moment from 'moment'
@@ -22,30 +23,18 @@ export const FilterPanel = (props) => {
         }
     }) 
 
+    useEffect(() => {
+        if(!_.isEqual(props.filter, filter)) {
+            setFilter({ ... props.filter })
+        }
+    }, [props])
+
     const [visible, setVisible] = useState(false)
-    const initialFilter =  {
-        orderId: '',
-        dateFrom: null,
-        dateTo: null,
-        customerName: '',
-        customerPhone: '',
-        orderStatus: null
-    }
     const [filter, setFilter] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
-        initialFilter
+        {}
     )
 
-    // const menu = <Menu>
-    //     <Menu.Item>
-    //         <Col key="customerName" span={24}>
-    //           <Input size={"large"} value={filter.customerName} placeholder={"Tên khách hàng"} suffix={<UserOutlined/>} allowClear onChange={e => setFilter({ customerName: e.target.value })}/>
-    //         </Col>
-    //     </Menu.Item>
-    //     <Menu.Item>
-    //         <Divider style={{ padding: 0, margin: '8px 0'}}/>   
-    //     </Menu.Item>
-    // </Menu>
     const menu = (
         <Menu gutter={16} key={"overlay-filter"}>
             <Menu.Item key="store_id" span={24} style={{ marginTop: 8 }}>
@@ -65,16 +54,15 @@ export const FilterPanel = (props) => {
                 <Input size={"large"} value={filter.customerPhone} placeholder={"SĐT khách hàng"} suffix={<PhoneOutlined/>} allowClear onChange={e => setFilter({ customerPhone: e.target.value })}/>
             </Menu.Item>
             <Menu.Item key="orderStatus" span={24}>
-                <Select size={"large"} value={filter.orderStatus || 'Đang xử lý'} allowClear placeholder={"Trạng thái"} style={{ width: '100%', }} onChange={(value) => setFilter({ orderStatus: value })}>
-                    <Option value={"Đang chờ xác nhận giao hàng"}>Đang chờ xác nhận thanh toán</Option>
+                <Select size={"large"} value={filter.orderStatus} allowClear placeholder={"Trạng thái"} style={{ width: '100%', }} onChange={(value) => setFilter({ orderStatus: value })}>
+                    <Option value={"Đang chờ xác nhận giao hàng"}>Đang chờ xác nhận thanh toán (Lazada)</Option>
                     <Option value={"Chờ xác nhận"}>Chờ xác nhận</Option>
-                    <Option value={"Chờ giao hàng"}>Chờ giao hàng</Option>
-                    <Option value={"Đã đóng gói"}>Đã đóng gói</Option>
-                    <Option value={"Sẵn sàng giao hàng"}>Sẵn sàng giao hàng</Option>
+                    <Option value={"Đang xử lý"}>Đang xử lý</Option>
                     <Option value={"Đang giao hàng"}>Đang giao hàng</Option>
                     <Option value={"Đã giao hàng"}>Đã giao hàng</Option>
                     <Option value={"Đã hủy"}>Đã hủy</Option>
                     <Option value={"Gặp sự cố"}>Gặp sự cố</Option>
+                    <Option value={"Đang hoàn trả"}>Đang hoàn trả</Option>
                     <Option value={"Đã hoàn trả"}>Đã hoàn trả</Option>
                     <Option value={"Mất hàng"}>Mất hàng</Option>
                 </Select>
@@ -108,9 +96,7 @@ export const FilterPanel = (props) => {
             dateFrom: new Date(filter.dateFrom).setHours(0), 
             dateTo: (new Date((new Date(new Date(filter.dateTo).setHours(23))).setMinutes(59))).setSeconds(59) // end of day
         }
-        // dateFrom: new Date(dateStrings[0]).setHours(0), 
-        // dateTo: (new Date((new Date(new Date(dateStrings[1]).setHours(23))).setMinutes(59))).setSeconds(59) // end of day
-        alert(JSON.stringify(finalFilter, null, 2))
+        props.handleFilterSubmit && props.handleFilterSubmit(finalFilter)
     }
     
 
