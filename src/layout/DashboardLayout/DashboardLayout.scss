@@ -8,6 +8,18 @@
   text-align: center;
 }
 
+.sider {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  .sider-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
 #components-layout-demo-custom-trigger .trigger {
   padding: 0 24px;
   font-size: 18px;
@@ -16,9 +28,8 @@
   transition: color 0.3s;
 }
 
-.site-layout .site-layout-background {
-}
 
 [data-theme='dark'] .site-layout .site-layout-background {
   background: #141414;
 }
+

@@ -3,13 +3,15 @@ import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import AppCreators from 'Redux/app'
 import _ from 'lodash'
-import { Table, Spin, Space, Switch, Dropdown, Menu, Button, Popconfirm, Row, Col } from 'antd';
-import Icon, { DisconnectOutlined, DownOutlined, PlusCircleOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import timeDiff from 'Utils/timeDiff'
+import { Table, Space, Typography, Dropdown, Menu, Button, Popconfirm, Row, Col } from 'antd';
+import Icon, { DisconnectOutlined, DownOutlined, PlusCircleOutlined, InfoCircleOutlined, LoginOutlined } from '@ant-design/icons'
 import { blue, red } from '@ant-design/colors'
 
 import LazadaIcon from '../../assets/lazada-icon.svg'
 import SendoIcon from '../../assets/sendo-icon.svg'
 
+const { Text } = Typography 
 
 const StorageStatus = props => {
   const history = useHistory()
@@ -43,8 +45,7 @@ const StorageStatus = props => {
       key: 'status',
       width: '25%',
       render: (text, record) => {
-        console.log(record)
-        return <p>Đang kết nối</p>
+        return timeDiff(new Date(record.expires), new Date()).secondsDifference >= 0 ? <Text style={{ color: '#7cb305'}}>Đang kết nối</Text> : <Text style={{ color: '#f5222d'}}>Đã hết hạn</Text>
       }
     },
     {
@@ -54,6 +55,9 @@ const StorageStatus = props => {
       width: '25%',
       render: (text, record) => {
         const menu = <Menu>
+            {
+              record.platform_name === 'lazada' && <Menu.Item key="reconnect"><a  style={{ color: blue[5] }} href={`https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=${window.location.origin}/app/create/lazada&country=vn&client_id=101074&state=`}><LoginOutlined />Kết nối lại</a></Menu.Item>
+            }
             <Menu.Item key="manual-sync" style={{ color: blue[5] }} onClick={() => history.push(`/app/config/${record._id}`)}><InfoCircleOutlined/>Xem cấu hình</Menu.Item>
             <Menu.Item key="disconnect" style={{ color: red[5] }}>
               <Popconfirm
