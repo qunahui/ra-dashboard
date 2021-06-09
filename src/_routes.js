@@ -41,6 +41,8 @@ const SingleOrderView = React.lazy(() => import('./views/OrderView/SingleOrderVi
 //
 const SupplierView = React.lazy(() => import('./views/SupplierView'))
 const SingleSupplierView = React.lazy(() => import('./views/SupplierView/SingleSupplierView'))
+//
+const NotConnected = React.lazy(() => import('../src/components/NotConnected'))
 
 
 const routes = [
@@ -237,6 +239,12 @@ const routes = [
     path: '/app/suppliers',
     name: 'Suppliers View',
     component: SupplierView,
+    rolesAccess: ['']
+  },
+  {
+    path: '/app/not-connected',
+    name: 'Not connected',
+    component: NotConnected,
     rolesAccess: ['']
   }
 ]

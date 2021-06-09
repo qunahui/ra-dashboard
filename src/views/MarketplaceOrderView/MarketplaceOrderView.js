@@ -51,7 +51,6 @@ export const MarketplaceOrderView = (props) => {
     submitFilter.dateFrom = isNaN(parseFloat(submitFilter.dateFrom)) ? new Date(submitFilter.dateFrom).getTime() : submitFilter.dateFrom
     submitFilter.dateTo = isNaN(parseFloat(submitFilter.dateTo)) ? new Date(submitFilter.dateTo).getTime() : submitFilter.dateTo
 
-    alert(JSON.stringify(submitFilter, null, 2))
     try { 
       const response = await request.get('/orders/marketplace', {
         params: {

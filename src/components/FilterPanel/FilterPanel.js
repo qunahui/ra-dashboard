@@ -12,6 +12,15 @@ const { Text, Title } = Typography
 const { RangePicker } = DatePicker;
 const { Submenu } = Menu
 
+const INITIAL_FILTER =  {
+    dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
+    dateTo: new Date(),
+    orderStatus: 'Chờ xác nhận',
+    orderId: '',
+    customerName: '',
+    customerPhone: '',
+  }
+
 export const FilterPanel = (props) => {
     const stores = useSelector(state => {
         const app = state.app.toJS()
@@ -119,12 +128,12 @@ export const FilterPanel = (props) => {
         }}>
             <Row gutter={8}>
                 <Col span={16}>
-                    <Row>
+                    <Row gutter={8}>
                         <Col span={8}>
                             <Input size={'large'} name={"orderId"} value={filter.orderId} onChange={e => setFilter({ orderId: e.target.value })} style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }} suffix={<BarcodeOutlined/>} placeholder={"Mã đơn hàng"} allowClear/>
                         </Col>
                         <Col span={8}>
-                            <RangePicker value={[ filter.dateFrom && moment(filter.dateFrom, 'YYYY/MM/DD'),  filter.dateTo && moment(filter.dateTo, 'YYYY/MM/DD')]} suffixIcon={<CalendarOutlined style={{ color: 'black' }}/>} size={"large"} placeholder={["Từ ngày", "Đến ngày"]} onCalendarChange={handleCalendarChange}/>
+                            <RangePicker style={{ width: '100%'}} value={[ filter.dateFrom && moment(filter.dateFrom, 'YYYY/MM/DD'),  filter.dateTo && moment(filter.dateTo, 'YYYY/MM/DD')]} suffixIcon={<CalendarOutlined style={{ color: 'black' }}/>} size={"large"} placeholder={["Từ ngày", "Đến ngày"]} onCalendarChange={handleCalendarChange}/>
                         </Col>
                         <Col span={8}>
                             <Dropdown 
@@ -151,7 +160,7 @@ export const FilterPanel = (props) => {
                 <Col span={2}>
                     {/* RESET */}
                     <Tooltip placement="topLeft" title={"Cài đặt lại"} arrowPointAtCenter>
-                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...initialFilter })}><UndoOutlined /></Button>
+                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...INITIAL_FILTER })}><UndoOutlined /></Button>
                     </Tooltip>
                 </Col>
                 <Col span={6}>
