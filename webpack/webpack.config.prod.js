@@ -1,8 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const DefinePlugin = require('webpack/lib/DefinePlugin')
-// Constant with our paths
+const CopyPlugin = require("copy-webpack-plugin");
 
 const paths = {
   DIST: path.resolve(__dirname, '../dist'),
@@ -150,9 +149,14 @@ module.exports = (env) => {
         template: path.join(paths.PUB, 'index.html'),
       }),
       new MiniCssExtractPlugin({ filename: 'style.bundle.css' }),
-      // new DefinePlugin({
-      //   "process.env": dotenv.parsed
-      // }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: "src/assets",
+            to: "../dist",
+          },
+        ],
+      }),
     ],
   }
 }
