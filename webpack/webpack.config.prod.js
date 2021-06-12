@@ -156,7 +156,6 @@ module.exports = (env) => {
       // new DefinePlugin({
       //   "process.env": dotenv.parsed
       // }),
-      new Dotenv(),
     ],
   }
 }
