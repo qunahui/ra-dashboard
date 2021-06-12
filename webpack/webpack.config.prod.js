@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // Constant with our paths
 
 const paths = {
-  DIST: path.resolve(__dirname, '../src/dist'),
+  DIST: path.resolve(__dirname, '../dist'),
   SRC: path.resolve(__dirname, '../src'),
   PUB: path.resolve(__dirname, '../src'),
   WBP: path.resolve(__dirname, '../webpack')
