@@ -42,12 +42,16 @@
     "reselect": "^4.0.0",
     "webpack-cli": "^3.3.12"
   },
+  "engines": {
+    "npm": "14.17.0",
+    "yarn": "1.22.10"
+  },
   "scripts": {
     "analyze": "source-map-explorer public/dist/*.app.bundle.js",
-    "start": "webpack-dev-server --config ./webpack/webpack.config.dev.js",
+    "start": "webpack-dev-server --config ./webpack/webpack.config.prod.js",
     "dev": "webpack-dev-server --port 3001 --env.NODE_ENV=development --config ./webpack/webpack.config.dev.js",
     "build": "webpack --config ./webpack/webpack.config.prod.js",
-    "heroku-postbuild": "npm install --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "yarn install --no-shrinkwrap && yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"
