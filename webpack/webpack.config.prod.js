@@ -1,37 +1,51 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-
+const path = require('path');
+const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
+// const DefinePlugin = require('webpack/lib/DefinePlugin')
 // Constant with our paths
+
 const paths = {
   DIST: path.resolve(__dirname, '../dist'),
   SRC: path.resolve(__dirname, '../src'),
   PUB: path.resolve(__dirname, '../src'),
+  WBP: path.resolve(__dirname, '../webpack')
 }
-// Webpack configuration
+
 module.exports = (env) => {
   return {
-    mode: 'production',
-    entry: ['babel-polyfill', path.join(paths.SRC, 'index.js')],
+    mode: 'development',
+    entry: [, 'babel-polyfill', path.join(paths.SRC, 'index.js')],
     output: {
       path: paths.DIST,
       filename: 'app.bundle.js',
       publicPath: '/',
     },
     resolve: {
+      extensions: ['.js', '.jsx'],
       alias: {
-        Components: path.resolve(__dirname, 'src/components/'),
-      },
+        Components: path.resolve(__dirname, '../src/components/'),
+        Helpers: path.resolve(__dirname, '../src/components/Helpers'),
+        Theme$: path.resolve(__dirname, '../src/styles/theme.js'),
+      }
     },
     module: {
       rules: [
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-          },
+          use: [
+            {
+              loader: require.resolve('babel-loader'),
+              options: {
+                // ... other options
+                plugins: [
+                  // ... other plugins
+                ].filter(Boolean),
+              },
+            },
+          ]
         },
         {
           test: /\.css$/,
@@ -77,7 +91,7 @@ module.exports = (env) => {
           test: /\.scss$/,
           issuer: /\.less$/,
           use: {
-            loader: './sassVarsToLess.js' // Change path if necessary
+            loader: path.resolve(__dirname, '../src/utils/sassVarsToLess.js') // Change path if necessary
           }
         },
         {
@@ -85,23 +99,45 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: {
-                name: '/images/[name].[hash].[ext]',
-              },
             },
           ],
         },
         {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
           loader: 'file-loader',
           options: {
             name: '/fonts/[name].[hash].[ext]',
           },
         },
+        {
+          test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: 'babel-loader',
+            },
+            {
+              loader: '@svgr/webpack',
+              options: {
+                babel: false,
+                icon: true,
+              },
+            },
+          ],
+        }
       ],
     },
     resolve: {
       extensions: ['.js', '.jsx'],
+      alias: {
+        Components: path.resolve(__dirname, '../src/components'),
+        Assets: path.resolve(__dirname, '../src/assets'),
+        Config: path.resolve(__dirname, '../src/config'),
+        Helpers: path.resolve(__dirname, '../src/components/Helpers'),
+        Theme$: path.resolve(__dirname, '../src/styles/theme.js'),
+        Styles: path.resolve(__dirname, '../src/styles'),
+        Utils: path.resolve(__dirname, '../src/utils'),
+        Redux: path.resolve(__dirname, '../src/redux'),
+      }
     },
     // Dev server configuration -> ADDED IN THIS STEP
     // Now it uses our "src" folder as a starting point
@@ -109,13 +145,18 @@ module.exports = (env) => {
       contentBase: paths.SRC,
       historyApiFallback: true,
       compress: true,
+      hot: true,
+      disableHostCheck: true //for ngrok
     },
     plugins: [
       new HtmlWebpackPlugin({
         template: path.join(paths.PUB, 'index.html'),
       }),
       new MiniCssExtractPlugin({ filename: 'style.bundle.css' }),
-      new BundleAnalyzerPlugin(),
+      // new DefinePlugin({
+      //   "process.env": dotenv.parsed
+      // }),
+      new Dotenv(),
     ],
   }
 }
