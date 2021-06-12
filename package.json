@@ -43,7 +43,7 @@
     "webpack-cli": "^3.3.12"
   },
   "engines": {
-    "npm": "14.17.0",
+    "node": "14.17.0",
     "yarn": "1.22.10"
   },
   "scripts": {
