@@ -1,4 +1,4 @@
-import { hot } from 'react-hot-loader'
+// import { hot } from 'react-hot-loader'
 import React, { Suspense, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import store from './store'
@@ -39,7 +39,12 @@ const App = (props) => {
   )
 }
 
+// export default connect(state => ({
+//   auth: state.auth.toJS()
+// }), dispatch => ({
+// }))(hot(module)(App));
+
 export default connect(state => ({
   auth: state.auth.toJS()
 }), dispatch => ({
-}))(hot(module)(App));
+}))(App);

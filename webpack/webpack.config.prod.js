@@ -1,8 +1,6 @@
 const path = require('path');
-const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const webpack = require('webpack');
 // const DefinePlugin = require('webpack/lib/DefinePlugin')
 // Constant with our paths
 
@@ -145,7 +143,6 @@ module.exports = (env) => {
       contentBase: paths.SRC,
       historyApiFallback: true,
       compress: true,
-      hot: true,
       disableHostCheck: true //for ngrok
     },
     plugins: [
