@@ -60,10 +60,6 @@
     "react-hot-loader": "^4.13.0",
     "sass": "^1.26.10"
   },
-  "engines": {
-    "node": "14.17.0",
-    "yarn": "1.22.10"
-  },
   "scripts": {
     "analyze": "source-map-explorer public/dist/*.app.bundle.js",
     "start": "webpack --config ./webpack/webpack.config.prod.js",
