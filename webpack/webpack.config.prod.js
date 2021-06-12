@@ -153,7 +153,7 @@ module.exports = (env) => {
         patterns: [
           {
             from: "src/assets",
-            to: "../dist",
+            to: "../dist/assets",
           },
         ],
       }),

@@ -374,7 +374,7 @@ export const CreateProductFromPlatformModal = (props) => {
             <Row gutter={8}> 
               <Col span={8}>
                 <div style={{ paddingLeft: 8, paddingRight: 8, marginBottom: 8 }}><Text style={{ fontWeight: 400, color: 'black' }}>Ảnh sản phẩm</Text></div>
-                <Image src={formValues.avatar || (record.platform === 'lazada' ? '../../assets/LazadaBanner.png' : undefined)} width={120} height={120} style={{ padding: 5, border: '1px solid #ccc', borderRadius: 5 }}/>
+                <Image src={formValues.avatar || (record.platform === 'lazada' ? '/assets/LazadaBanner.png' : undefined)} width={120} height={120} style={{ padding: 5, border: '1px solid #ccc', borderRadius: 5 }}/>
               </Col>
               <Col span={16}>
                 <div style={{ marginBottom: 8 }}>

@@ -32,7 +32,7 @@ const AuthLayout = (props) => {
 
   return (
       <Row style={{ height: '100vh'}}>
-        <Col span={16} style={{ backgroundImage: "url('../../assets/working-background-1.jpg')", backgroundSize: '100% 100%'}}/>
+        <Col span={16} style={{ backgroundImage: "url('assets/working-background-1.jpg')", backgroundSize: '100% 100%'}}/>
         <Col span={8} style={strongShadow}>
           <Suspense fallback={<Spinners pulse />}>
             <Switch>
