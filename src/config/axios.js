@@ -1,11 +1,10 @@
 import axios from 'axios'
 import * as constants from '../utils/constants'
 
-import { push } from 'connected-react-router'
-import Creators from '../redux/user'
-import store from '../store'
 
 const isProduction = process.env.NODE_ENV === 'production'
+
+console.log("Setting up enviroment: ", process.env.NODE_ENV)
 
 const request = axios.create()
 
