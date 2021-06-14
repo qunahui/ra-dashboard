@@ -115,8 +115,8 @@ export const MarketplaceOrderView = (props) => {
               <FilterPanel filter={filter} handleFilterSubmit={(values) => {
                 setFilter({ 
                   ...values,
-                  dateFrom: values.dateFrom ? new Date(values.dateFrom) : filter.dateFrom,
-                  dateTo: values.dateTo ? new Date(values.dateTo) : filter.dateTo,
+                  dateFrom: values.dateFrom ? new Date(new Date(values.dateFrom).setHours(0,0,0,0)) : filter.dateFrom,
+                  dateTo: values.dateTo ? new Date(new Date(values.dateTo).setHours(0,0,0,0)) : filter.dateTo,
                 })
                 fetchMarketplaceOrders(values)
               }}/>
