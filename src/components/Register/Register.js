@@ -4,6 +4,7 @@ import { withRouter, useHistory } from 'react-router-dom'
 import { Form, Input, Button, Row, Col, Typography, Avatar, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons'
 import { blue } from '@ant-design/colors' 
+import toast from 'Helpers/ShowToast'
 import NProgress from 'nprogress'
 
 import Creators from '../../redux/user'
@@ -29,6 +30,7 @@ const Register = (props) => {
   }, [props.isLogin])
 
   const onFinishFailed = errorInfo => {
+    toast({ type: 'error', message: 'Mật khẩu không khớp. Vui lòng kiểm tra lại' })
   };
 
   return (
@@ -44,23 +46,29 @@ const Register = (props) => {
         >
           <Form.Item
             name="displayName"
-            rules={[{ required: true, message: 'Please input your name!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Name" />
+            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Tên" />
           </Form.Item>
 
           <Form.Item
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Email" />
+            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập email" />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
-            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Password" />
+            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập mật khẩu" />
+          </Form.Item>
+          <Form.Item
+            name="retype"
+            rules={[{ required: true, message: 'Vui lòng nhập lại mật khẩu!', matchedOpt: 'password' }]}
+          >
+            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập lại mật khẩu" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>

@@ -2,6 +2,8 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 const LoginView = React.lazy(() => import('./views/AuthView/LoginView'))
 const RegisterView = React.lazy(() => import('./views/AuthView/RegisterView'))
+const ForgotPassword = React.lazy(() => import('Components/ForgotPassword'))
+const ChangePassword = React.lazy(() => import('Components/ChangePassword'))
 const DashboardView = React.lazy(() => import('./views/DashboardView'))
 const ConfigView = React.lazy(() => import('./views/ConfigView'))
 const ConfigItemView = React.lazy(() => import('./views/ConfigView/item'))
@@ -266,6 +268,13 @@ const authRoutes = [
     path: '/forgot',
     name: 'forgot password',  
     rolesAccess: [''],  
+    component: ForgotPassword
+  },
+  {
+    path: '/change-password',
+    name: 'change password',  
+    rolesAccess: [''],  
+    component: ChangePassword
   },
   {
     path: '/',

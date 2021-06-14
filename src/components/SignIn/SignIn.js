@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { withRouter, useHistory } from 'react-router-dom'
+import { withRouter, useHistory, Link } from 'react-router-dom'
 import { Form, Input, Button, Row, Col, Typography, Avatar, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons'
-import { blue } from '@ant-design/colors' 
+import { blue } from '@ant-design/colors'
+import toast from 'Helpers/ShowToast'
+
 import NProgress from 'nprogress'
 
 import Creators from '../../redux/user'
@@ -29,6 +31,7 @@ const SignIn = (props) => {
   }, [props.isLogin])
 
   const onFinishFailed = errorInfo => {
+    toast({ type: 'error', message: errorInfo })
   };
 
   return (
@@ -44,16 +47,16 @@ const SignIn = (props) => {
         >
           <Form.Item
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Email" />
+            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập email" />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
-            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Password" />
+            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập mật khẩu" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
@@ -64,6 +67,7 @@ const SignIn = (props) => {
         <Button onClick={() => history.push('/register')} size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
             Đăng ký
         </Button>
+        <Link to={"/forgot"} ><div style={{ marginTop: 24 }}>Quên mật khẩu</div></Link>
       </Col>
     </Row>
   );
