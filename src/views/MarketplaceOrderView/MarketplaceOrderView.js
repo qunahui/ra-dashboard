@@ -16,8 +16,8 @@ const { Option } = Select
 
 export const MarketplaceOrderView = (props) => {
   const INITIAL_FILTER =  {
-    dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
-    dateTo: new Date(),
+    dateFrom: new Date(new Date(new Date().setDate(new Date().getDate() - 14)).setHours(0,0,0,0)),
+    dateTo: new Date(new Date().setHours(0,0,0,0)),
     orderStatus: 'Chờ xác nhận',
     orderId: '',
     customerName: '',
