@@ -19,7 +19,10 @@ const { Types, Creators } = createActions({
   checkUserSessionStart: [],
   checkUserSessionSuccess: ['mongoAuth'],
   setTheme: ['theme'],
-  reset: []
+  reset: [],
+  getWhoAmIStart: [],
+  getWhoAmISuccess: ['payload'],
+  getWhoAmIFailure: ['payload']
 })
 
 export const UserTypes = Types
@@ -84,6 +87,19 @@ const setTheme = (state, {theme}) => state.mergeDeep({
   }
 })
 
+const getWhoAmIStart = (state) => state.merge({
+  isGettingUser: true
+})
+
+const getWhoAmISuccess = (state, { payload: { user } }) => state.merge({
+  isGettingUser: false,
+  user 
+})
+
+const getWhoAmIFailure = (state) => state.merge({
+  isGettingUser: false
+})
+
 const reset = (state) => INITIAL_STATE
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -103,4 +119,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CHECK_USER_SESSION_SUCCESS]: checkUserSessionSuccess,
   [Types.SET_THEME]: setTheme,
   [Types.RESET]: reset,
+  [Types.GET_WHO_AM_I_START]: getWhoAmIStart,
+  [Types.GET_WHO_AM_I_SUCCESS]: getWhoAmISuccess,
+  [Types.GET_WHO_AM_I_FAILURE]: getWhoAmIFailure,
 })

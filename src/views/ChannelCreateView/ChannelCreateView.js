@@ -11,53 +11,37 @@ import Icon, { CheckCircleOutlined, FileDoneOutlined } from '@ant-design/icons';
 import LazadaIcon from '../../assets/lazada-icon.svg'
 import SendoIcon from '../../assets/sendo-icon.svg'
 
+import './styles.scss'
 
+const style = { 
+  minHeight: '300px'
+}
 
 const ChannelCreateView = (props) => {
   console.log("props: ", props)
   const [platform, setPlatform] = React.useState('');
-  
-  // React.useEffect(() => {
-  //   //fetch product after authentication
-  //   async function fetch() {
-  //     if(lazadaCredential) {
-  //       console.log("Begin request with credential: ",lazadaCredential)
-  //       let options = {
-  //         ...lazadaCredential,
-  //         filter: 'all'
-  //       }
-  //       console.log("Option: ", options)
-  //       const result = await request.post('/api/lazada/fetch-products', options)
-  //       console.log("Data: ", result)
-  //       setLoading(false)
-  //       props.push('/app/create/lazada/finish', { name: lazadaCredential.name })
-  //     }
-  //   }
-
-  //   fetch()
-  // },[lazadaCredential])
 
   const renderConnectButton = () => {
     switch(platform) {
       case 'Sendo': 
         return(
           <Link to="/app/create/sendo">
-            <Button disabled={platform === ''} type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Connect</Button>
+            <Button disabled={platform === ''} type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Kết nối</Button>
           </Link>
         )
       default: return (
           <a href={`https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=${window.location.origin}/app/create/lazada&country=vn&client_id=101074&state=`+ props.auth.user._id + '_' + props.app.storage.id}>
-            <Button disabled={platform === ''} type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Connect</Button>
+            <Button disabled={platform === ''} type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Kết nối</Button>
           </a>
         )
     }
   }
 
   return (
-    <Row align="middle" style={{ minHeight: '300px'}}>
-      <Col span={24} justify="center">
+    <Row align="middle" className={'channel-connect-container'} style={style}>
+      <Col span={24} justify="center" className={'channel-connect-content'}>
         <Row justify="center" >
-          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Connect a new sales channel</Typography.Title>
+          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Kết nối gian hàng mới</Typography.Title>
         </Row>
         <Row justify="center" style={{ marginTop: '20px'}}>
           <Radio.Group

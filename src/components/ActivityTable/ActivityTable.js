@@ -4,15 +4,12 @@ import { useHistory } from 'react-router-dom'
 import AppCreators from 'Redux/app'
 import toast from 'Components/Helpers/ShowToast'
 import _ from 'lodash'
-import { Table, Typography, Input, Space, Button, DatePicker } from 'antd';
+import { Table, Typography, Input, Space, Button, Card } from 'antd';
 import Highlighter from 'react-highlight-words'
 import Icon, { SearchOutlined } from '@ant-design/icons'
-import { blue, red } from '@ant-design/colors'
-
-import LazadaIcon from '../../assets/lazada-icon.svg'
-import SendoIcon from '../../assets/sendo-icon.svg'
 import { request } from 'Config/axios'
 
+import { cardBorder } from './styles'
 
 const { Text, Title } = Typography
 
@@ -38,7 +35,7 @@ const Activity = props => {
 
   React.useEffect(() => {
     getActivity()
-  }, [])
+  }, [props])
 
   const getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -134,13 +131,16 @@ const Activity = props => {
   ]
 
   return (
-    <div style={{ marginTop: 16}}>
-      <Title level={4} style={{ marginLeft: 8 }}>Hoạt động gần đây</Title>
+    <Card 
+      title={<Title level={4} style={{ marginLeft: 8 }}>Hoạt động gần đây</Title>}
+      style={{ ...cardBorder, marginTop: 24 }}
+    >
       <Table columns={columns} dataSource={dataSource} bordered/>
-    </div>
+    </Card>
   )
 }
 
 export default connect(state => ({
+  app: state.app.toJS()
 }), dispatch => ({
 }))(Activity)

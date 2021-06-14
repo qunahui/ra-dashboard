@@ -4,14 +4,15 @@ import { useHistory } from 'react-router-dom'
 import AppCreators from 'Redux/app'
 import _ from 'lodash'
 import timeDiff from 'Utils/timeDiff'
-import { Table, Space, Typography, Dropdown, Menu, Button, Popconfirm, Row, Col } from 'antd';
+import { Table, Space, Typography, Dropdown, Menu, Button, Popconfirm, Row, Col, Card } from 'antd';
 import Icon, { DisconnectOutlined, DownOutlined, PlusCircleOutlined, InfoCircleOutlined, LoginOutlined } from '@ant-design/icons'
 import { blue, red } from '@ant-design/colors'
+import { cardBorder } from './styles'
 
 import LazadaIcon from '../../assets/lazada-icon.svg'
 import SendoIcon from '../../assets/sendo-icon.svg'
 
-const { Text } = Typography 
+const { Text, Title } = Typography 
 
 const StorageStatus = props => {
   const history = useHistory()
@@ -81,12 +82,13 @@ const StorageStatus = props => {
   ]
 
   return (
-    <>
-      <Space align="center" style={{ marginBottom: 8 }}>
-        <Button type="primary" onClick={() => history.push('/app/create')}><PlusCircleOutlined /> Kết nối gian hàng mới</Button>
-      </Space>
+    <Card 
+      title={<Title level={4} style={{ marginLeft: 8 }}>Các gian hàng đã kết nối</Title>}
+      extra={<Button type="primary" onClick={() => history.push('/app/create')}><PlusCircleOutlined /> Kết nối gian hàng mới</Button>}
+      style={cardBorder}
+    >
       <Table columns={columns} dataSource={dataSource} bordered/>
-    </>
+    </Card>
   )
 }
 

@@ -5,6 +5,7 @@ import { push } from 'connected-react-router'
 import { request, setToken } from '../../config/axios'
 import THEME from 'Theme'
 import SystemIcon from 'Assets/system.svg'
+import WhoAmI from 'Components/WhoAmI'
 //routes
 import { routes } from '../../_routes'
 
@@ -34,10 +35,12 @@ const { SubMenu } = Menu;
 const DashboardLayout = (props) => {
   const defaultSelectedKey = props.location.pathname
   const [collapsed, setCollaped] = React.useState(false)
+  const [isTokenSetted, setTokenSetted] = React.useState(false)
   const history = useHistory()
 
   useEffect(() => {
     setToken(props.auth.token)
+    setTokenSetted(true)
     props.getStoresStart()
   },[])
 
@@ -95,7 +98,7 @@ const DashboardLayout = (props) => {
               </SubMenu>
               <SubMenu key="/app/products" icon={<DropboxOutlined />} title={<span style={{ paddingLeft: 8 }}>Sản phẩm</span>}>
                 <Menu.Item key="/app/products"><Link to="/app/products">Tất cả sản phẩm</Link></Menu.Item>
-                <SubMenu key="/app/variants" title="Quản lý kho">
+                <SubMenu key="/app/variants/manage" title="Quản lý kho">
                   <Menu.Item key="/app/variants"><Link to="/app/variants">Toàn bộ phiên bản</Link></Menu.Item>
                 </SubMenu>
                 <Menu.Item key="/app/purchase_orders"><Link to="/app/purchase_orders">Đơn nhập hàng</Link></Menu.Item>
@@ -123,6 +126,7 @@ const DashboardLayout = (props) => {
           </Content>
         </Layout>
       </Layout>
+      {isTokenSetted &&<WhoAmI/>}
     </Layout>
   )
   {/* </SocketIOProvider> */}

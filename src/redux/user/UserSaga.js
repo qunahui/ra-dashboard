@@ -63,6 +63,18 @@ export function* signOut() {
   }
 }
 
+export function* getWhoAmIProcess() {
+  try {
+    const result = yield request.get('/users/me')
+
+    if(result.code === 200) {
+      yield put(Creators.getWhoAmISuccess(result.data))
+    } 
+  } catch(e) {
+    yield put(Creators.getWhoAmIFailure())
+  }
+}
+
 // export function* isUserAuthenticated() {
 //   try {
 //     const userAuth = yield getCurrentUser();
@@ -105,6 +117,10 @@ export function* onLogoutStart() {
   yield takeLatest(UserTypes.SIGN_OUT_START, signOut)
 }
 
+export function* onGetWhoAmI() {
+  yield takeLatest(UserTypes.GET_WHO_AM_I_START, getWhoAmIProcess)
+}
+
 // export function* onCheckUserSession() {
 //   yield takeLatest(UserTypes.CHECK_USER_SESSION_START, isUserAuthenticated);
 // }
@@ -130,6 +146,7 @@ const userRootSagas = [
   // call(onCheckUserSession),
   call(onLogoutStart), 
   call(onSignUpStart),
+  call(onGetWhoAmI),
 ];
 
 export default userRootSagas

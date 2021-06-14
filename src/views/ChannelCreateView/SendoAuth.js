@@ -30,7 +30,7 @@ const SendoAuth = (props) => {
     <Row justify="center" align="middle" style={{ minHeight: '300px'}}>
       <Col span={16} justify="center">
         <Row justify="center">
-          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Connect a new sales channel</Typography.Title>
+          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Kết nối gian hàng mới channel</Typography.Title>
         </Row>
         <Col span={24} justify="center" style={{ backgroundColor: '#fff', padding: '20px', boxShadow: '0 .125rem .25rem rgba(0,28,68,.075)'}}>
           <Row>

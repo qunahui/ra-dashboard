@@ -263,6 +263,11 @@ const authRoutes = [
     rolesAccess: [''],
   },
   {
+    path: '/forgot',
+    name: 'forgot password',  
+    rolesAccess: [''],  
+  },
+  {
     path: '/',
     name: 'Redirect',
     component: Redirect,
