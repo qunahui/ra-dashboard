@@ -17,7 +17,7 @@ const { Option } = Select
 export const MarketplaceOrderView = (props) => {
   const INITIAL_FILTER =  {
     dateFrom: new Date(new Date(new Date().setDate(new Date().getDate() - 14)).setHours(0,0,0,0)),
-    dateTo: new Date(new Date().setHours(0,0,0,0)),
+    dateTo: new Date(new Date().setHours(23,59,59,999)),
     orderStatus: 'Chờ xác nhận',
     orderId: '',
     customerName: '',
@@ -116,7 +116,7 @@ export const MarketplaceOrderView = (props) => {
                 setFilter({ 
                   ...values,
                   dateFrom: values.dateFrom ? new Date(new Date(values.dateFrom).setHours(0,0,0,0)) : filter.dateFrom,
-                  dateTo: values.dateTo ? new Date(new Date(values.dateTo).setHours(0,0,0,0)) : filter.dateTo,
+                  dateTo: values.dateTo ? new Date(new Date(values.dateTo).setHours(23,59,59,999)) : filter.dateTo,
                 })
                 fetchMarketplaceOrders(values)
               }}/>
