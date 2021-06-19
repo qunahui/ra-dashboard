@@ -64,7 +64,7 @@ const AddSupplierForm = (props) => {
     let oldVal = ''
     setFormState({
       ...formState,
-      options: formState.options.map((opt) => {
+      options: formState.options?.map((opt) => {
         if(opt.optionName === name) {
           oldVal = opt.optionValue
           return {
@@ -88,7 +88,11 @@ const AddSupplierForm = (props) => {
       ...formState,
       inventories: {
         initPrice: formState.initPrice,
-        initStock: formState.initStock,
+        onHand: formState.initStock,
+        available: 0,
+        incoming: 0,
+        onway: 0,
+        trading: 0
       },
       avatar: variantAvatar
     }
@@ -111,7 +115,6 @@ const AddSupplierForm = (props) => {
     setShowModal(true)
   }
   const handleHideModal = () => {
-    setFormState({})
     setShowModal(false)
   }
   //<--------------------------------------- add new variant modal handler -------------------------------------------->
@@ -140,13 +143,13 @@ const AddSupplierForm = (props) => {
             <Col span={16}>
               <Space size={"middle"} direction={"vertical"} style={{ width: '100%' }}>
                 {
-                  formState.options.map((option, index) => (
+                  formState.options?.map((option, index) => (
                     <div key={index}>
                       <Text style={{ display: 'inline-block', marginBottom: '5px' }}>{option.optionName}: </Text>
                       <AutoComplete
                         style={{ width: '100%'}}
                         size={"large"}
-                        options={props.initialValues?.suggestOptions[index].optionValue.map(opt => ({ value: opt }))}
+                        options={props.initialValues?.suggestOptions[index].optionValue?.map(opt => ({ value: opt }))}
                         onChange={(value) => handleSelectChange(value, option.optionName)}
                         placeholder={"Chọn giá trị cho thuộc tính tùy chọn hoặc sử dụng các giá trị cũ."}
                       />

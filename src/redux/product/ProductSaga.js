@@ -60,7 +60,6 @@ export function* createVariantProcess({ payload }){
       yield put(Creators.createVariantSuccess(result.data))
       NProgress.set(0.8)
       yield put(push('/app/product/' + payload.productId))
-      window.location.reload()
     }
   } catch(e) {
     toast({ type: 'error', message: e.message})
