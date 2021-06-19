@@ -4,13 +4,13 @@ import 'firebase/auth';
 import 'firebase/storage';
 
 const config = {
-    apiKey: process.env.API_KEY,
-    authDomain: process.env.AUTH_DOMAIN,
-    databaseURL: process.env.DATABASE_URL,
-    projectId: process.env.PROJECT_ID,
-    storageBucket: process.env.STORAGE_BUCKET,
-    messagingSenderId:process.env.MESSAGING_SENDER_ID,
-    appId: process.env.APP_ID
+    apiKey: 'AIzaSyBYAulgfRKB98GKfvCVS1VQNRzGKD_IJqo',
+    authDomain: 'testapi-3a32b.firebaseapp.com',
+    databaseURL: 'https://testapi-3a32b.firebaseio.com',
+    projectId: 'testapi-3a32b',
+    storageBucket: 'testapi-3a32b.appspot.com',
+    messagingSenderId: '669498926395',
+    appId: '1:669498926395:web:2da04088cf2d574103031e'
 };
 
 console.log("Firebase config :", config)
