@@ -13,6 +13,8 @@ const config = {
     appId: process.env.APP_ID
 };
 
+console.log("Firebase config :", config)
+
 firebase.initializeApp(config);
 firebase.auth().languageCode = 'en_EN';
 
