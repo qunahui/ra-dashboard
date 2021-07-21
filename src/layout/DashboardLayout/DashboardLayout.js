@@ -30,12 +30,19 @@ import AppCreators from '../../redux/app'
 //
 const { Content, Sider, Header } = Layout;
 const { SubMenu } = Menu;
+const rootSubmenuKeys = [
+  '/app/dashboard',
+  '/app/market_place',
+  '/app/products',
+  '/app/orders',
+];
 //
 
 const DashboardLayout = (props) => {
-  const defaultSelectedKey = props.location.pathname
+  const [defaultSelectedKey, setDefaultSelectedKey] = useState(props.location.pathname)
   const [collapsed, setCollaped] = React.useState(false)
   const [isTokenSetted, setTokenSetted] = React.useState(false)
+  const [openKeys, setOpenKeys] = React.useState([]);
   const history = useHistory()
 
   useEffect(() => {
@@ -63,15 +70,24 @@ const DashboardLayout = (props) => {
         <PrivateRoute key={route.key || route.path} {...route} />
       ) : null,
     )
+  
+  const onOpenChange = keys => {
+    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
 
-
+  console.log("Found: ", rootSubmenuKeys.find(i => defaultSelectedKey.includes(i)))
     // <SocketIOProvider url="http://localhost:5050" opts={{ query: `uid=${props.auth.user.uid}`}}>
   return (
     <Layout>
       <Layout>
         <Sider
           style={{
-            overflow: "auto",
+            overflow: "hidden",
             height: "100vh",
             position: "sticky",
             top: 0,
@@ -79,7 +95,7 @@ const DashboardLayout = (props) => {
             boxShadow: THEME.boxShadowBase,
           }}
           collapsed={collapsed}
-          collapsible={true}
+          // collapsible={true}
           onCollapse={() => setCollaped(!collapsed)}
           theme={'light'}
           className={'sider'}
@@ -87,7 +103,7 @@ const DashboardLayout = (props) => {
           <div style={{ display: 'grid', placeItems: 'center', padding: 8}} className={'sider-header'}>
             <SystemIcon style={{ padding: 0, height: 35, width: 35, cursor: 'pointer'}} onClick={() => history.push('/app/dashboard')}/>
           </div>
-          <Menu theme="light" mode="inline" defaultSelectedKeys={[defaultSelectedKey]}>
+          <Menu theme="light" mode="inline" defaultSelectedKeys={[defaultSelectedKey]} openKeys={openKeys?.length > 0 ? openKeys : [rootSubmenuKeys.find(i => defaultSelectedKey.includes(i))]} onOpenChange={onOpenChange} onSelect={(e) => setDefaultSelectedKey(e.key)}>
               <Menu.Item key="/app/dashboard" icon={<VideoCameraOutlined />}>
                 <Link to="/app/dashboard"><span style={{ paddingLeft: 8 }}>Trang chính</span></Link>
               </Menu.Item>
@@ -98,17 +114,17 @@ const DashboardLayout = (props) => {
               </SubMenu>
               <SubMenu key="/app/products" icon={<DropboxOutlined />} title={<span style={{ paddingLeft: 8 }}>Sản phẩm</span>}>
                 <Menu.Item key="/app/products"><Link to="/app/products">Tất cả sản phẩm</Link></Menu.Item>
-                <SubMenu key="/app/variants/manage" title="Quản lý kho">
-                  <Menu.Item key="/app/variants"><Link to="/app/variants">Toàn bộ phiên bản</Link></Menu.Item>
+                <SubMenu key="/app/products/variants/manage" title="Quản lý kho">
+                  <Menu.Item key="/app/products/variants"><Link to="/app/products/variants">Toàn bộ phiên bản</Link></Menu.Item>
                 </SubMenu>
-                <Menu.Item key="/app/purchase_orders"><Link to="/app/purchase_orders">Đơn nhập hàng</Link></Menu.Item>
-                <Menu.Item key="/app/supplier_refund_orders"><Link to="/app/supplier_refund_orders">Đơn hoàn trả NCC</Link></Menu.Item>
-                <Menu.Item key="/app/suppliers"><Link to="/app/suppliers">Quản lý nhà cung cấp</Link></Menu.Item>
+                <Menu.Item key="/app/products/purchase_orders"><Link to="/app/products/purchase_orders">Đơn nhập hàng</Link></Menu.Item>
+                <Menu.Item key="/app/products/supplier_refund_orders"><Link to="/app/products/supplier_refund_orders">Đơn hoàn trả NCC</Link></Menu.Item>
+                <Menu.Item key="/app/products/suppliers"><Link to="/app/products/suppliers">Quản lý nhà cung cấp</Link></Menu.Item>
               </SubMenu>
               <SubMenu key="/app/orders" icon={<ShoppingOutlined />} title={<span style={{ paddingLeft: 8 }}>Đơn hàng</span>}>
                 <Menu.Item key="/app/orders/create"><Link to="/app/orders/create">Tạo đơn hàng</Link></Menu.Item>
                 <Menu.Item key="/app/orders"><Link to="/app/orders">Tất cả đơn hàng</Link></Menu.Item>
-                <Menu.Item key="/app/refund_orders"><Link to="/app/refund_orders">Đơn hoàn trả</Link></Menu.Item>
+                <Menu.Item key="/app/orders/refund"><Link to="/app/orders/refund">Đơn hoàn trả</Link></Menu.Item>
               </SubMenu>
             </Menu>
           <PageHeader/>

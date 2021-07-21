@@ -32,7 +32,6 @@ const CustomPageHeader = (props) => {
       bottom: 48,
       background: 'white',
       border: 'none',
-      borderBottom: '1px solid #fafafa',
     }}>
       <Menu.Item key="/app/config" icon={<SettingOutlined />} onClick={() => history.push('/app/config')}>
         <span style={{ paddingLeft: 8}}>Thông tin cửa hàng</span>

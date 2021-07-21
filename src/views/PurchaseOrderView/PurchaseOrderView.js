@@ -48,7 +48,7 @@ export const PurchaseOrderView = (props) => {
                 defaultActiveKey="tất cả" 
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
-                  <Button type="primary" key="Tạo đơn đặt hàng" onClick={() => history.push('/app/purchase_orders/create')}>Tạo đơn đặt hàng</Button>,
+                  <Button type="primary" key="Tạo đơn đặt hàng" onClick={() => history.push('/app/products/purchase_orders/create')}>Tạo đơn đặt hàng</Button>,
                 ]}
               >
                 <TabPane tab="Tất cả" key="tất cả">
@@ -67,7 +67,7 @@ export const PurchaseOrderView = (props) => {
               <Button 
                 type={"primary"} 
                 style={{ marginTop: 50}}
-                onClick={() => history.push('/app/purchase_orders/create')}
+                onClick={() => history.push('/app/products/purchase_orders/create')}
               >Tạo đơn nhập hàng đầu tiên</Button>
             </Col>
           </Row>

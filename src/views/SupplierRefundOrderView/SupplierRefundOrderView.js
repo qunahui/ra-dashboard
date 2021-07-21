@@ -49,7 +49,7 @@ export const RefundOrderView = (props) => {
                 defaultActiveKey="tất cả" 
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
-                  <Button type="primary" key="Tạo đơn hoàn hàng" onClick={() => history.push('/app/supplier_refund_orders/create')}>Tạo đơn hoàn hàng</Button>,
+                  <Button type="primary" key="Tạo đơn hoàn hàng" onClick={() => history.push('/app/products/supplier_refund_orders/create')}>Tạo đơn hoàn hàng</Button>,
                 ]}
               >
                 <TabPane tab="Tất cả" key="tất cả">
@@ -68,7 +68,7 @@ export const RefundOrderView = (props) => {
               <Button 
                 type={"primary"} 
                 style={{ marginTop: 50}}
-                onClick={() => history.push('/app/supplier_refund_orders/create')}
+                onClick={() => history.push('/app/products/supplier_refund_orders/create')}
               >Tạo đơn hoàn hàng đầu tiên</Button>
             </Col>
           </Row>

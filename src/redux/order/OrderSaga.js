@@ -1,4 +1,5 @@
 import { all, call, put, select, take, takeLatest } from 'redux-saga/effects'
+import qs from 'qs'
 import { request, setToken } from '../../config/axios'
 import Creators, { OrderTypes } from './Order'
 // import AppCreators from '../app'
@@ -88,10 +89,17 @@ export function* cancelOrderProcess({ payload }) {
   }
 }
 
-export function* getOrdersProcess() {
+export function* getOrdersProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.get('/orders')
+    const result = yield request.get('/orders', {
+      params: {
+        ...payload,
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      } 
+    })
     console.log(result)
     if(result.code === 200) {
       yield put(Creators.getOrdersSuccess(result.data))

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Table, Tag } from 'antd'
+import { Typography, Table, Tag, Row, Col } from 'antd'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { useHistory, Link } from 'react-router-dom'
 import { amountFormatter } from 'Utils/inputFormatter'
+import { ProfileOutlined } from '@ant-design/icons'
 
-const { Text } = Typography
+
+const { Text, Title } = Typography
 
 export const AllOrderTable = (props) => {
   const [dataSource, setDataSource] = useState(props.orders || [])
@@ -158,7 +160,20 @@ export const AllOrderTable = (props) => {
           return i
         }
       })}
-      columns={columns} 
+      columns={columns}
+      locale={{
+        emptyText: (
+          <Row justify={"center"}>
+            <Col span={24}>
+              <ProfileOutlined style={{ fontSize: 100, marginTop: 16, marginBottom: 16 }}/>
+            </Col>
+            <Col span={24}>
+              <Title level={5}>Không có đơn hàng</Title>
+              <Text type={"secondary"}>Không tìm thấy đơn hàng phù hợp với dữ liệu tìm kiếm.</Text>
+            </Col>
+          </Row>
+        )
+      }}
     />
   )
 }

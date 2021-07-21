@@ -23,7 +23,7 @@ export const AllRefundOrderTab = (props) => {
       title: 'Mã đơn',
       dataIndex: 'code',
       key: 'code',
-      render: (value, record) => <Link to={`/app/refund_orders/${record._id}`}>{value}</Link>
+      render: (value, record) => <Link to={`/app/orders/refund/${record._id}`}>{value}</Link>
     },
     {
       title: 'Nhà cung cấp',

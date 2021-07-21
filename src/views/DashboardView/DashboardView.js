@@ -60,12 +60,6 @@ function DashboardView(props) {
         </Col>
       </Row>
       <Row gutter={[16,16]} style={{ marginTop: '16px'}}>
-        <Col span={6}><LoadingSkeleton width={'100%'} center={true} title={'Doanh thu'}></LoadingSkeleton></Col>
-        <Col span={6}><LoadingSkeleton width={'100%'} center={true} title={'Đơn hàng mới'}></LoadingSkeleton></Col>
-        <Col span={6}><LoadingSkeleton width={'100%'} center={true} title={'Mã giảm giá đang áp dụng'}></LoadingSkeleton></Col>
-        <Col span={6}><LoadingSkeleton width={'100%'} center={true} title={'Reviews'}></LoadingSkeleton></Col>
-        <Col span={16}><LoadingSkeleton rows={7} width={'100%'} height={300} marginLeft={5}title={'Tổng quan bán hàng'}></LoadingSkeleton></Col>
-        <Col span={8}><LoadingSkeleton rows={7} width={'100%'} height={300} title={'Tổng quan bán hàng'}></LoadingSkeleton></Col>
       </Row>
     </>
   )

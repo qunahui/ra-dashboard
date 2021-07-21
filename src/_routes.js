@@ -6,7 +6,6 @@ const ForgotPassword = React.lazy(() => import('Components/ForgotPassword'))
 const ChangePassword = React.lazy(() => import('Components/ChangePassword'))
 const DashboardView = React.lazy(() => import('./views/DashboardView'))
 const ConfigView = React.lazy(() => import('./views/ConfigView'))
-const ConfigItemView = React.lazy(() => import('./views/ConfigView/item'))
 //
 const ChannelCreateView = React.lazy(() => import('./views/ChannelCreateView'))
 const ChannelCreateSuccessView = React.lazy(() => import('./views/ChannelCreateView/success'))
@@ -87,12 +86,6 @@ const routes = [
     rolesAccess: [''],
   },
   {
-    path: '/app/config/:id',
-    name: 'Item config',
-    component: ConfigItemView,
-    rolesAccess: [''],
-  },
-  {
     path: '/app/config',
     name: 'App config',
     component: ConfigView,
@@ -135,12 +128,14 @@ const routes = [
     name: 'All products',
     component: ProductView,
     rolesAccess: [''],
+    exact: true,
   },
   {
-    path: '/app/variants',
+    path: '/app/products/variants',
     name: 'All products',
     component: AllVariantView,
     rolesAccess: [''],
+    exact: true,
   },
   {
     path: '/app/product/:id',
@@ -156,58 +151,58 @@ const routes = [
     rolesAccess: ['']
   },
   {
-    path: '/app/purchase_orders/create',
+    path: '/app/products/purchase_orders/create',
     name: 'Purchase Orders create',
     component: PurchaseOrderCreateView,
     rolesAccess: [''],
     exact: true,
   },
   {
-    path: '/app/purchase_orders/:id',
+    path: '/app/products/purchase_orders/:id',
     name: 'Single Purchase Order View',
     component: SinglePurchaseOrderView,
     rolesAccess: [''],
   },
   {
-    path: '/app/purchase_orders',
+    path: '/app/products/purchase_orders',
     name: 'Purchase Orders View',
     component: PurchaseOrderView,
     rolesAccess: ['']
   },
   {
-    path: '/app/refund_orders/create',
+    path: '/app/orders/refund/create',
     name: 'Refund Orders create',
     component: RefundOrderCreateView,
     rolesAccess: [''],
     exact: true,
   },
   {
-    path: '/app/refund_orders/:id',
+    path: '/app/orders/refund/:id',
     name: 'Single Refund Order View',
     component: SingleRefundOrderView,
     rolesAccess: [''],
   },
   {
-    path: '/app/refund_orders',
+    path: '/app/orders/refund',
     name: 'Refund Orders View',
     component: RefundOrderView,
     rolesAccess: ['']
   },
   {
-    path: '/app/supplier_refund_orders/create',
+    path: '/app/products/supplier_refund_orders/create',
     name: 'SupplierRefund Orders create',
     component: SupplierRefundOrderCreateView,
     rolesAccess: [''],
     exact: true,
   },
   {
-    path: '/app/supplier_refund_orders/:id',
+    path: '/app/products/supplier_refund_orders/:id',
     name: 'Single Supplier Refund Order View',
     component: SingleSupplierRefundOrderView,
     rolesAccess: [''],
   },
   {
-    path: '/app/supplier_refund_orders',
+    path: '/app/products/supplier_refund_orders',
     name: 'Supplier Refund Orders View',
     component: SupplierRefundOrderView,
     rolesAccess: ['']
@@ -232,13 +227,13 @@ const routes = [
     rolesAccess: ['']
   },
   {
-    path: '/app/suppliers/:id',
+    path: '/app/products/suppliers/:id',
     name: 'Supplier info View',
     component: SingleSupplierView,
     rolesAccess: ['']
   },
   {
-    path: '/app/suppliers',
+    path: '/app/products/suppliers',
     name: 'Suppliers View',
     component: SupplierView,
     rolesAccess: ['']

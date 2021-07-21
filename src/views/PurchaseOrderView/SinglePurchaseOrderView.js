@@ -191,7 +191,7 @@ export const SinglePurchaseOrderView = (props) => {
       <Row gutter={[0, 16]} style={{ marginBottom: 16 }} justify={"space-between"}>
         <Col span={12}>
           <Row>
-            <a href="/app/purchase_orders">
+            <a href="/app/products/purchase_orders">
               <Title level={5}><ArrowLeftOutlined/> Quay lại danh sách đơn nhập hàng</Title>
             </a>
           </Row>
@@ -358,7 +358,7 @@ export const SinglePurchaseOrderView = (props) => {
           }
         </Col>
         <Col>
-          <Button style={{ marginRight: 8 }} onClick={() => history.push('/app/purchase_orders')}>Quay lại</Button>
+          <Button style={{ marginRight: 8 }} onClick={() => history.push('/app/products/purchase_orders')}>Quay lại</Button>
           {
             remainPrice > 0 && (
               <Button disabled={isOrderCanceled} style={{ marginRight: 8 }} onClick={handleShowPaymentModal}>Xác nhận thanh toán</Button>

@@ -12,7 +12,6 @@ import qs from 'qs'
 
 const { Text, Title } = Typography
 const { TabPane } = Tabs
-const { Option } = Select
 
 export const MarketplaceOrderView = (props) => {
   const INITIAL_FILTER =  {
@@ -25,6 +24,7 @@ export const MarketplaceOrderView = (props) => {
   }
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(false)
+  const [activeKey, setActiveKey] = useState("Chờ xác nhận")
   const [filter, setFilter] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     INITIAL_FILTER
@@ -93,13 +93,14 @@ export const MarketplaceOrderView = (props) => {
           >
             <Col span={24}>
               <Tabs 
-                defaultActiveKey="Chờ xác nhận" 
+                activeKey={activeKey}
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
                 ]}
                 onTabClick={key => {
                   setFilter({ orderStatus: key })
                   fetchMarketplaceOrders({ ...filter, orderStatus: key })
+                  setActiveKey(key)
                 }}
               >
                 <TabPane tab="Chờ xác nhận" key="Chờ xác nhận"/>
@@ -112,14 +113,18 @@ export const MarketplaceOrderView = (props) => {
                 <TabPane tab="Đã hoàn trả" key="Đã hoàn trả"/>
                 <TabPane tab="Mất hàng" key="Mất hàng"/>
               </Tabs>
-              <FilterPanel filter={filter} handleFilterSubmit={(values) => {
-                setFilter({ 
-                  ...values,
-                  dateFrom: values.dateFrom ? new Date(new Date(values.dateFrom).setHours(0,0,0,0)) : filter.dateFrom,
-                  dateTo: values.dateTo ? new Date(new Date(values.dateTo).setHours(23,59,59,999)) : filter.dateTo,
-                })
-                fetchMarketplaceOrders(values)
-              }}/>
+              <FilterPanel 
+                filter={filter}
+                handleFilterSubmit={(values) => {
+                  setActiveKey(values.orderStatus)
+                  setFilter({ 
+                      ...values,
+                      dateFrom: values.dateFrom ? new Date(new Date(values.dateFrom).setHours(0,0,0,0)) : filter.dateFrom,
+                      dateTo: values.dateTo ? new Date(new Date(values.dateTo).setHours(23,59,59,999)) : filter.dateTo,
+                    })
+                    fetchMarketplaceOrders(values)
+                  }}
+              />
               <AllMarketplaceOrderTable orders={orderList} loading={loading}/>
             </Col>
           </Row>

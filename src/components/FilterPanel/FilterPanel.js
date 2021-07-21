@@ -46,16 +46,6 @@ export const FilterPanel = (props) => {
 
     const menu = (
         <Menu gutter={16} key={"overlay-filter"}>
-            <Menu.Item key="store_id" span={24} style={{ marginTop: 8 }}>
-                {/* <Select
-                    mode={"tags"}
-                    size={"large"}
-                    style={{ width: '100%'}}
-                    suffixIcon={<HddOutlined/>}
-                    placeholder={"Lọc theo gian hàng"}
-                    options={[]}
-                /> */}
-            </Menu.Item>
             <Menu.Item key="customerName" span={24}>
                 <Input size={"large"} value={filter.customerName} placeholder={"Tên khách hàng"} suffix={<UserOutlined/>} allowClear onChange={e => setFilter({ customerName: e.target.value })}/>
             </Menu.Item>

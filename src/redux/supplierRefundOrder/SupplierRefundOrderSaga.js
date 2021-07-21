@@ -36,7 +36,7 @@ export function* createSupplierRefundOrderProcess({ payload }) {
       toast({ type: 'success', message: 'Tạo đơn hoàn hàng mới thành công !'})
       console.log(result.data)
       yield put(Creators.createSupplierRefundOrderSuccess(result.data))
-      yield put(push(`/app/supplier_refund_orders/${result.data._id}`))
+      yield put(push(`/app/products/supplier_refund_orders/${result.data._id}`))
     }
   } catch(e) {
     console.log("Create refund order failure: ", e.message)

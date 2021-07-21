@@ -10,6 +10,8 @@ import toast from 'react-toastify'
 import { blue, purple } from '@ant-design/colors'
 import Icon, {CheckCircleOutlined} from '@ant-design/icons'
 
+const { Text, Title } = Typography
+
 const SendoAuth = (props) => {
   const { isWorking } = props.app
   const [loading, setLoading] = useState(false)
@@ -30,33 +32,33 @@ const SendoAuth = (props) => {
     <Row justify="center" align="middle" style={{ minHeight: '300px'}}>
       <Col span={16} justify="center">
         <Row justify="center">
-          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Kết nối gian hàng mới channel</Typography.Title>
+          <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Kết nối gian hàng mới</Typography.Title>
         </Row>
         <Col span={24} justify="center" style={{ backgroundColor: '#fff', padding: '20px', boxShadow: '0 .125rem .25rem rgba(0,28,68,.075)'}}>
           <Row>
-            Platform: <b>Sendo</b>
+            <Title level={4}>Nền tảng: SENDO</Title>
           </Row>
           <Row>
-            <Typography><b>Step 1: </b>Visit the link <a target="_blank" href="https://ban.sendo.vn/cau-hinh/api">https://ban.sendo.vn/cau-hinh/api</a>, then select "Connect API".</Typography>
+            <Text><b>Step 1: </b>Truy cập đường dẫn <a target="_blank" href="https://ban.sendo.vn/cau-hinh/api">https://ban.sendo.vn/cau-hinh/api</a>, chọn nút "Kết nối API".</Text>
           </Row> <br/>
           <Row>
-            <Typography><b>Step 2: </b>Enter the following link in the box "Get data path": <a href="https://api.link">https://api.link</a>.</Typography>
+            <Text><b>Step 2: </b>Nhập đường dẫn sau vào ô "Đường dẫn nhận dữ liệu": <a href="https://mms-track.netlify.app">https://mms-track.netlify.app</a>.</Text>
           </Row> <br/>
           <Row>
-            <Typography><b>Step 3: </b>Select all 4 actions and click Save:</Typography> <br/>
+            <Text><b>Step 3: </b>Chọn tất cả 4 hành động nhận dữ liệu và bấm nút Lưu:</Text> <br/>
           </Row> <br/>
           <Row>
             <ul>
-              <li style={{textAlign: "start"}}>Create orders</li>
-              <li style={{textAlign: "start"}}>Create products</li>
+              <li style={{textAlign: "start"}}>Tạo đơn hàng</li>
+              <li style={{textAlign: "start"}}>Tạo sản phẩm</li>
             </ul>
             <ul>
-              <li style={{textAlign: "start"}}>Update orders</li>
-              <li style={{textAlign: "start"}}>Update products</li>
+              <li style={{textAlign: "start"}}>Cập nhật đơn hàng</li>
+              <li style={{textAlign: "start"}}>Cập nhật sản pahamr</li>
             </ul>
           </Row> <br/>
           <Row>
-            <Typography>Finally, you need to fill <b>Shop code</b> and <b>Secret code</b> in the two boxes below.</Typography>
+            <Text>Cuối cùng, bạn cần điền <b>Mã shop</b> và <b>Mã bảo mật</b> vào 2 ô bên dưới.</Text>
           </Row>
           <Divider/>
           <Row justify="center" style={{ marginTop: '40px'}}>
@@ -66,14 +68,14 @@ const SendoAuth = (props) => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
               >
-                <Form.Item name="app_key" label="Shop code" rules={[{ required: true, message: 'This field is required!' }]}>
+                <Form.Item name="app_key" label="Mã shop" rules={[{ required: true, message: 'This field is required!' }]}>
                   <Input size="large"/>
                 </Form.Item>
-                <Form.Item name="app_secret" label="Secret code" rules={[{ required: true, message: 'This field is required!' }]}>
+                <Form.Item name="app_secret" label="Mã bảo mật" rules={[{ required: true, message: 'This field is required!' }]}>
                   <Input size="large"/>
                 </Form.Item>
                 <Form.Item>
-                  <Button loading={loading} htmlType="submit" type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Connect</Button>
+                  <Button loading={loading} htmlType="submit" type="primary" size="large" style={{ fontSize: '24px', height: '50px'}} icon={<CheckCircleOutlined/>} block>Kết nối</Button>
                 </Form.Item>
               </Form>
             </Col>

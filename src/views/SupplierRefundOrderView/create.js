@@ -479,7 +479,7 @@ export const create = (props) => {
         <Divider/>
         <Row justify="end" gutter={[16]}>
           <Col>
-            <Button onClick={() => history.push('/app/supplier_refund_orders')}>Hủy</Button>
+            <Button onClick={() => history.push('/app/products/supplier_refund_orders')}>Hủy</Button>
           </Col>
           <Col>
             <Button htmlType="submit" type="primary">Duyệt đơn hoàn</Button>

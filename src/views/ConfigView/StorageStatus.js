@@ -59,7 +59,12 @@ const StorageStatus = props => {
             {
               record.platform_name === 'lazada' && <Menu.Item key="reconnect"><a  style={{ color: blue[5] }} href={`https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=${window.location.origin}/app/create/lazada&country=vn&client_id=101074&state=`}><LoginOutlined />Kết nối lại</a></Menu.Item>
             }
-            <Menu.Item key="manual-sync" style={{ color: blue[5] }} onClick={() => history.push(`/app/config/${record._id}`)}><InfoCircleOutlined/>Xem cấu hình</Menu.Item>
+            <Menu.Item key="manual-sync" style={{ color: blue[5] }} 
+                onClick={() => history.push(`/app/config/${record._id}`, {
+                record
+            })}><InfoCircleOutlined/>
+              Xem cấu hình
+            </Menu.Item>
             <Menu.Item key="disconnect" style={{ color: red[5] }}>
               <Popconfirm
                 title={`Xác nhận gỡ gian hàng: ${record.store_name}, điều này sẽ khiến các sản phẩm/đơn hàng liên quan bị xóa.`}

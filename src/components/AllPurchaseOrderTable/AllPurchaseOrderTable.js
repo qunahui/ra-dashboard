@@ -22,7 +22,7 @@ export const AllPurchaseOrderTable = (props) => {
       title: 'Mã đơn',
       dataIndex: 'code',
       key: 'code',
-      render: (value, record) => <Link to={`/app/purchase_orders/${record._id}`}>{value}</Link>
+      render: (value, record) => <Link to={`/app/products/purchase_orders/${record._id}`}>{value}</Link>
     },
     {
       title: 'Nhà cung cấp',

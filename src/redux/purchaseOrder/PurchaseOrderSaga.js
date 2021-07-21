@@ -36,7 +36,7 @@ export function* createPurchaseOrderProcess({ payload }) {
       toast({ type: 'success', message: 'Tạo đơn nhập hàng mới thành công !'})
       console.log(result.data)
       yield put(Creators.createPurchaseOrderSuccess(result.data))
-      yield put(push(`/app/purchase_orders/${result.data._id}`))
+      yield put(push(`/app/products/purchase_orders/${result.data._id}`))
     }
   } catch(e) {
     console.log("Create purchase order failure: ", e.message)

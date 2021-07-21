@@ -517,7 +517,7 @@ export const create = (props) => {
         <Divider/>
         <Row justify="end" gutter={[16]}>
           <Col>
-            <Button onClick={() => history.push('/app/purchase_orders')}>Hủy</Button>
+            <Button onClick={() => history.push('/app/products/purchase_orders')}>Hủy</Button>
           </Col>
           <Col>
             <Button htmlType="submit" type="primary">Đặt hàng và duyệt</Button>

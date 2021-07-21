@@ -39,7 +39,7 @@ const ChannelCreateView = (props) => {
 
   return (
     <Row align="middle" className={'channel-connect-container'} style={style}>
-      <Col span={24} justify="center" className={'channel-connect-content'}>
+      <Col span={8} justify="center" className={'channel-connect-content'}>
         <Row justify="center" >
           <Typography.Title level={2} copyable={false} style={{ color: blue[5]}}>Kết nối gian hàng mới</Typography.Title>
         </Row>
@@ -69,6 +69,8 @@ const ChannelCreateView = (props) => {
             {renderConnectButton()} 
           </Col>
         </Row>
+      </Col>
+      <Col span={16} className={'channel-connect-background'}>
       </Col>
     </Row>
   )

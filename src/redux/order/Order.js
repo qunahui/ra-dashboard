@@ -13,7 +13,7 @@ const { Types, Creators } = createActions({
   createOrderPackagingStart: ['payload'],
   createOrderPackagingSuccess: ['payload'],
   createOrderPackagingFailure: ['payload'],
-  getOrdersStart: [],
+  getOrdersStart: ['payload'],
   getOrdersSuccess: ['payload'],
   getOrdersFailure: ['payload'],
   confirmPlatformOrderStart: ['payload'], //xac nhan con hang

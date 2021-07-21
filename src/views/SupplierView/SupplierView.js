@@ -18,7 +18,7 @@ export const SupplierView = (props) => {
       title: 'Tên nhà cung cấp',
       dataIndex: 'name',
       key: 'name',
-      render: (text, record) => <Link to={`/app/suppliers/${record._id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/app/products/suppliers/${record._id}`}>{text}</Link>
     },
     {
       title: 'Nhóm nhà cung cấp',
@@ -106,7 +106,7 @@ export const SupplierView = (props) => {
               <Button 
                 type={"primary"} 
                 style={{ marginTop: 50}}
-                onClick={() => history.push('/app/suppliers/create')}
+                onClick={() => history.push('/app/products/suppliers/create')}
               >Tạo nhà cung cấp đầu tiên</Button>
             </Col>
           </Row>

@@ -195,7 +195,7 @@ export const SingleRefundOrderView = (props) => {
       <Row gutter={[0, 16]} style={{ marginBottom: 16 }} justify={"space-between"}>
         <Col span={12}>
           <Row>
-            <a href="/app/refund_orders">
+            <a href="/app/orders/refund">
               <Title level={5}><ArrowLeftOutlined/> Quay lại danh sách đơn nhập hàng</Title>
             </a>
           </Row>
@@ -379,7 +379,7 @@ export const SingleRefundOrderView = (props) => {
           }
         </Col>
         <Col>
-          <Button style={{ marginRight: 8 }} onClick={() => history.push('/app/refund_orders')}>Quay lại</Button>
+          <Button style={{ marginRight: 8 }} onClick={() => history.push('/app/orders/refund')}>Quay lại</Button>
           {
             remainPrice > 0 && isEditable && (
               <Button disabled={isOrderCanceled} style={{ marginRight: 8 }} onClick={handleShowPaymentModal}>Xác nhận thanh toán</Button>

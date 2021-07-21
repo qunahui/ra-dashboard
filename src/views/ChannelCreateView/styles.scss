@@ -1,4 +1,13 @@
 .channel-connect-container {
     background: white;
     height: 100%!important;
+    margin: -24px -38px -24px -72px;
+    overflow: hidden;
+}
+
+.channel-connect-background {
+    height: 100vh!important;
+    background-image: url('../../assets/working-background-1.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
