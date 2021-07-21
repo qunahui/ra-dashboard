@@ -7,7 +7,7 @@ import { amountFormatter, amountParser } from 'Utils/inputFormatter'
 import { request } from 'Config/axios'
 import { Link } from 'react-router-dom'
 
-import { Row, Col, Form, Select, AutoComplete, InputNumber, Divider, Input, Typography, Checkbox, Collapse, Button, Upload, Modal, Tag, Table } from 'antd'
+import { Row, Col, Form, Select, Switch, Divider, Input, Typography, Checkbox, Collapse, Button, Upload, Modal, Tag, Table } from 'antd'
 import { blue } from '@ant-design/colors'
 import { PlusOutlined, ArrowLeftOutlined, InfoCircleTwoTone } from '@ant-design/icons'
 import './SingleProduct.styles.scss'
@@ -25,9 +25,9 @@ export const SingleProduct = (props) => {
   async function fetchProduct(id) {
     const response = await request.get(`/products/${id}`)
     if(response.code === 200) {
-      const product = response.data[0]
+      const product = response.data
 
-      product.fileList = product.avatar.map(i => { 
+      product.fileList = product?.avatar.map(i => { 
         let arr = i.split('/')
         let name = arr[arr.length - 1].split('?')[0]
         return {
@@ -37,7 +37,7 @@ export const SingleProduct = (props) => {
           name,
           status: 'done', 
         }
-      })
+      }) || []
       form.setFieldsValue({
         ...product,
       })
@@ -54,7 +54,6 @@ export const SingleProduct = (props) => {
   useEffect(() => {
     try { 
       let id = props.match.params.id;
-      console.log("first-fetch")
       fetchProduct(id)
     } catch(e) { 
       toast({ type: 'error', message: 'Có gì đó sai sai !'})
@@ -74,7 +73,6 @@ export const SingleProduct = (props) => {
 
   const handleSelectCategory = (selected) => {
     const { name, value } = selected;
-    console.log(name, value)
     setCategorySelected({
       name, value
     })
@@ -144,7 +142,6 @@ export const SingleProduct = (props) => {
   }
 
   useEffect(() => {
-    console.log("uploader changed: ", uploaderState)
   }, [uploaderState])
 
   //<----------------------------------------image handler-------------------------------------->
@@ -291,7 +288,6 @@ export const SingleProduct = (props) => {
           <div className={"product-info"} style={{ height: '100%' }}>
             <Form.Item 
                 name={"name"} 
-                initialValue={"Áo phông EAGLES"} 
                 label={<p className="product-info__item--text">Tên sản phẩm</p>} 
                 className={"product-info__item"}
                 rules={[{ required: true, message: 'Trường tên là bắt buộc'}]}
@@ -304,7 +300,6 @@ export const SingleProduct = (props) => {
                 <Col span={24}>
                   <Form.Item 
                     name="shortDescription" 
-                    initialValue={''}
                     rules={[{ max: 100,  message: 'Mô tả ngắn gọn tối đa 80 ký tự' }]}
                   >
                     <Input placeholder={'Mô tả ngắn gọn cho sản phẩm, bao gồm các thông tin nổi bật nhất.....'}/>
@@ -339,9 +334,11 @@ export const SingleProduct = (props) => {
               <Input allowClear={true} value={product.brand} placeholder="Nhập vào nhãn hiệu"/>
             </Form.Item>
             <Divider/>
-            <Form.Item name="tags" shouldUpdate={true} initialValue={product.tags && [...product.tags]} label="Tags">
-              {/* <Input placeholder="Nhập vào tags"/> */}
-              <Select mode="tags" placeholder="Nhập vào tags"></Select><br/><br/>
+            <Form.Item 
+                name={"tags"} 
+                label={'Tags'} 
+            >
+              <Select mode={"tags"} placeholder="Nhập vào tag"/>
             </Form.Item>
             <Divider/>
             <Row>
@@ -404,17 +401,20 @@ export const SingleProduct = (props) => {
                   bordered
                   size="middle"
                   scroll={{ x: 'calc(700px + 50%)', y: 240 }}
-                  // onRow={(record, rowIndex) => {
-                  //   return {
-                  //     onClick: () => alert(JSON.stringify(record, null, 2))
-                  //   }
-                  // }}
                 />
               </Col>
             </Row>
           </div>
-          </Col>
+        </Col>
       </Row>
+      <Form.Item
+        name={"sellable"} 
+        label={"Cho phép bán"} 
+        style={{ marginRight: 8 }}
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
       <Divider />
       <Row id="create product footer" justify="space-between">
         <Col>

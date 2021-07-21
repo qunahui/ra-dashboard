@@ -11,8 +11,8 @@ const LazadaCategoryPicker = (props) => {
   const linkRef = useRef(null)
   const [rootCategory, setRootCategory] = useState([])
   const [renderState, setRenderState] = useState({
-    name: props.renderState.name && props.renderState.name,
-    value: props.renderState.value && props.renderState.value,
+    name: props.renderState?.name && props.renderState?.name || '',
+    value: props.renderState?.value && props.renderState?.value || 0,
   })
 
   useEffect(() => {
@@ -183,7 +183,7 @@ const LazadaCategoryPicker = (props) => {
           }}
           dropdownRender={dropdownRender}
         >
-          {renderState.name && <a ref={linkRef} href="#">Edit <EditOutlined /></a> }
+          {renderState?.name ? <a ref={linkRef} href="#">Edit <EditOutlined /></a> : '--' }
         </Cascader>
       </div>
     </>

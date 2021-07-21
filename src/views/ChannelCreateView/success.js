@@ -9,13 +9,13 @@ const CreateSuccessView = props => {
     <Row justify="center" align="middle" style={{ minHeight: '300px'}}>
       <Col span={16} justify="center">
         <Row justify="center">
-          <Typography.Title level={2} copyable={false} style={{ color: blue[4]}}>Shop connection is successful! Initiating data sync and analytics.</Typography.Title>
-          <Typography.Text type="secondary" copyable={false}>Your shop is connected and named as <Typography.Text style={{ color: blue[4]}}>{props.location.state.store_name && props.location.state.store_name}</Typography.Text>. Please wait for data to be synced, or connect more shops for holistic management and insightful analytics from the beginning.</Typography.Text>
+          <Typography.Title level={2} copyable={false} style={{ color: blue[4]}}>Kết nối thành công! Đang khởi tạo dữ liệu và phân tích.</Typography.Title>
+          <Typography.Text type="secondary" copyable={false}>Shop của bạn đã được kết nối. Vui lòng đợi dữ liệu được đồng bộ hóa hoặc kết nối nhiều cửa hàng hơn để quản lý toàn diện và phân tích cụ thể hơn.</Typography.Text>
         </Row>
         <br/>
         <Row justify="center">
-          <Button onClick={() => props.push('/app/dashboard')} style={{ marginRight: '10px'}}>Go to dashboard</Button>
-          <Button type="primary" onClick={() => props.push('/app/create')}>Connect more!</Button>
+          <Button onClick={() => props.push('/app/dashboard')} style={{ marginRight: '10px'}}>Quay về trang chính</Button>
+          <Button type="primary" onClick={() => props.push('/app/create')}>Kết nối thêm!</Button>
         </Row>
       </Col>
     </Row>

@@ -85,7 +85,7 @@ export const MarketplaceOrderView = (props) => {
        true ? (
           <Row
             style={{ 
-              backgroundColor: '#fafafa',
+              backgroundColor: '#fff',
               padding: '8px 24px',
               border: '1px solid #ccc',
               borderRadius: 5

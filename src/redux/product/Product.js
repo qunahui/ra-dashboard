@@ -4,7 +4,7 @@ import { fromJS, Map } from 'immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  getProductsStart: [],
+  getProductsStart: ['payload'],
   getProductsSuccess: ['payload'],
   getProductsFailure: ['payload'],
   createProductStart: ['payload'],

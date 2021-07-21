@@ -141,6 +141,7 @@ export const AllOrderTable = (props) => {
 
   return (
     <Table 
+      bordered
       loading={props.loading}
       locale={{
         emptyText: (

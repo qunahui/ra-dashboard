@@ -148,10 +148,13 @@ export function* deleteVariantProcess({ payload }){
   }
 } 
   
-export function* getProductsProcess() {
+export function* getProductsProcess({ payload }) {
   NProgress.start()
   try {
-    const result = yield request.get('/products')
+    const result = yield request.get('/products', { params: {
+      name: payload?.name || '',
+      type: payload?.type || 'all'
+    } })
     NProgress.set(0.5)
     if(result.code === 200) {
       yield put(Creators.getProductsSuccess(result.data))

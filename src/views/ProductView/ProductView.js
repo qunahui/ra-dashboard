@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { Row, Col, Typography, Button, Table, Tabs, Form, Input, Cascader } from 'antd'
+import { Row, Col, Typography, Button, Divider, Tabs, Form, Input, Cascader } from 'antd'
 //
 import AllProductTab from './AllProductTab'
 import LazadaCategoryPicker from 'Components/LazadaCategoryPicker'
@@ -18,10 +18,15 @@ const onFinish = values => {
 
 const ProductView = (props) => {
   const history = useHistory();
+  const [activeKey, setActiveKey] = useState("active")
+
   return (
     <>
-      <Row>
-        <Title level={3} type="secondary">Quản lý sản phẩm</Title>
+      <Row justify={"center"}>
+        <Col span={16}>
+          <Title level={3}>Quản lý sản phẩm</Title>
+          <Divider/>  
+        </Col>
       </Row>
       <Row
         style={{ 
@@ -33,28 +38,18 @@ const ProductView = (props) => {
       >
         <Col span={24}>
           <Tabs 
-            defaultActiveKey="tất cả" 
+            activeKey={activeKey}
             destroyInactiveTabPane={true} 
             tabBarExtraContent={[
               <Button type="primary" key="Tạo sản phẩm" onClick={() => history.push('/app/products/create')}>Tạo sản phẩm</Button>,
             ]}
+            onChange={(value) => setActiveKey(value)}
           >
-            <TabPane tab="Tất cả" key="tất cả">
-              <AllProductTab />
-            </TabPane>
-            <TabPane tab="Đang chờ duyệt" key="Đang chờ duyệt">
-              {/* <LinkedSuccessProductTab/> */}
-            </TabPane>
-            <TabPane tab="Hết hàng" key="Hết hàng">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
-            <TabPane tab="Đã tắt kích hoạt" key="Đã tắt kích hoạt">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
-            <TabPane tab="Đã xóa" key="Đã xóa">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
+            <TabPane tab="Tất cả" key="all"/>
+            <TabPane tab="Đang giao dịch" key="active"/>
+            <TabPane tab="Đã tắt kích hoạt" key="inactive"/>
           </Tabs>
+          <AllProductTab type={activeKey}/>
         </Col>
       </Row>
     </>

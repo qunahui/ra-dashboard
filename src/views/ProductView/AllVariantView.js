@@ -33,7 +33,6 @@ const columns = [
       {record.store_id}
     </>
     },
-    width: 200
   },
   {
     title: <div>Mã sku</div>,
@@ -42,20 +41,27 @@ const columns = [
   },
   {
     title: <div>Có thể bán</div>,
-    dataIndex: 'status',
-    key: 'status',
-    // render: (value, record) => <Typography.Text type={record.sellable ? "success" : "warning"}>{record.sellable ? "Đang giao dịch" : "Ngừng giao dịch"}</Typography.Text>
+    dataIndex: 'onHand',
+    key: 'onHand',
+    render: (value, record) => <span>{record?.inventories?.onHand || 0}</span>
   },
   {
-    title: <div>Ngày khởi tạo</div>,
-    dataIndex: 'createdAt',
-    key: 'createdAt',
-    // render: value => new Date(value).toLocaleString('vi-VN')
+    title: <div>Đang giao dịch</div>,
+    dataIndex: 'onHand',
+    key: 'onHand',
+    render: (value, record) => <span>{record?.inventories?.trading || 0}</span>
   },
   {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
+    title: <div>Hàng sắp về</div>,
+    dataIndex: 'incoming',
+    key: 'incoming',
+    render: (value, record) => <span>{record?.inventories?.incoming || 0}</span>
+  },
+  {
+    title: <div>Giá bán lẻ</div>,
+    dataIndex: 'retailPrice',
+    key: 'retailPrice',
+    render: (value, record) => <span>{value}</span>
   },
 ]
 
@@ -72,14 +78,6 @@ export const AllProductTab = (props) => {
     }
   }, [props.products])
 
-  const onExpandRow = record => {
-
-  }
-
-  const onRowSelection = (selectedRowKeys, selectedRows) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  }
-
   return (
     <Row
       style={{ 
@@ -91,11 +89,14 @@ export const AllProductTab = (props) => {
     >
       <Col span={24}>
         <Table 
-          rowSelection={{
-            onChange: onRowSelection
-          }}
+          bordered
           dataSource={dataSource} 
           columns={columns} 
+          hideOnSinglePage={true}
+          pagination={{
+            pageSize: 10,
+            total: dataSource?.length || 0
+          }}
         />
       </Col>
     </Row>

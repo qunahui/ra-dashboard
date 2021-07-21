@@ -53,8 +53,8 @@ export const SingleVariant = (props) => {
       async function fetchProduct() {
         const response = await request.get(`/products/${id}`)
         if(response.code === 200) {
-          const product = response.data[0]
-          product.fileList = product.avatar.map(i => { 
+          const product = response.data
+          product.fileList = product?.avatar.map(i => { 
             let arr = i.split('/')
             let name = arr[arr.length - 1].split('?')[0]
             return {
@@ -65,11 +65,7 @@ export const SingleVariant = (props) => {
               status: 'done', 
             }
           })
-          
-          console.log({
-            ...variant
-          })
-
+      
           const currentVariant = product.variants.find(i => i._id === variantId)
 
           form.setFieldsValue({
