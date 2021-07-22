@@ -12,7 +12,7 @@ export const AllPurchaseOrderTable = (props) => {
   const [selectedOrderRowKeys, setSelectedOrderRowKeys] = useState([])
   
   useEffect(() => {
-    if(!_.isEqual(dataSource,props.purchaseOrders)) {
+    if(!_.isEqual(dataSource, props.purchaseOrders)) {
       setDataSource(props.purchaseOrders)
     }
   }, [props.purchaseOrders])
@@ -99,7 +99,7 @@ export const AllPurchaseOrderTable = (props) => {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: value => amountFormatter(value)
+      render: value => value ? amountFormatter(value) : 0
     }
   ]
 
@@ -125,18 +125,7 @@ export const AllPurchaseOrderTable = (props) => {
 
   return (
     <Table 
-      rowSelection={{
-        onChange: onRowSelection,
-        type: props.selectType ? props.selectType : "checkbox",
-        selectedRowKeys: selectedOrderRowKeys,
-      }}
-      onRow={(record) => ({
-        onClick: () => {
-          selectRow(record)
-          props.onSelect && props.onSelect(record)
-        }
-      })}
-      dataSource={dataSource.map(i => ({ key: i._id, ...i })).filter(i => {
+      dataSource={dataSource?.map(i => ({ key: i._id, ...i })).filter(i => {
         if(props.filterBySupplier) {
           if (i.supplierEmail === props.filterBySupplier.email && i.instockStatus === true && i.orderStatus !== 'Đã hoàn trả') {
             return i

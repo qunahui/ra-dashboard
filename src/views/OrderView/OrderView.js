@@ -43,6 +43,13 @@ export const OrderView = (props) => {
 
   const history = useHistory()
   return (
+    <>
+    <Row justify={"center"}>
+      <Col span={16}>
+        <Title level={3}>Đơn nhập hàng</Title>
+        <Divider/>  
+      </Col>
+    </Row>
     <Row
       style={{ 
         backgroundColor: '#fff',
@@ -80,6 +87,7 @@ export const OrderView = (props) => {
         <AllOrderTable orders={orderList} loading={loading}/>
       </Col>
     </Row>
+    </>
   )
 }
 

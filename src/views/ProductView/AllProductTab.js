@@ -89,7 +89,7 @@ const columns = [
 
 const INITIAL_FILTER = {
   name: '',
-  type: 'all'
+  type: 'active'
 }
 
 const FilterPanel = ({ onFilter }) => {

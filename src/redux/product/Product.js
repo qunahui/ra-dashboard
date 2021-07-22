@@ -10,6 +10,9 @@ const { Types, Creators } = createActions({
   getProductByIdStart: ['payload'],
   getProductByIdSuccess: ['payload'],
   getProductByIdFailure: ['payload'],
+  getVariantsStart: ['payload'],
+  getVariantsSuccess: ['payload'],
+  getVariantsFailure: ['payload'],
   createProductStart: ['payload'],
   createProductSuccess: ['payload'],
   createProductFailure: ['payload'],
@@ -50,6 +53,7 @@ export const INITIAL_STATE = fromJS({
 /* ------------- Reducers ------------- */
 const getProductsStart = state => state.merge({
   isWorking: true,
+  products: [],
   dataProduct: null,
   variants: [],
   dataVariant: null
@@ -61,6 +65,20 @@ const getProductsSuccess = (state, { payload }) => state.merge({
 })
 
 const getProductsFailure = state => state.merge({
+  isWorking: false
+})
+
+const getVariantsStart = state => state.merge({
+  isWorking: true,
+  dataVariant: null
+})
+
+const getVariantsSuccess = (state, { payload }) => state.merge({
+  isWorking: false,
+  variants: payload
+})
+
+const getVariantsFailure = state => state.merge({
   isWorking: false
 })
 
@@ -187,6 +205,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_PRODUCTS_START]: getProductsStart,
   [Types.GET_PRODUCTS_SUCCESS]: getProductsSuccess,
   [Types.GET_PRODUCTS_FAILURE]: getProductsFailure,
+  [Types.GET_VARIANTS_START]: getVariantsStart,
+  [Types.GET_VARIANTS_SUCCESS]: getVariantsSuccess,
+  [Types.GET_VARIANTS_FAILURE]: getVariantsFailure,
   [Types.GET_PRODUCT_BY_ID_START]: getProductByIdStart,
   [Types.GET_PRODUCT_BY_ID_SUCCESS]: getProductByIdSuccess,
   [Types.GET_PRODUCT_BY_ID_FAILURE]: getProductByIdFailure,

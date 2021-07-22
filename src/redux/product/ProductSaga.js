@@ -181,6 +181,26 @@ export function* getProductByIdProcess({ payload }) {
   } 
 }
 
+export function* getVariantsProcess({ payload }) {
+  NProgress.start()
+  try {
+    const result = yield request.get('/variants', { params: {
+      name: payload?.name || '',
+      type: payload?.type || 'all'
+    } })
+    NProgress.set(0.5)
+    if(result.code === 200) {
+      yield put(Creators.getVariantsSuccess(result.data))
+      NProgress.set(0.8)
+    }
+  } catch(e) {
+    toast({ type: 'error', message: e.message})
+    yield put(Creators.getVariantsFailure())
+  } finally {
+    NProgress.done()
+  }
+}
+
 export function* onCreateProductStart() {
   yield takeLatest(ProductTypes.CREATE_PRODUCT_START, createProductProcess);
 }
@@ -217,7 +237,12 @@ export function* onGetProductByIdStart() {
   yield takeLatest(ProductTypes.GET_PRODUCT_BY_ID_START, getProductByIdProcess)
 }
 
+export function* onGetVariantsStart() {
+  yield takeLatest(ProductTypes.GET_VARIANTS_START, getVariantsProcess)
+}
+
 const productRootSagas = [
+  call(onGetVariantsStart),
   call(onGetProductByIdStart),
   call(onCreateProductStart),
   call(onCreateProductFromPlatformStart),

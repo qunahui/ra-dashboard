@@ -5,25 +5,17 @@ import { Row, Col, Typography, Divider, Button, Tabs } from 'antd'
 import PurchaseOrderCreators from 'Redux/purchaseOrder'
 import AllPurchaseOrderTable from 'Components/AllPurchaseOrderTable'
 import './PurchaseOrderView.styles.scss'
+import FilterPanel from './FilterPanel'
 
 
 const { Text, Title } = Typography
 const { TabPane } = Tabs
 
 export const PurchaseOrderView = (props) => {
-  const [purchaseOrderList, setPurchaseOrderList] = useState([])
 
   useEffect(() => {
     props.getPurchaseOrdersStart()
   }, [])
-
-  useEffect(() => {
-    const { purchaseOrders, isWorking } = props.purchaseOrder
-    if(!_.isEqual(purchaseOrders, purchaseOrderList) && !isWorking) {
-      setPurchaseOrderList(purchaseOrders)
-    }
-  }, [props.purchaseOrder])
-
   const history = useHistory()
   return (
     <>
@@ -34,7 +26,7 @@ export const PurchaseOrderView = (props) => {
         </Col>
       </Row>
       {
-        purchaseOrderList.length > 0 ? (
+        props.purchaseOrders?.length > 0 ? (
           <Row
             style={{ 
               backgroundColor: '#fff',
@@ -51,13 +43,17 @@ export const PurchaseOrderView = (props) => {
                   <Button type="primary" key="Tạo đơn đặt hàng" onClick={() => history.push('/app/products/purchase_orders/create')}>Tạo đơn đặt hàng</Button>,
                 ]}
               >
-                <TabPane tab="Tất cả" key="tất cả">
-                  <AllPurchaseOrderTable purchaseOrders={purchaseOrderList}/>
-                </TabPane>
-                <TabPane tab="Đang giao dịch" key="Đang giao dịch">
-                  {/* <LinkedFailProductTab/> */}
-                </TabPane>
+                <TabPane tab={"Tất cả"} key={"Tất cả"}/>
+                <TabPane tab={"Đặt hàng"} key={"Đặt hàng"} />
+                <TabPane tab={"Duyệt"} key={"Duyệt"} />
+                <TabPane tab={"Xuất kho/Đang giao hàng"} key={"Xuất kho/Đang giao hàng"}/>
+                <TabPane tab={"Đã giao hàng"} key={"Đã giao hàng"}/>
+                <TabPane tab={"Hoàn thành"} key={"Hoàn thành"}/>
+                <TabPane tab={"Đã hủy"} key={"Đã hủy"}/>
+                <TabPane tab={"Đang hoàn trả"} key={"Đang hoàn trả"}/>
+                <TabPane tab={"Đã hoàn trả"} key={"Đã hoàn trả"}/>
               </Tabs>
+              <AllPurchaseOrderTable purchaseOrders={props?.purchaseOrders}/>
             </Col>
           </Row>
         ) : (
@@ -78,7 +74,7 @@ export const PurchaseOrderView = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  purchaseOrder: state.purchaseOrder.toJS()
+  purchaseOrders: state.purchaseOrder.toJS()?.purchaseOrders
 })
 
 const mapDispatchToProps = dispatch => ({
