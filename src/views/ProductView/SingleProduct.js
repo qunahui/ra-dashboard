@@ -22,11 +22,10 @@ export const SingleProduct = (props) => {
   const [product, setProduct] = useState({})
   const [form] = Form.useForm()
 
-  async function fetchProduct(id) {
-    const response = await request.get(`/products/${id}`)
-    if(response.code === 200) {
-      const product = response.data
-
+  useEffect(() => {
+    const { dataProduct } = props
+    if(dataProduct && Object.keys(dataProduct)?.length > 0) {
+      const product = dataProduct
       product.fileList = product?.avatar.map(i => { 
         let arr = i.split('/')
         let name = arr[arr.length - 1].split('?')[0]
@@ -41,20 +40,18 @@ export const SingleProduct = (props) => {
       form.setFieldsValue({
         ...product,
       })
-
       setProduct(product)
       setUploaderState({ fileList: product.fileList})
-
       if(product.description) {
         setDescription(product.description)
       }
-    } 
-  }
+    }
+  }, [props])
 
   useEffect(() => {
     try { 
       let id = props.match.params.id;
-      fetchProduct(id)
+      props.getProductById(id)
     } catch(e) { 
       toast({ type: 'error', message: 'Có gì đó sai sai !'})
     }
@@ -135,6 +132,8 @@ export const SingleProduct = (props) => {
       await imgFile.getDownloadURL().then(url => {
         imageUrl = url
       })
+
+      form.setFieldsValue({ avatar: [imageUrl] })
       onSuccess(null, {...image, url: imageUrl});
     } catch(e) {
       onError(e);
@@ -253,6 +252,7 @@ export const SingleProduct = (props) => {
     const updatedProduct = {
       ...product,
       ...values,
+      avatar: form.getFieldValue('avatar'),
       description,
       categoryName: categorySelected.name,
       categoryId: categorySelected.value
@@ -347,6 +347,7 @@ export const SingleProduct = (props) => {
               </Col>
             </Row>
             <Row>
+            {/* <Form.Item name="avatar" noStyle> */}
               <Upload
                 listType="picture-card"
                 fileList={fileList}
@@ -361,6 +362,7 @@ export const SingleProduct = (props) => {
                   <div style={{ marginTop: 8 }}>Upload</div>
                 </div>
               </Upload>
+            {/* </Form.Item> */}
               <Modal
                 visible={previewVisible}
                 title={previewTitle}
@@ -397,7 +399,7 @@ export const SingleProduct = (props) => {
               <Col span={24}>
                 <Table
                   columns={columns}
-                  dataSource={product.variants && product.variants.map(i => ({ ...i, key: i._id }))}
+                  dataSource={props?.variants && props?.variants.map(i => ({ ...i, key: i._id }))}
                   bordered
                   size="middle"
                   scroll={{ x: 'calc(700px + 50%)', y: 240 }}
@@ -442,10 +444,13 @@ export const SingleProduct = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth.toJS()
+  auth: state.auth.toJS(),
+  dataProduct: state.product.toJS()?.dataProduct,
+  variants: state.product.toJS()?.variants,
 })
 
 const mapDispatchToProps = dispatch => ({
+  getProductById: (payload) => dispatch(Creators.getProductByIdStart(payload)),
   updateProductStart: (payload) => dispatch(Creators.updateProductStart(payload)),
   deleteProductStart: (payload) => dispatch(Creators.deleteProductStart(payload)),
 })

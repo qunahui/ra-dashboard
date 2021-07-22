@@ -6,6 +6,7 @@ import Creators from 'Redux/product'
 import ImageUpload from 'Components/ImageUpload'
 import { removeVI } from 'jsrmvi'
 import { amountFormatter, amountParser, moneyFormatter, moneyParser } from 'Utils/inputFormatter'
+import './styles.scss'
 
 const { Text } = Typography
 const { Option } = Select
@@ -45,7 +46,6 @@ const AddSupplierForm = (props) => {
   }
 
   const handleInputNumberChange = (name) =>  (value) => {
-    console.log(name, value)
     setFormState({
       ...formState,
       [name]: value
@@ -60,7 +60,6 @@ const AddSupplierForm = (props) => {
   }
 
   const handleSelectChange = (value, name)  => {
-    console.log(value, name)
     let oldVal = ''
     setFormState({
       ...formState,
@@ -79,7 +78,6 @@ const AddSupplierForm = (props) => {
   }
 
   useEffect(() => {
-    console.log(formState.options)
   }, [formState.options])
 
   const handleFormSubmit = () => {
@@ -122,7 +120,7 @@ const AddSupplierForm = (props) => {
   //<--------------------------------------- image change handler -------------------------------------------->
   const [variantAvatar, setVariantAvatar] = useState('')
   const handleImageChange = (file) => {
-    setVariantAvatar(file.url)
+    setVariantAvatar(file?.[0]?.url || '')
   }
   //<--------------------------------------- image change handler -------------------------------------------->
 
@@ -139,8 +137,20 @@ const AddSupplierForm = (props) => {
           ]}
           width={800}
         >
+          {/* <Row style={{ width: '100%' }} justify="end">
+            <ImageUpload 
+                handleChange={handleImageChange}
+                maxCount={1}
+                style={{ height: 150 }}
+              >
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                <p className="ant-upload-text" style={{ width: '100%', textAlign: 'center' }}>Tải ảnh</p>
+                </p>
+              </ImageUpload>
+          </Row> */}
           <Row gutter={16}>
-            <Col span={16}>
+            <Col span={12}>
               <Space size={"middle"} direction={"vertical"} style={{ width: '100%' }}>
                 {
                   formState.options?.map((option, index) => (
@@ -156,29 +166,10 @@ const AddSupplierForm = (props) => {
                     </div>
                   ))
                 }
-                <div>
-                  <Text style={{ display: 'inline-block', marginBottom: '5px' }}> Tên biến thể: </Text>
-                  <Input size={"large"} name="name" onChange={handleChange} value={formState.name} placeholder={"Nhập vào tên biến thể"}/>
-                </div>
-                <div>
-                  <Text style={{ display: 'inline-block', marginBottom: '5px' }}> SKU: </Text>
-                  <Input size={"large"} name="sku" onChange={handleChange} value={formState.sku} style={{ width: '100%' }} placeholder={"Nhập vào SKU"}/>
-                </div>
               </Space>
             </Col>
-            <Col span={8} style={{ height: 150 }}>
-              <ImageUpload 
-                type="drag"
-                handleChange={handleImageChange}
-                maxCount={1}
-                style={{ height: 100 }}
-              >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Thả tập tin ảnh để cập nhật ảnh của phiên bản này</p>
-              </ImageUpload>
-              <Space size={"middle"} direction={"vertical"} style={{ width: '100%', marginTop: 16}}>
+            <Col span={12} className={"fixed-150"}>
+              <Space size={"middle"} direction={"vertical"} style={{ width: '100%'}}>
                 <div>
                   <Text style={{ display: 'inline-block', marginBottom: '5px' }}> Giá nhập: </Text>
                   <InputNumber style={{ width: '100%'}} formatter={moneyFormatter} parser={moneyParser} size={"large"} name={"importPrice"} onChange={(value) => handleInputNumberChange("importPrice")(value)} value={formState.importPrice} placeholder={"Nhập vào giá nhập"}/>
@@ -193,13 +184,23 @@ const AddSupplierForm = (props) => {
                 </div>
               </Space>
             </Col>
-            <Col span={16}>
+            <Col span={12} style={{ marginTop: 16 }}>
+                <Text style={{ display: 'inline-block', marginBottom: '5px' }}> Tên biến thể: </Text>
+                <Input size={"large"} name="name" onChange={handleChange} value={formState.name} placeholder={"Nhập vào tên biến thể"}/>
+            </Col>
+            <Col span={12} style={{ marginTop: 16 }}>
+              <div>
+                <Text style={{ display: 'inline-block', marginBottom: '5px' }}> SKU: </Text>
+                <Input size={"large"} name="sku" onChange={handleChange} value={formState.sku} style={{ width: '100%' }} placeholder={"Nhập vào SKU"}/>
+              </div>
+            </Col>
+            <Col span={12}>
               <div style={{ marginTop: 16}}>
                 <Text style={{ display: 'inline-block', marginBottom: '5px' }}> Trọng lượng: </Text>
                 <InputNumber style={{ width: '100%'}} formatter={amountFormatter} parser={amountParser} size={"large"} name={"weightValue"} onChange={(value) => handleInputNumberChange("weightValue")(value)} value={formState.weightValue} placeholder={"Nhập vào trọng lượng"}/>
               </div>
             </Col>
-            <Col span={8}>
+            <Col span={12}>
                <div style={{ marginTop: 16}}>
                 <Text style={{ display: 'inline-block', marginBottom: '5px' }}> Đơn vị khối lượng: </Text>
                 <Select size={"large"} defaultValue={formState.weightUnit} onChange={handleWeightUnitChange} style={{ border: 'none', width: '100%' }} id="weight-unit-selector">
@@ -216,7 +217,7 @@ const AddSupplierForm = (props) => {
             </Col>
             <Col span={12}>
               <div style={{ marginTop: 16}}>
-                <Text style={{ display: 'inline-block', marginBottom: '5px', marginRight: 5 }}> Giá vốn ban đầu: </Text> <a href="#" onClick={(e) => { e.preventDefault(); console.log(formState.importPrice); setFormState({ ...formState, initPrice: formState.importPrice })}}>Sử dụng giá nhập</a>
+                <Text style={{ display: 'inline-block', marginBottom: '5px', marginRight: 5 }}> Giá vốn ban đầu: </Text> <a href="#" onClick={(e) => { e.preventDefault(); setFormState({ ...formState, initPrice: formState.importPrice })}}>Sử dụng giá nhập</a>
                 <InputNumber style={{ width: '100%'}} formatter={amountFormatter} parser={amountParser} size={"large"} name={"initPrice"} onChange={(value) => handleInputNumberChange("initPrice")(value)} value={formState.initPrice} placeholder={"Nhập vào trọng lượng"}/>
               </div>  
             </Col>

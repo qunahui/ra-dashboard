@@ -168,6 +168,19 @@ export function* getProductsProcess({ payload }) {
   }
 }
 
+export function* getProductByIdProcess({ payload }) {
+  try {
+    const result = yield request.get(`/products/${payload}`)
+    if(result.code === 200) {
+      yield put(Creators.getProductByIdSuccess(result.data))
+    }
+  }
+  catch(e) {
+    toast({ type: 'error', message: e.message})
+    yield put(Creators.getProductByIdFailure(e.message))
+  } 
+}
+
 export function* onCreateProductStart() {
   yield takeLatest(ProductTypes.CREATE_PRODUCT_START, createProductProcess);
 }
@@ -200,7 +213,12 @@ export function* onDeleteProductStart() {
   yield takeLatest(ProductTypes.DELETE_PRODUCT_START, deleteProductProcess);
 }
 
+export function* onGetProductByIdStart() {
+  yield takeLatest(ProductTypes.GET_PRODUCT_BY_ID_START, getProductByIdProcess)
+}
+
 const productRootSagas = [
+  call(onGetProductByIdStart),
   call(onCreateProductStart),
   call(onCreateProductFromPlatformStart),
   call(onCreateVariantStart),

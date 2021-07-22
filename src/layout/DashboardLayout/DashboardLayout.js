@@ -37,12 +37,33 @@ const rootSubmenuKeys = [
   '/app/orders',
 ];
 //
+const selectParentKey = (key) => {
+  switch(key) {
+    case '/app/dashboard':
+      return '/app/dashboard'
+    case '/app/market_place/products':
+    case '/app/market_place/products/create':
+    case '/app/market_place/orders':
+      return '/app/market_place'
+    case '/app/products':
+    case '/app/products/variants':
+    case '/app/products/purchase_orders':
+    case '/app/products/supplier_refund_orders':
+    case '/app/products/suppliers':
+      return '/app/products'
+    case '/app/orders/create':
+    case '/app/orders':
+    case '/app/orders/refund':
+      return '/app/orders'
+    default: return;
+  }
+}
 
 const DashboardLayout = (props) => {
-  const [defaultSelectedKey, setDefaultSelectedKey] = useState(props.location.pathname)
+  const [openKeys, setOpenKeys] = useState([])
+  const [selectedKey, setSelectedKey] = useState('')
   const [collapsed, setCollaped] = React.useState(false)
   const [isTokenSetted, setTokenSetted] = React.useState(false)
-  const [openKeys, setOpenKeys] = React.useState([]);
   const history = useHistory()
 
   useEffect(() => {
@@ -50,6 +71,13 @@ const DashboardLayout = (props) => {
     setTokenSetted(true)
     props.getStoresStart()
   },[])
+
+  
+  useEffect(() => {
+    const subPathname = props.location.pathname
+    setSelectedKey(subPathname)
+    setOpenKeys([selectParentKey(subPathname)])
+  }, [])
 
   useEffect(() => {
     const { app } = props
@@ -80,8 +108,6 @@ const DashboardLayout = (props) => {
     }
   };
 
-  console.log("Found: ", rootSubmenuKeys.find(i => defaultSelectedKey.includes(i)))
-    // <SocketIOProvider url="http://localhost:5050" opts={{ query: `uid=${props.auth.user.uid}`}}>
   return (
     <Layout>
       <Layout>
@@ -103,25 +129,30 @@ const DashboardLayout = (props) => {
           <div style={{ display: 'grid', placeItems: 'center', padding: 8}} className={'sider-header'}>
             <SystemIcon style={{ padding: 0, height: 35, width: 35, cursor: 'pointer'}} onClick={() => history.push('/app/dashboard')}/>
           </div>
-          <Menu theme="light" mode="inline" defaultSelectedKeys={[defaultSelectedKey]} openKeys={openKeys?.length > 0 ? openKeys : [rootSubmenuKeys.find(i => defaultSelectedKey.includes(i))]} onOpenChange={onOpenChange} onSelect={(e) => setDefaultSelectedKey(e.key)}>
+          <Menu theme="light" mode="inline" 
+            openKeys={
+              openKeys?.length > 0 ? openKeys : [rootSubmenuKeys.find((i) => selectedKey.includes(i))]
+            } 
+            selectedKeys={[selectedKey]}
+            onOpenChange={onOpenChange} 
+            onSelect={(e) => e.key !== selectedKey && setSelectedKey(e.key)}
+          >
               <Menu.Item key="/app/dashboard" icon={<VideoCameraOutlined />}>
-                <Link to="/app/dashboard"><span style={{ paddingLeft: 8 }}>Trang chính</span></Link>
+                <Link to="/app/dashboard"><span style={{ paddingLeft: 8, fontWeight: 500 }}>Trang chính</span></Link>
               </Menu.Item>
-              <SubMenu key="/app/market_place" icon={<UserOutlined />} title={<span style={{ paddingLeft: 8 }}>Sàn TMĐT</span>}>
+              <SubMenu key="/app/market_place" icon={<UserOutlined />} title={<span style={{ paddingLeft: 8, fontWeight: 500 }}>Sàn TMĐT</span>}>
                 <Menu.Item key="/app/market_place/products"><Link to="/app/market_place/products">Tất cả sản phẩm</Link></Menu.Item>
                 <Menu.Item key="/app/market_place/products/create"><Link to="/app/market_place/products/create">Đăng bán sản phẩm</Link></Menu.Item>
                 <Menu.Item key="/app/market_place/orders"><Link to="/app/market_place/orders">Đơn hàng</Link></Menu.Item>
               </SubMenu>
-              <SubMenu key="/app/products" icon={<DropboxOutlined />} title={<span style={{ paddingLeft: 8 }}>Sản phẩm</span>}>
+              <SubMenu key="/app/products" icon={<DropboxOutlined />} title={<span style={{ paddingLeft: 8, fontWeight: 500 }}>Sản phẩm</span>}>
                 <Menu.Item key="/app/products"><Link to="/app/products">Tất cả sản phẩm</Link></Menu.Item>
-                <SubMenu key="/app/products/variants/manage" title="Quản lý kho">
-                  <Menu.Item key="/app/products/variants"><Link to="/app/products/variants">Toàn bộ phiên bản</Link></Menu.Item>
-                </SubMenu>
+                <Menu.Item key="/app/products/variants"><Link to="/app/products/variants">Quản lý kho</Link></Menu.Item>
                 <Menu.Item key="/app/products/purchase_orders"><Link to="/app/products/purchase_orders">Đơn nhập hàng</Link></Menu.Item>
                 <Menu.Item key="/app/products/supplier_refund_orders"><Link to="/app/products/supplier_refund_orders">Đơn hoàn trả NCC</Link></Menu.Item>
                 <Menu.Item key="/app/products/suppliers"><Link to="/app/products/suppliers">Quản lý nhà cung cấp</Link></Menu.Item>
               </SubMenu>
-              <SubMenu key="/app/orders" icon={<ShoppingOutlined />} title={<span style={{ paddingLeft: 8 }}>Đơn hàng</span>}>
+              <SubMenu key="/app/orders" icon={<ShoppingOutlined />} title={<span style={{ paddingLeft: 8, fontWeight: 500 }}>Đơn hàng</span>}>
                 <Menu.Item key="/app/orders/create"><Link to="/app/orders/create">Tạo đơn hàng</Link></Menu.Item>
                 <Menu.Item key="/app/orders"><Link to="/app/orders">Tất cả đơn hàng</Link></Menu.Item>
                 <Menu.Item key="/app/orders/refund"><Link to="/app/orders/refund">Đơn hoàn trả</Link></Menu.Item>

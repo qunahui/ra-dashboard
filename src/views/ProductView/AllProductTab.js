@@ -103,10 +103,10 @@ const FilterPanel = ({ onFilter }) => {
   }
   
   return (
-    <Row gutter={[16, 16]} style={{ marginBottom: 16 }} justify="end">
-      <Col span={6}><Input value={filter?.name} onChange={e => setFilter({ name: e.target.value })} size={"large"} placeholder={"Tìm kiếm theo tên"} allowClear/></Col>
+    <Row gutter={[16, 16]} style={{ marginBottom: 8 }} justify="end">
+      <Col span={6}><Input value={filter?.name} onChange={e => setFilter({ name: e.target.value })} placeholder={"Tìm kiếm theo tên"} allowClear/></Col>
       <Col span={2}>
-          <Button type={'primary'} style={{ width: '100%'}} size={"large"} onClick={handleFilterSubmit}>Tìm kiếm</Button>
+        <Button type={'primary'} style={{ width: '100%'}} onClick={handleFilterSubmit}>Tìm kiếm</Button>
       </Col>
     </Row>
   )

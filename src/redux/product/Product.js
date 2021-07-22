@@ -7,6 +7,9 @@ const { Types, Creators } = createActions({
   getProductsStart: ['payload'],
   getProductsSuccess: ['payload'],
   getProductsFailure: ['payload'],
+  getProductByIdStart: ['payload'],
+  getProductByIdSuccess: ['payload'],
+  getProductByIdFailure: ['payload'],
   createProductStart: ['payload'],
   createProductSuccess: ['payload'],
   createProductFailure: ['payload'],
@@ -39,11 +42,17 @@ export const INITIAL_STATE = fromJS({
   products: [],
   isWorking: false,
   error: null,
+  dataProduct: null, 
+  variants: [],
+  dataVariant: null
 })
 
 /* ------------- Reducers ------------- */
 const getProductsStart = state => state.merge({
-  isWorking: true
+  isWorking: true,
+  dataProduct: null,
+  variants: [],
+  dataVariant: null
 })
 
 const getProductsSuccess = (state, { payload }) => state.merge({
@@ -53,6 +62,21 @@ const getProductsSuccess = (state, { payload }) => state.merge({
 
 const getProductsFailure = state => state.merge({
   isWorking: false
+})
+
+const getProductByIdStart = (state) => state.merge({
+  isWorking: true,
+})
+
+const getProductByIdSuccess = (state, { payload }) => state.merge({
+  isWorking: false,
+  dataProduct: payload,
+  variants: payload?.variants || [],
+})
+
+const getProductByIdFailure = (state, { payload }) => state.merge({
+  isWorking: false,
+  error: payload
 })
 
 const createProductStart = state => state.merge({
@@ -83,9 +107,9 @@ const createVariantStart = state => state.merge({
 })
 
 const createVariantSuccess = (state, { payload }) => {
-  // state = state.update('products', products => products.find(i => i._id === payload.productId).variants.concat(payload))
+  state = state.update('variants', variants => [...variants, payload])
   return state.merge({
-    isWorking: false
+    isWorking: false,
   })
 }
 
@@ -163,6 +187,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_PRODUCTS_START]: getProductsStart,
   [Types.GET_PRODUCTS_SUCCESS]: getProductsSuccess,
   [Types.GET_PRODUCTS_FAILURE]: getProductsFailure,
+  [Types.GET_PRODUCT_BY_ID_START]: getProductByIdStart,
+  [Types.GET_PRODUCT_BY_ID_SUCCESS]: getProductByIdSuccess,
+  [Types.GET_PRODUCT_BY_ID_FAILURE]: getProductByIdFailure,
   [Types.CREATE_PRODUCT_START]: createProductStart,
   [Types.CREATE_PRODUCT_SUCCESS]: createProductSuccess,
   [Types.CREATE_PRODUCT_FROM_PLATFORM_START]: createProductFromPlatformStart,

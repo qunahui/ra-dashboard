@@ -34,10 +34,10 @@ const CustomPageHeader = (props) => {
       border: 'none',
     }}>
       <Menu.Item key="/app/config" icon={<SettingOutlined />} onClick={() => history.push('/app/config')}>
-        <span style={{ paddingLeft: 8}}>Thông tin cửa hàng</span>
+        <span style={{ paddingLeft: 8, fontWeight: 500 }}>Thông tin cửa hàng</span>
       </Menu.Item>
       <Menu.Item key="/app/logout" icon={<PoweroffOutlined />} onClick={() => props.signOut()}>
-        <span style={{ paddingLeft: 8}}>Đăng xuất</span>
+        <span style={{ paddingLeft: 8, fontWeight: 500 }}>Đăng xuất</span>
       </Menu.Item>
     </Menu>
   )
