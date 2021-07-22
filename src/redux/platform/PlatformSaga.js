@@ -16,7 +16,7 @@ export function* getSendoProductProcess(storeIds) {
     if(storeIds.length === 0) {
       return []
     }
-    const result = yield request.get('http://localhost:5000/sendo/products', {
+    const result = yield request.get('/sendo/products', {
       params: {
         storeIds: [...storeIds]
       }, 
@@ -38,7 +38,7 @@ export function* getLazadaProductProcess(storeIds) {
     if(storeIds.length === 0) {
       return []
     }
-    const result = yield request.get('http://localhost:5000/lazada/products?storeIds=', {
+    const result = yield request.get('/lazada/products?storeIds=', {
       params: {
         storeIds: [...storeIds]
       }, 
