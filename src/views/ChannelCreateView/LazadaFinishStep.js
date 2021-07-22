@@ -23,18 +23,18 @@ const LazadaFinishStep = props => {
         <Row justify="center" align="middle">
           <Col span={16} justify="center">
             <Row justify="center">
-              <Typography.Title level={2} copyable={false} style={{ color: blue[4]}}>Update shop's information</Typography.Title>
+              <Typography.Title level={2} copyable={false} style={{ color: blue[4]}}>Cập nhật thông tin cửa hàng</Typography.Title>
             </Row>
             <Row justify="center">
-              <Typography.Text type="secondary" copyable={false}>One more step to finish your connect process</Typography.Text>
+              <Typography.Text type="secondary" copyable={false}>Chỉ một bước để hoàn thiện quá trình kết nối.</Typography.Text>
             </Row>
           </Col>
         </Row>
         <br/>
         <Row>
           <Col span={8} style={{ textAlign: 'start', minHeight: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', padding: '10px 20px'}}>
-            <Typography.Text strong copyable={false}>Short name for your store: </Typography.Text>
-            <Typography.Text copyable={false}>The short name helps to identify and distinguish shop from the others </Typography.Text>
+            <Typography.Text strong copyable={false}>Đặt tên rút gọn cho gian hàng: </Typography.Text>
+            <Typography.Text copyable={false}>Tên rút gọn sẽ giúp định danh và phân biệt giữa các gian hàng với nhau</Typography.Text>
           </Col>
           <Col span={16} justify="center" style={{backgroundColor: '#fff', minHeight: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' , boxShadow: '0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)', border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '4px'}}>
             <Input disabled={true} size="large" placeholder="Your shop name" prefix={<ShopOutlined />}  style={{width: '90%' }} value={shopName} onChange={(e) => setShopName(e.target.value)}/>
@@ -43,14 +43,13 @@ const LazadaFinishStep = props => {
         <br/>
         <Row>
           <Col span={8} style={{ textAlign: 'start', height: '50px', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', padding: '0px 20px'}}>
-            <Typography.Text strong copyable={false}>Sync configuration: </Typography.Text>
-            <Typography.Text copyable={false}>Choose your sync configuration option of the system </Typography.Text>
+            <Typography.Text strong copyable={false}>Cấu hình đồng bộ: </Typography.Text>
+            <Typography.Text copyable={false}>Chọn cấu hình đồng bộ cho gian hàng</Typography.Text>
           </Col>
           <Col span={16} style={{ textCenter: 'start', backgroundColor: '#fff', height: '50px', display: 'flex', justifyContent: 'flex-start', padding: '10px 20px', boxShadow: '0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)', border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '4px'}}>
             <Radio defaultChecked={true}>
-              default configuration
+              Cấu hình mặc định
             </Radio><br/>
-            <Typography.Text type="secondary">System with connect by default</Typography.Text>
           </Col>
         </Row>
         <Divider/>
@@ -58,7 +57,7 @@ const LazadaFinishStep = props => {
           <Button 
             onClick={() => props.push('/app/create/success', { store_name: shopName })} 
             size="large" type="primary" style={{ fontSize: '18px'}}
-          >Save</Button>
+          >Lưu</Button>
         </Row>
     </>
   )

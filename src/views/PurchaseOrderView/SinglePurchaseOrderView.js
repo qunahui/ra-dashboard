@@ -275,9 +275,9 @@ export const SinglePurchaseOrderView = (props) => {
                       <Text strong>Tiền cần trả</Text> <br/>
                     </Col>
                     <Col>
-                      {amountFormatter(order.totalQuantity)} <br/>
-                      {amountFormatter(order.totalPrice)} <br/>
-                      {amountFormatter(order.totalPrice)} <br/>
+                      {amountFormatter(order?.totalQuantity || 0)} <br/>
+                      {amountFormatter(order?.totalPrice || 0)} <br/>
+                      {amountFormatter(order?.totalPrice || 0)} <br/>
                     </Col>
                   </Row>
                 </Col>

@@ -6,12 +6,14 @@ import { request } from '../../config/axios'
 //antd-ui
 import { Modal, Row, Col, Typography, Button, Radio, Spin, message } from 'antd'
 import { blue, purple } from '@ant-design/colors'
-import Icon, { CheckCircleOutlined, FileDoneOutlined } from '@ant-design/icons';
+import Icon, { CheckCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 // app component
 import LazadaIcon from '../../assets/lazada-icon.svg'
 import SendoIcon from '../../assets/sendo-icon.svg'
 
 import './styles.scss'
+
+const { Title } = Typography
 
 const style = { 
   minHeight: '300px'
@@ -38,6 +40,12 @@ const ChannelCreateView = (props) => {
   }
 
   return (
+    <>
+    <Row gutter={[0, 16]} style={{ marginBottom: 16, position: 'absolute' }}>
+      <Link to="/app/dashboard">
+        <Title level={5}><ArrowLeftOutlined/> Quay lại trang chủ</Title>
+      </Link>
+    </Row>
     <Row align="middle" className={'channel-connect-container'} style={style}>
       <Col span={8} justify="center" className={'channel-connect-content'}>
         <Row justify="center" >
@@ -73,6 +81,7 @@ const ChannelCreateView = (props) => {
       <Col span={16} className={'channel-connect-background'}>
       </Col>
     </Row>
+    </>
   )
 }
 

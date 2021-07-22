@@ -7,7 +7,7 @@ import THEME from 'Theme'
 import SystemIcon from 'Assets/system.svg'
 
 import {
-  UserOutlined,
+  PoweroffOutlined,
   LogoutOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
@@ -36,7 +36,7 @@ const CustomPageHeader = (props) => {
       <Menu.Item key="/app/config" icon={<SettingOutlined />} onClick={() => history.push('/app/config')}>
         <span style={{ paddingLeft: 8}}>Thông tin cửa hàng</span>
       </Menu.Item>
-      <Menu.Item key="/app/logout" icon={<LogoutOutlined />} onClick={() => props.signOut()}>
+      <Menu.Item key="/app/logout" icon={<PoweroffOutlined />} onClick={() => props.signOut()}>
         <span style={{ paddingLeft: 8}}>Đăng xuất</span>
       </Menu.Item>
     </Menu>

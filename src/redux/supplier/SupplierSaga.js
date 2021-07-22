@@ -12,7 +12,7 @@ export const getToken = (state) => {
 
 export function* getSupplierProcess() {
   try { 
-    const result = yield request.get('/supplier')
+    const result = yield request.get('/suppliers')
     if(result.code === 200) { 
       yield put(Creators.getSupplierSuccess(result.data))
     }
@@ -24,7 +24,7 @@ export function* getSupplierProcess() {
 export function* addSupplierProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.post('/supplier', payload)
+    const result = yield request.post('/suppliers', payload)
     if(result.code === 200) {
       console.log(result.data)
       toast({ type: 'success', message: 'Tạo nhà cung cấp mới thành công !'})

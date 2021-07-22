@@ -509,9 +509,9 @@ export const create = (props) => {
                     <Col>
                       {totalState.quantity} <br/>
                       {amountFormatter(form.getFieldValue('shippingFee')) || 0} <br/>
-                      {amountFormatter(totalState.price) || 0} <br/>
-                      {amountFormatter(totalState.price) || 0} <br/>
-                      {amountFormatter(totalState.price + form.getFieldValue('shippingFee')) || 0} <br/>
+                      {amountFormatter(totalState?.price) || 0} <br/>
+                      {amountFormatter(totalState?.price) || 0} <br/>
+                      {amountFormatter(totalState?.price + form.getFieldValue('shippingFee')) || 0} <br/>
                     </Col>
                   </Row>
                 </Col>

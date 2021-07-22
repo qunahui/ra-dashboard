@@ -11,7 +11,7 @@ export const SingleSupplierView = (props) => {
     try {
       const _id = props.match.params.id 
 
-      const response = await request.get(`/supplier/${_id}`)
+      const response = await request.get(`/suppliers/${_id}`)
 
       if(response.code === 200) {
         setSupplier(response.data)

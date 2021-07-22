@@ -32,14 +32,13 @@ const AddSupplierForm = (props) => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormState({ ...formState, [name]: value })
-    // console.log()
   }
 
   const handleEmailChange = async (e) => {
     const { name, value } = e.target
     setFormState({ ...formState, [name]: value })
     try {
-      const response = await request.get(`/supplier/check/${value}`)
+      const response = await request.get(`/suppliers/check/${value}`)
       if(response.code === 200) {
         setSupExist(false)
       }
