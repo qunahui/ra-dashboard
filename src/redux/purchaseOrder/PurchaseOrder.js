@@ -10,7 +10,7 @@ const { Types, Creators } = createActions({
   createPurchaseReceiptStart: ['payload'],
   createPurchaseReceiptSuccess: ['payload'],
   createPurchaseReceiptFailure: ['payload'],
-  getPurchaseOrdersStart: [],
+  getPurchaseOrdersStart: ['payload'],
   getPurchaseOrdersSuccess: ['payload'],
   getPurchaseOrdersFailure: ['payload'],
   confirmPurchasePaymentStart: ['payload'],

@@ -24,22 +24,11 @@ export const MarketplaceOrderView = (props) => {
   }
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(false)
-  const [activeKey, setActiveKey] = useState("Chờ xác nhận")
+  const [activeKey, setActiveKey] = useState("Tất cả")
   const [filter, setFilter] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     INITIAL_FILTER
   )
-  useEffect(() => {
-    // props.getOrdersStart()
-  }, [])
-
-  // useEffect(() => {
-  //   const { orders, isWorking } = props.order
-  //   if(!_.isEqual(orders, orderList) && !isWorking) {
-  //     setOrderList(orders)
-  //   }
-  // }, [props.order])
-
   
   useEffect(() => {
     fetchMarketplaceOrders(filter)
@@ -103,6 +92,7 @@ export const MarketplaceOrderView = (props) => {
                   setActiveKey(key)
                 }}
               >
+                <TabPane tab="Tất cả" key="Tất cả"/>
                 <TabPane tab="Chờ xác nhận" key="Chờ xác nhận"/>
                 <TabPane tab="Đang xử lý" key="Đang xử lý"/>
                 <TabPane tab="Đang giao hàng" key="Đang giao hàng"/>

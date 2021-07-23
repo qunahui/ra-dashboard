@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Row, Col, Typography, Divider, Button, Tabs } from 'antd'
@@ -11,11 +11,27 @@ import FilterPanel from './FilterPanel'
 const { Text, Title } = Typography
 const { TabPane } = Tabs
 
+const INITIAL_FILTER =  {
+  orderStatus: 'Tất cả',
+  code: '',
+  supplierName: '',
+  supplierPhone: '',
+  dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
+  dateTo: new Date(),
+}
+
+
 export const PurchaseOrderView = (props) => {
+  const [activeKey, setActiveKey] = useState('Tất cả')
+  const [filter, setFilter] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    INITIAL_FILTER
+  )
 
   useEffect(() => {
     props.getPurchaseOrdersStart()
   }, [])
+
   const history = useHistory()
   return (
     <>
@@ -25,8 +41,6 @@ export const PurchaseOrderView = (props) => {
           <Divider/>  
         </Col>
       </Row>
-      {
-        props.purchaseOrders?.length > 0 ? (
           <Row
             style={{ 
               backgroundColor: '#fff',
@@ -37,38 +51,29 @@ export const PurchaseOrderView = (props) => {
           >
             <Col span={24}>
               <Tabs 
-                defaultActiveKey="tất cả" 
+                activeKey={activeKey}
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
                   <Button type="primary" key="Tạo đơn đặt hàng" onClick={() => history.push('/app/products/purchase_orders/create')}>Tạo đơn đặt hàng</Button>,
                 ]}
+                onChange={(e) => {
+                  setActiveKey(e)
+                  props.getPurchaseOrdersStart({ orderStatus: e })
+                }}
               >
                 <TabPane tab={"Tất cả"} key={"Tất cả"}/>
-                <TabPane tab={"Đặt hàng"} key={"Đặt hàng"} />
-                <TabPane tab={"Duyệt"} key={"Duyệt"} />
-                <TabPane tab={"Xuất kho/Đang giao hàng"} key={"Xuất kho/Đang giao hàng"}/>
-                <TabPane tab={"Đã giao hàng"} key={"Đã giao hàng"}/>
+                <TabPane tab={"Đặt hàng và duyệt"} key={"Đặt hàng và duyệt"} />
+                <TabPane tab={"Nhập kho"} key={"Nhập kho"} />
                 <TabPane tab={"Hoàn thành"} key={"Hoàn thành"}/>
-                <TabPane tab={"Đã hủy"} key={"Đã hủy"}/>
-                <TabPane tab={"Đang hoàn trả"} key={"Đang hoàn trả"}/>
                 <TabPane tab={"Đã hoàn trả"} key={"Đã hoàn trả"}/>
+                <TabPane tab={"Đã hủy"} key={"Đã hủy"}/>
               </Tabs>
+              <FilterPanel handleFilterSubmit={(values) => {
+                props.getPurchaseOrdersStart(values)
+              }}/>
               <AllPurchaseOrderTable purchaseOrders={props?.purchaseOrders}/>
             </Col>
           </Row>
-        ) : (
-          <Row justify={"center"}>
-            <Col span={16} className={"front-text"}>
-              <Text>Cửa hàng của bạn chưa có đơn nhập hàng nào</Text> <br/>
-              <Button 
-                type={"primary"} 
-                style={{ marginTop: 50}}
-                onClick={() => history.push('/app/products/purchase_orders/create')}
-              >Tạo đơn nhập hàng đầu tiên</Button>
-            </Col>
-          </Row>
-        )
-      }
     </>
   )
 }
@@ -78,7 +83,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getPurchaseOrdersStart: () => dispatch(PurchaseOrderCreators.getPurchaseOrdersStart())
+  getPurchaseOrdersStart: (payload) => dispatch(PurchaseOrderCreators.getPurchaseOrdersStart(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseOrderView)

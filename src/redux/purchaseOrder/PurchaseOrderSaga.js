@@ -47,11 +47,20 @@ export function* createPurchaseOrderProcess({ payload }) {
   }
 }
 
-export function* getPurchaseOrdersProcess() {
+export function* getPurchaseOrdersProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.get('/purchase-orders')
-    console.log(result)
+    const result = yield request.get('/purchase-orders', {
+      params: {
+        code: '',
+        dateFrom: null, 
+        dateTo: null,
+        supplierName: '',
+        supplierPhone: '',
+        orderStatus: 'Tất cả',
+        ...payload
+      }
+    })
     if(result.code === 200) {
       yield put(Creators.getPurchaseOrdersSuccess(result.data))
     }

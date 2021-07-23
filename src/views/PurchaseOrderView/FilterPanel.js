@@ -15,23 +15,13 @@ const { Submenu } = Menu
 const INITIAL_FILTER =  {
     dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
     dateTo: new Date(),
-    orderStatus: 'Chờ xác nhận',
-    orderId: '',
-    customerName: '',
-    customerPhone: '',
+    orderStatus: 'Tất cả',
+    code: '',
+    supplierName: '',
+    supplierPhone: '',
   }
 
 export const FilterPanel = (props) => {
-    const stores = useSelector(state => {
-        const app = state.app.toJS()
-        if(app) {
-            const { storage } = app
-            return [].concat(storage.sendoCredentials).concat(storage.lazadaCredentials)
-        } else {
-            return []
-        }
-    }) 
-
     useEffect(() => {
         if(!_.isEqual(props.filter, filter)) {
             setFilter({ ... props.filter })
@@ -41,16 +31,16 @@ export const FilterPanel = (props) => {
     const [visible, setVisible] = useState(false)
     const [filter, setFilter] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
-        {}
+        INITIAL_FILTER
     )
 
     const menu = (
         <Menu gutter={16} key={"overlay-filter"}>
-            <Menu.Item key="customerName" span={24}>
-                <Input size={"large"} value={filter.customerName} placeholder={"Tên khách hàng"} suffix={<UserOutlined/>} allowClear onChange={e => setFilter({ customerName: e.target.value })}/>
+            <Menu.Item key="supplierName" span={24}>
+                <Input size={"large"} value={filter.supplierName} placeholder={"Tên nhà cung cấp"} suffix={<UserOutlined/>} allowClear onChange={e => setFilter({ supplierName: e.target.value })}/>
             </Menu.Item>
-            <Menu.Item key="customerPhone" span={24}>
-                <Input size={"large"} value={filter.customerPhone} placeholder={"SĐT khách hàng"} suffix={<PhoneOutlined/>} allowClear onChange={e => setFilter({ customerPhone: e.target.value })}/>
+            <Menu.Item key="supplierPhone" span={24}>
+                <Input size={"large"} value={filter.supplierPhone} placeholder={"SĐT nhà cung cấp"} suffix={<PhoneOutlined/>} allowClear onChange={e => setFilter({ supplierPhone: e.target.value })}/>
             </Menu.Item>
             <Menu.Item key="orderStatus" span={24}>
                 <Select size={"large"} value={filter.orderStatus} allowClear placeholder={"Trạng thái"} style={{ width: '100%', }} onChange={(value) => setFilter({ orderStatus: value })}>
@@ -70,15 +60,15 @@ export const FilterPanel = (props) => {
             </Menu.Item>
             <Menu.Item gutter={16} style={{ padding: 8 }} key={"extra-button-filter"}>
                 <Row>
-                    <Col span={12}><Button style={{ width: '100%'}} onClick={() => {
+                    <Col span={11}><Button style={{ width: '100%'}} onClick={() => {
                         setVisible(false)
                         setFilter({
-                            customerName: '',
-                            customerPhone: '',
+                            supplierName: '',
+                            supplierPhone: '',
                             orderStatus: null
                         })
                     }}>Hủy</Button></Col>
-                    <Col span={12}><Button style={{ width: '100%'}} type={'primary'} onClick={() => {
+                    <Col offset={1} span={11}><Button style={{ width: '100%'}} type={'primary'} onClick={() => {
                         setVisible(false)
                         handleFilterOrder()
                     }}>Áp dụng</Button></Col>
@@ -88,7 +78,6 @@ export const FilterPanel = (props) => {
     );
 
     const handleFilterOrder = () => {
-        // console.log("Filter: ", filter)
         let finalFilter = {
             ...filter,
             dateFrom: new Date(filter.dateFrom).setHours(0), 
@@ -119,7 +108,7 @@ export const FilterPanel = (props) => {
                 <Col span={16}>
                     <Row gutter={8}>
                         <Col span={8}>
-                            <Input size={'large'} name={"orderId"} value={filter.orderId} onChange={e => setFilter({ orderId: e.target.value })} style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }} suffix={<BarcodeOutlined/>} placeholder={"Mã đơn hàng"} allowClear/>
+                            <Input size={'large'} name={"code"} value={filter.code} onChange={e => setFilter({ code: e.target.value })} style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }} suffix={<BarcodeOutlined/>} placeholder={"Mã đơn hàng"} allowClear/>
                         </Col>
                         <Col span={8}>
                             <RangePicker style={{ width: '100%'}} value={[ filter.dateFrom && moment(filter.dateFrom, 'YYYY/MM/DD'),  filter.dateTo && moment(filter.dateTo, 'YYYY/MM/DD')]} suffixIcon={<CalendarOutlined style={{ color: 'black' }}/>} size={"large"} placeholder={["Từ ngày", "Đến ngày"]} onCalendarChange={handleCalendarChange}/>
