@@ -11,21 +11,23 @@ import FilterPanel from './FilterPanel'
 const { Text, Title } = Typography
 const { TabPane } = Tabs
 
+const d = new Date()
 
 const INITIAL_FILTER =  {
   orderStatus: 'Tất cả',
   code: '',
   supplierName: '',
   supplierPhone: '',
-  dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
-  dateTo: new Date(),
+  dateFrom:  new Date(new Date(d.setDate(d.getDate()- 14)).setHours(0, 0, 0, 0)),
+  dateTo: new Date(new Date().setHours(23, 59, 59, 59)),
 }
+
 
 
 export const RefundOrderView = (props) => {
   const [activeKey, setActiveKey] = useState("Tất cả")
   useEffect(() => {
-    props.getSupplierRefundOrdersStart()
+    props.getSupplierRefundOrdersStart(INITIAL_FILTER)
   }, [])
 
   const history = useHistory()
@@ -54,7 +56,7 @@ export const RefundOrderView = (props) => {
               ]}
               onChange={(e) => {
                 setActiveKey(e)
-                props.getSupplierRefundOrdersStart({ orderStatus: e })
+                props.getSupplierRefundOrdersStart({ ...INITIAL_FILTER, orderStatus: e })
               }}
             >
               <TabPane tab={"Tất cả"} key={"Tất cả"}/>
@@ -64,7 +66,7 @@ export const RefundOrderView = (props) => {
               <TabPane tab={"Đã hoàn trả"} key={"Đã hoàn trả"}/>
               <TabPane tab={"Đã hủy"} key={"Đã hủy"}/>
             </Tabs>
-            <FilterPanel handleFilterSubmit={(values) => {
+            <FilterPanel defaultFilter={INITIAL_FILTER} handleFilterSubmit={(values) => {
               props.getSupplierRefundOrdersStart(values)
             }}/>
             <AllSupplierRefundOrderTab refundOrders={props?.refundOrders}/>

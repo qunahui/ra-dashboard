@@ -43,6 +43,8 @@ const SingleOrderView = React.lazy(() => import('./views/OrderView/SingleOrderVi
 const SupplierView = React.lazy(() => import('./views/SupplierView'))
 const SingleSupplierView = React.lazy(() => import('./views/SupplierView/SingleSupplierView'))
 //
+const CustomerView = React.lazy(() => import('./views/CustomerView'))
+//
 const NotConnected = React.lazy(() => import('../src/components/NotConnected'))
 
 
@@ -225,6 +227,13 @@ const routes = [
     name: 'Orders View',
     component: OrderView,
     rolesAccess: ['']
+  },
+  {
+    path: '/app/customers',
+    name: 'Customers View',
+    component: CustomerView,
+    rolesAccess: [''],
+    exact: true,
   },
   {
     path: '/app/products/suppliers/:id',

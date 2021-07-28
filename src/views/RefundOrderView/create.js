@@ -21,6 +21,17 @@ const { TextArea } = Input
 const { Step } = Steps
 const EditableContext = React.createContext(null);
 
+const d = new Date()
+
+const INITIAL_FILTER =  {
+  orderStatus: 'Tất cả',
+  code: '',
+  customerName: '',
+  customerPhone: '',
+  dateFrom:  new Date(new Date(d.setDate(d.getDate()- 365)).setHours(0, 0, 0, 0)),
+  dateTo: new Date(new Date().setHours(23, 59, 59, 59)),
+}
+
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -162,11 +173,12 @@ export const create = (props) => {
   }, [props.order])
 
   const handleShowSearchOrderModal = () => {
-    props.getOrdersStart()
+    props.getOrdersStart(INITIAL_FILTER)
     setShowSearchOrderModal(true)
   }
   const handleHideSearchOrderModal = () => {
     setShowSearchOrderModal(false)
+    setChosenOrder(null)
   }
 
   const handleOrderChange = (selected) => {
@@ -190,7 +202,7 @@ export const create = (props) => {
       handleCalcRefundOrderTotal(chosenOrder.lineItems.map(lineItem => ({ key: lineItem._id, ...lineItem })))
       setShowSearchOrderModal(false)
       form.setFieldsValue({
-        code: `HOÀN_TRẢ_${chosenOrder.code}`
+        code: `HOAN_TRA_${chosenOrder.code}`
       })
     }
   }
@@ -409,7 +421,7 @@ export const create = (props) => {
                   onCancel={handleHideSearchOrderModal}
                   footer={[
                     <Button key={"cancel-search-modal"} onClick={handleHideSearchOrderModal}>Thoát</Button>,
-                    <Button key={"submit-search-modal"} type="primary" onClick={handleOrderSelect}>Thêm vào đơn</Button>
+                    <Button disabled={!chosenOrder} key={"submit-search-modal"} type="primary" onClick={handleOrderSelect}>Thêm vào đơn</Button>
                   ]}
                 >
                   <Input prefix={<SearchOutlined/>} value={searchOrderFilter} onChange={(e) => setSearchOrderFilter(e.target.value)}/> <br/><br/>
@@ -498,7 +510,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   getCustomerStart: () => dispatch(CustomerCreators.getCustomerStart()),
-  getOrdersStart: () => dispatch(OrderCreators.getOrdersStart()),
+  getOrdersStart: (INITIAL_FILTER) => dispatch(OrderCreators.getOrdersStart(INITIAL_FILTER)),
   createRefundOrderStart: (payload) => dispatch(RefundOrderCreators.createRefundOrderStart(payload))
 })
 

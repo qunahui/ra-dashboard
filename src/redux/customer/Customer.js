@@ -7,7 +7,7 @@ const { Types, Creators } = createActions({
   addCustomerStart: ['payload'],
   addCustomerSuccess: ['payload'],
   addCustomerFailure: ['payload'],
-  getCustomerStart: [],
+  getCustomerStart: ['payload'],
   getCustomerSuccess: ['payload'],
   getCustomerFailure: ['payload'],
 })

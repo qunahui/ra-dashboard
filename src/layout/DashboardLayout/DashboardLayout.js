@@ -54,6 +54,7 @@ const selectParentKey = (key) => {
     case '/app/orders/create':
     case '/app/orders':
     case '/app/orders/refund':
+    case '/app/customers':
       return '/app/orders'
     default: return;
   }
@@ -156,6 +157,7 @@ const DashboardLayout = (props) => {
                 <Menu.Item key="/app/orders/create"><Link to="/app/orders/create">Tạo đơn hàng</Link></Menu.Item>
                 <Menu.Item key="/app/orders"><Link to="/app/orders">Tất cả đơn hàng</Link></Menu.Item>
                 <Menu.Item key="/app/orders/refund"><Link to="/app/orders/refund">Đơn hoàn trả</Link></Menu.Item>
+                <Menu.Item key="/app/customers"><Link to="/app/customers">Quản lý khách hàng</Link></Menu.Item>
               </SubMenu>
             </Menu>
           <PageHeader/>

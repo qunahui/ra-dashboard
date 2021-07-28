@@ -12,26 +12,7 @@ const { Text, Title } = Typography
 const { RangePicker } = DatePicker;
 const { Submenu } = Menu
 
-const INITIAL_FILTER =  {
-    dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
-    dateTo: new Date(),
-    orderStatus: 'Chờ xác nhận',
-    orderId: '',
-    customerName: '',
-    customerPhone: '',
-  }
-
 export const FilterPanel = (props) => {
-    const stores = useSelector(state => {
-        const app = state.app.toJS()
-        if(app) {
-            const { storage } = app
-            return [].concat(storage.sendoCredentials).concat(storage.lazadaCredentials)
-        } else {
-            return []
-        }
-    }) 
-
     useEffect(() => {
         if(!_.isEqual(props.filter, filter)) {
             setFilter({ ... props.filter })
@@ -41,7 +22,7 @@ export const FilterPanel = (props) => {
     const [visible, setVisible] = useState(false)
     const [filter, setFilter] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
-        {}
+        props?.defaultFilter
     )
 
     const menu = (
@@ -88,11 +69,10 @@ export const FilterPanel = (props) => {
     );
 
     const handleFilterOrder = () => {
-        // console.log("Filter: ", filter)
         let finalFilter = {
             ...filter,
-            dateFrom: new Date(filter.dateFrom).setHours(0), 
-            dateTo: (new Date((new Date(new Date(filter.dateTo).setHours(23))).setMinutes(59))).setSeconds(59) // end of day
+            dateFrom: new Date(new Date(filter.dateFrom).setHours(0, 0, 0, 0)), 
+            dateTo: new Date(new Date(filter.dateTo).setHours(23, 59, 59, 59)), 
         }
         props.handleFilterSubmit && props.handleFilterSubmit(finalFilter)
     }
@@ -119,7 +99,7 @@ export const FilterPanel = (props) => {
                 <Col span={16}>
                     <Row gutter={8}>
                         <Col span={8}>
-                            <Input size={'large'} name={"orderId"} value={filter.orderId} onChange={e => setFilter({ orderId: e.target.value })} style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }} suffix={<BarcodeOutlined/>} placeholder={"Mã đơn hàng"} allowClear/>
+                            <Input size={'large'} name={"code"} value={filter.code} onChange={e => setFilter({ code: e.target.value })} style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }} suffix={<BarcodeOutlined/>} placeholder={"Mã đơn hàng"} allowClear/>
                         </Col>
                         <Col span={8}>
                             <RangePicker style={{ width: '100%'}} value={[ filter.dateFrom && moment(filter.dateFrom, 'YYYY/MM/DD'),  filter.dateTo && moment(filter.dateTo, 'YYYY/MM/DD')]} suffixIcon={<CalendarOutlined style={{ color: 'black' }}/>} size={"large"} placeholder={["Từ ngày", "Đến ngày"]} onCalendarChange={handleCalendarChange}/>
@@ -149,7 +129,7 @@ export const FilterPanel = (props) => {
                 <Col span={2}>
                     {/* RESET */}
                     <Tooltip placement="topLeft" title={"Cài đặt lại"} arrowPointAtCenter>
-                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...INITIAL_FILTER })}><UndoOutlined /></Button>
+                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...props?.defaultFilter })}><UndoOutlined /></Button>
                     </Tooltip>
                 </Col>
                 <Col span={6}>

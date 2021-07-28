@@ -52,12 +52,6 @@ export function* getPurchaseOrdersProcess({ payload }) {
   try { 
     const result = yield request.get('/purchase-orders', {
       params: {
-        code: '',
-        dateFrom: null, 
-        dateTo: null,
-        supplierName: '',
-        supplierPhone: '',
-        orderStatus: 'Tất cả',
         ...payload
       }
     })

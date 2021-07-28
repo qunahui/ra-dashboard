@@ -10,9 +10,13 @@ export const getToken = (state) => {
   return state.auth.toJS().token
 }
 
-export function* getCustomerProcess() {
+export function* getCustomerProcess({payload}) {
   try { 
-    const result = yield request.get('/customers')
+    const result = yield request.get('/customers', {
+      params: {
+        search: payload?.search || ''
+      }
+    })
     if(result.code === 200) { 
       yield put(Creators.getCustomerSuccess(result.data))
     }

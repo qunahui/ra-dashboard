@@ -12,15 +12,6 @@ const { Text, Title } = Typography
 const { RangePicker } = DatePicker;
 const { Submenu } = Menu
 
-const INITIAL_FILTER =  {
-    dateFrom: new Date(new Date().setDate(new Date().getDate() - 14)),
-    dateTo: new Date(),
-    orderStatus: 'Tất cả',
-    code: '',
-    supplierName: '',
-    supplierPhone: '',
-  }
-
 export const FilterPanel = (props) => {
     useEffect(() => {
         if(!_.isEqual(props.filter, filter)) {
@@ -31,7 +22,7 @@ export const FilterPanel = (props) => {
     const [visible, setVisible] = useState(false)
     const [filter, setFilter] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
-        INITIAL_FILTER
+        props?.defaultFilter
     )
 
     const menu = (
@@ -80,8 +71,8 @@ export const FilterPanel = (props) => {
     const handleFilterOrder = () => {
         let finalFilter = {
             ...filter,
-            dateFrom: new Date(filter.dateFrom).setHours(0), 
-            dateTo: (new Date((new Date(new Date(filter.dateTo).setHours(23))).setMinutes(59))).setSeconds(59) // end of day
+            dateFrom: new Date(new Date(filter.dateFrom).setHours(0, 0, 0, 0)), 
+            dateTo: new Date(new Date(filter.dateTo).setHours(23, 59, 59, 59)), 
         }
         props.handleFilterSubmit && props.handleFilterSubmit(finalFilter)
     }
@@ -138,7 +129,7 @@ export const FilterPanel = (props) => {
                 <Col span={2}>
                     {/* RESET */}
                     <Tooltip placement="topLeft" title={"Cài đặt lại"} arrowPointAtCenter>
-                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...INITIAL_FILTER })}><UndoOutlined /></Button>
+                        <Button size={'large'} style={{ width: '100%'}} onClick={() => setFilter({ ...props?.defaultFilter })}><UndoOutlined /></Button>
                     </Tooltip>
                 </Col>
                 <Col span={6}>

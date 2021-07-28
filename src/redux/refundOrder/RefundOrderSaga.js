@@ -21,7 +21,7 @@ export function* createReceiptProcess({ payload }) {
     }
   } catch(e) {
     console.log("Create refund order failure: ", e.message)
-    toast({ type: 'error', message: 'Xuất kho thất bại !'})
+    toast({ type: 'error', message: e.message})
     yield put(Creators.createRefundReceiptFailure())
   } finally {
     NProgress.done()
@@ -39,18 +39,19 @@ export function* createRefundOrderProcess({ payload }) {
       yield put(push(`/app/orders/refund/${result.data._id}`))
     }
   } catch(e) {
-    console.log("Create refund order failure: ", e.message)
-    toast({ type: 'error', message: 'Tạo đơn hoàn hàng mới thất bại !'})
+    toast({ type: 'error', message: e.message})
     yield put(Creators.createRefundOrderFailure())
   } finally {
     NProgress.done()
   }
 }
 
-export function* getRefundOrdersProcess() {
+export function* getRefundOrdersProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.get('/refund-orders')
+    const result = yield request.get('/refund-orders', {
+      params: payload
+    })
     if(result.code === 200) {
       yield put(Creators.getRefundOrdersSuccess(result.data))
     }

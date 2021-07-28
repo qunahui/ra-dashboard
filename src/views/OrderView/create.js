@@ -224,12 +224,14 @@ export const create = (props) => {
   const [totalState, setTotalState] = useState({
     quantity: 0,
     price: 0,
+    shippingFee: 0,
   })
 
   const handleCalcPurchaseOrderTotal = (data) => {
     setTotalState({
       quantity: data.reduce((acc, item) => acc += item.quantity, 0),
       price: data.reduce((acc, item) => acc += (item.price * item.quantity), 0),
+      shippingFee: totalState.shippingFee,
     })
   }
 
@@ -508,10 +510,10 @@ export const create = (props) => {
                     </Col>
                     <Col>
                       {totalState.quantity} <br/>
-                      {amountFormatter(form.getFieldValue('shippingFee') || 0)} <br/>
+                      {amountFormatter(totalState?.shippingFee || 0)} <br/>
                       {amountFormatter(totalState?.price || 0)} <br/>
                       {amountFormatter(totalState?.price || 0)} <br/>
-                      {amountFormatter(totalState?.price + form.getFieldValue('shippingFee')  || 0)} <br/>
+                      {amountFormatter(totalState?.price + totalState?.shippingFee  || 0)} <br/>
                     </Col>
                   </Row>
                 </Col>
@@ -545,7 +547,11 @@ export const create = (props) => {
             <div className={"order-info padding"}>
               <Row gutter={1} style={{ marginTop: 8 }}>
                 <Form.Item style={{ width: '100%' }} label="Phí vận chuyển" name="shippingFee" initialValue={0}>
-                  <InputNumber formatter={moneyFormatter} parser={moneyParser} style={{ width: '100%'}}/>
+                  <InputNumber formatter={moneyFormatter} parser={moneyParser} onChange={shippingFee => {
+                    if(shippingFee) {
+                      setTotalState({ ...totalState, shippingFee })
+                    }
+                  }} style={{ width: '100%'}}/>
                 </Form.Item>
               </Row>
             </div>
