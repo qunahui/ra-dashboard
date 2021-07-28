@@ -53,7 +53,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
   const save = async () => {
     try {
       let values = await form.validateFields();
-      ['price', 'quantity'].map(tag => {
+      ['price', 'quantity']?.map(tag => {
         values.hasOwnProperty(tag) && (values[tag] = parseFloat(values[tag]))
       })
 
@@ -169,7 +169,7 @@ export const create = (props) => {
   }
 
   const handleOrderChange = (selected) => {
-    setChosenOrder(selected)
+    setChosenOrder(selected?.[0])
   }
 
   const handleOrderSelect = () => {
@@ -185,11 +185,11 @@ export const create = (props) => {
           userId: chosenOrder.userId
         })
       }
-      setLineItemList(chosenOrder.lineItems.map(lineItem => ({ key: lineItem._id, ...lineItem })))
-      handleCalcRefundOrderTotal(chosenOrder.lineItems.map(lineItem => ({ key: lineItem._id, ...lineItem })))
+      setLineItemList(chosenOrder.lineItems?.map(lineItem => ({ key: lineItem._id, ...lineItem })))
+      handleCalcRefundOrderTotal(chosenOrder?.lineItems?.map(lineItem => ({ key: lineItem._id, ...lineItem })))
       setShowSearchOrderModal(false)
       form.setFieldsValue({
-        code: `HOÀN_TRẢ_${chosenOrder.code}`
+        code: `TRA_HANG_${chosenOrder.code}`
       })
     }
   }
@@ -415,6 +415,7 @@ export const create = (props) => {
                   <AllPurchaseOrderTable purchaseOrders={orderList.filter(i => i.supplierName !== props.displayName )} selectType={"radio"} onSelect={handleOrderChange} selectOnClick filterBySupplier={chosenSupplier} refundFilter/>
                 </Modal>
               </Row>
+              {chosenOrder && <strong style={{ paddingLeft: 16 }}>Hoàn đơn cho đơn nhập: {chosenOrder?.code}</strong>}
               <Row style={{ marginTop: 5}}>
                 <Col span={24}>
                   <Table

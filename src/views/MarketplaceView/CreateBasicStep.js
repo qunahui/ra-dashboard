@@ -101,7 +101,7 @@ export const CreateBasicStep = (props) => {
 
   async function getSuggestCategory(name) {
     try {
-      const result = await request.post(`/sendo/suggest-category`, {
+      const result = await request.post(`/sendo/categories/suggest`, {
         name,
       })
 
@@ -115,9 +115,9 @@ export const CreateBasicStep = (props) => {
     const { name, value } = selected
     let required = [];
     try {
-      const response = await request.get(`/lazada-attribute/${value}`)
+      const response = await request.get(`/lazada/attributes/${value}`)
       if(response.code === 200) {
-        required = response.data?.db.attributes
+        required = response.data?.attributes
       }
     } catch(e) { 
       toast({ type: 'error', message: e.message })

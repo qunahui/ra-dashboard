@@ -19,7 +19,7 @@ function searchBrandByName(value, callback) {
   curBrandValue = value
 
   function fetch() {
-    request.get(`/brand/search/${value}`)
+    request.get(`/brands/search/${value}`)
       .then(response => {
         if(curBrandValue === value && response.code === 200) {
           callback(response.data)

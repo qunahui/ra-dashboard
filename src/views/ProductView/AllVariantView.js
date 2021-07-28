@@ -96,7 +96,7 @@ export const AllProductTab = (props) => {
     <>
     <Row justify={"center"}>
       <Col span={16}>
-        <Title level={3}>Đơn nhập hàng</Title>
+        <Title level={3}>Quản lý phiên bản</Title>
         <Divider/>  
       </Col>
     </Row>

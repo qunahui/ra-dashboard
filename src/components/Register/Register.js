@@ -30,57 +30,108 @@ const Register = (props) => {
   }, [props.isLogin])
 
   const onFinishFailed = errorInfo => {
-    toast({ type: 'error', message: 'Mật khẩu không khớp. Vui lòng kiểm tra lại' })
+    // toast({ type: 'error', message: 'Mật khẩu không khớp. Vui lòng kiểm tra lại' })
   };
 
   return (
-    <Row type="flex" justify="center" style={{ minHeight: '100vh' }}>
-      <Col span={16} justify="center" align="middle" style={{ padding: '16px 24px', minHeight: '640px', borderRadius: '30px', marginTop: '64px' }}>
-        <Avatar size={48} icon={<UserOutlined />} justify="center" style={{ color: '#fff', backgroundColor: blue[6] }} />
+    <div gutter={[16, 16]}>
+      <Row justify="center" style={{ borderRadius: '30px', marginTop: '16px' }}>
+        <Col xs={24} style={{textAlign: 'center'}}>
+          <Avatar size={48} icon={<UserOutlined />} justify="center" style={{ color: '#fff', backgroundColor: blue[6] }} />
+        </Col>
         <Typography align="middle" style={{ fontSize: '28px', marginBottom: '24px' }}>Đăng ký</Typography>
-        <Form
-          name="basic"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
+      </Row>
+      <Form
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        layout={"vertical"}
+      >
+        <Row justify="center" gutter={16} style={{ margin: '0 16px' }}>
+        <Col xs={24} lg={12}>
           <Form.Item
             name="displayName"
+            label="Họ và tên"
             rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Tên" />
+            <Input placeholder="Nhập vào họ và tên" />
           </Form.Item>
-
+        </Col>
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="phone"
+            label="Số điện thoại"
+            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
+          >
+            <Input placeholder="Nhập vào phone" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={24}>
+          <Form.Item
+            name="address"
+            label="Địa chỉ"
+            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+          >
+            <Input placeholder="Nhập vào địa chỉ" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={24}>
+          <Form.Item
+            name="storageName"
+            label="Tên kho hàng"
+            rules={[{ required: true, message: 'Vui lòng nhập tên kho hàng!' }]}
+          >
+            <Input placeholder="Nhập vào tên kho hàng" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={24}>
           <Form.Item
             name="email"
+            label="Email"
             rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập email" />
+            <Input placeholder="Nhập vào email" />
           </Form.Item>
-
+        </Col>
+        <Col xs={24} lg={12}>
           <Form.Item
             name="password"
+            label="Mật khẩu"
             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
-            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập mật khẩu" />
+            <Input.Password placeholder="Nhập mật khẩu" />
           </Form.Item>
+        </Col>
+        <Col xs={24} lg={12}>
           <Form.Item
             name="retype"
-            rules={[{ required: true, message: 'Vui lòng nhập lại mật khẩu!', matchedOpt: 'password' }]}
+            label="Nhập lại mật khẩu"
+            rules={[{ required: true, message: 'Vui lòng nhập lại mật khẩu!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Mật khẩu và nhập lại mật khẩu không trùng khớp!'))
+              },
+            }),
+          ]}
           >
-            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập lại mật khẩu" />
+            <Input.Password placeholder="Nhập lại mật khẩu" />
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
-              Đăng ký
-            </Button>
-          </Form.Item>
-        </Form>
-        <Button onClick={() => history.push('/login')} size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
-          Đã có tài khoản ? 
-        </Button>
-      </Col>
-    </Row>
+        </Col>
+        <Col xs={16} lg={16} style={{ textAlign: 'center' }}>
+          <Button type="primary" htmlType="submit" style={{ marginBottom: 8, borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
+            Đăng ký
+          </Button>
+          <Button onClick={() => history.push('/login')} style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>
+            Đã có tài khoản ? 
+          </Button>
+        </Col>
+        </Row>
+      </Form>
+    </div>
   );
 };
 

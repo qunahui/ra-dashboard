@@ -7,7 +7,7 @@ const { Types, Creators } = createActions({
   addSupplierStart: ['payload'],
   addSupplierSuccess: ['payload'],
   addSupplierFailure: ['payload'],
-  getSupplierStart: [],
+  getSupplierStart: ['payload'],
   getSupplierSuccess: ['payload'],
   getSupplierFailure: ['payload'],
 })

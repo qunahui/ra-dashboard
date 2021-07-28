@@ -10,7 +10,7 @@ const { Types, Creators } = createActions({
   createRefundReceiptStart: ['payload'],
   createRefundReceiptSuccess: ['payload'],
   createRefundReceiptFailure: ['payload'],
-  getRefundOrdersStart: [],
+  getRefundOrdersStart: ['payload'],
   getRefundOrdersSuccess: ['payload'],
   getRefundOrdersFailure: ['payload'],
   confirmRefundPaymentStart: ['payload'],

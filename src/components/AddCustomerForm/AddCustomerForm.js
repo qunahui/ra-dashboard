@@ -22,11 +22,11 @@ const AddCustomerForm = (props) => {
   const [loading, setLoading] = useState(false)
   const [isCusExist, setCusExist] = useState(false)
   const [formState, setFormState] = useState({
-    name: 'Customer 1',
-    email: 'cus@gmail.com',
-    phone: '0987654321',
-    group: 'cgroup 1',
-    address: 'address random ' + Math.random()
+    name: '',
+    email: '',
+    phone: '',
+    group: '',
+    address: ''
   })
   
   const handleChange = (e) => {

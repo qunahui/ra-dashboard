@@ -13,9 +13,7 @@ export const AllRefundOrderTab = (props) => {
   const [selectedOrderRowKeys, setSelectedOrderRowKeys] = useState([])
   
   useEffect(() => {
-    if(!_.isEqual(dataSource, props.refundOrders)) {
-      setDataSource(props.refundOrders)
-    }
+    setDataSource(props.refundOrders)
   }, [props.refundOrders])
 
   const columns = [

@@ -125,6 +125,11 @@ export const AllPurchaseOrderTable = (props) => {
 
   return (
     <Table 
+      rowSelection={{
+        onChange: onRowSelection,
+        type: props.selectType ? props.selectType : "checkbox",
+        selectedRowKeys: selectedOrderRowKeys,
+      }}
       dataSource={dataSource?.map(i => ({ key: i._id, ...i })).filter(i => {
         if(props.filterBySupplier) {
           if (i.supplierEmail === props.filterBySupplier.email && i.instockStatus === true && i.orderStatus !== 'Đã hoàn trả') {

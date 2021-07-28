@@ -99,22 +99,22 @@ export const SingleRefundOrderView = (props) => {
       const response = await request.get(`/supplier-refund-orders/${id}`)
       if(response.code === 200) {
         setOrder({
-          ...response.data[0],
-          paidHistory: response.data[0].paidHistory.reverse(),
-          lineItems: response.data[0].lineItems.map(i => ({
+          ...response.data,
+          paidHistory: response.data.paidHistory.reverse(),
+          lineItems: response.data.lineItems.map(i => ({
             ...i,
             key: i._id
           }))
         })
         let currentStep = 0;
-        response.data[0].step && response.data[0].step.map((i, index) => {
+        response.data.step && response.data.step.map((i, index) => {
           if(i.isCreated === true) {
             console.log("index: ", index)
             currentStep = index
           }
         })
 
-        if(response.data[0].orderStatus === 'Đã hủy') {
+        if(response.data.orderStatus === 'Đã hủy') {
           setIsOrderCanceled(true)
         }
         setCurrentStep(currentStep)

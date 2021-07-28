@@ -95,7 +95,7 @@ const ConfigView = props => {
         <ActivityTable/>
         <Employee/>
       </TabPane>
-      <TabPane
+      {/* <TabPane
         key={"credential"}
         tab={"Cấu hình từng gian hàng"}
       >
@@ -108,6 +108,7 @@ const ConfigView = props => {
           )
         }
       </TabPane>
+    */}
     </Tabs>
   )
 }

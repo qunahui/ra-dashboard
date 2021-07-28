@@ -57,7 +57,7 @@ function searchBrandByName(value, callback) {
   curBrandValue = value
 
   function fetch() {
-    request.get(`/brand/search/${value}`)
+    request.get(`/brands/search/${value}`)
       .then(response => {
         if(curBrandValue === value && response.code === 200) {
           callback(response.data)
@@ -566,7 +566,7 @@ export const CreatePlatformStep = (props) => {
   useEffect(() => {
     async function getSendoAttr() {
       try {
-        const response = await request.get(`/api/sendo/attribute/${formValues.sendoCategoryId}`, {
+        const response = await request.get(`/api/sendo/attributes/${formValues.sendoCategoryId}`, {
           headers: {
             'Platform-Token': selectedPlatform.find(i => i.platform_name === 'sendo').access_token
           }
@@ -600,7 +600,7 @@ export const CreatePlatformStep = (props) => {
   useEffect(() => {
     async function getLazadaAttr() {
       try {
-        const response = await request.get(`/lazada-attribute/${formValues.categoryId}`)
+        const response = await request.get(`/lazada-attributes/${formValues.categoryId}`)
 
         if(response.code === 200) {
           console.log(response.data)

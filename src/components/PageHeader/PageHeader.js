@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Creators from '../../redux/user'
-import { PageHeader, Button, Dropdown, Menu, Typography, Image } from 'antd';
+import { PageHeader, Button, Dropdown, Menu, Typography, Image, Row, Col } from 'antd';
 import THEME from 'Theme'
 import SystemIcon from 'Assets/system.svg'
 
@@ -18,6 +18,7 @@ const { Text } = Typography
 
 const CustomPageHeader = (props) => {
   const history = useHistory()
+  const [activeKey, setActiveKey] = useState('')
   const userMenu = (
     <Menu>
       <Menu.Item key="/app/logout" icon={<LogoutOutlined />} onClick={() => props.signOut()}>
@@ -27,19 +28,19 @@ const CustomPageHeader = (props) => {
   );
 
   return (
-    <Menu theme="light" mode="inline" style={{
+    <Row activeKey={activeKey} theme="light" mode="inline" style={{
       position: 'absolute',
       bottom: 48,
       background: 'white',
       border: 'none',
     }}>
-      <Menu.Item key="/app/config" icon={<SettingOutlined />} onClick={() => history.push('/app/config')}>
-        <span style={{ paddingLeft: 8, fontWeight: 500 }}>Thông tin cửa hàng</span>
-      </Menu.Item>
-      <Menu.Item key="/app/logout" icon={<PoweroffOutlined />} onClick={() => props.signOut()}>
-        <span style={{ paddingLeft: 8, fontWeight: 500 }}>Đăng xuất</span>
-      </Menu.Item>
-    </Menu>
+      <Col span={24} style={{ padding: 8, marginBottom: 8 }} key="/app/config" onClick={() => history.push('/app/config')}>
+        <span style={{ paddingLeft: 8, fontWeight: 500, cursor: 'pointer' }}><SettingOutlined style={{ marginRight: 8 }}/>Thông tin cửa hàng</span>
+      </Col>
+      <Col span={24} style={{ padding: 8, marginBottom: 8 }} key="/app/logout" onClick={() => props.signOut()}>
+        <span style={{ paddingLeft: 8, fontWeight: 500, cursor: 'pointer' }}><PoweroffOutlined style={{ marginRight: 8 }}/>Đăng xuất</span>
+      </Col>
+    </Row>
   )
 
   // return (

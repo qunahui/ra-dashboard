@@ -102,20 +102,6 @@ const Activity = props => {
       ...getColumnSearchProps('userName'),
     },
     {
-      title: 'Vai trò',
-      dataIndex: 'userRole',
-      key: 'userRole',
-      witdh: '25%',
-      filters: [{
-        text: 'Chủ cửa hàng',
-        value: 'Chủ cửa hàng',
-      },{
-        text: 'Nhân viên',
-        value: 'Nhân viên',
-      },],
-      onFilter: (value, record) => record.userRole === value,
-    },
-    {
       title: 'Hoạt động',
       dataIndex: 'message',
       key: 'message',

@@ -150,7 +150,7 @@ const AllProductTab = (props) => {
           style={style}
         />
       },
-      width: 200
+      width: 100
     },
     {
       title: (<div>Tên sản phẩm</div>),
@@ -177,7 +177,7 @@ const AllProductTab = (props) => {
           <Text>{record.platform === 'sendo' ? <SendoIcon/> : <LazadaIcon/>} &nbsp; {record.store_name && record.store_name}</Text>
         </>
       },
-      width: '15%'
+      width: '20%'
     },
     {
       title: <div>Trạng thái liên kết</div>,

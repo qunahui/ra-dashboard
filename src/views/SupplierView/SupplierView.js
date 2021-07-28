@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Link, useHistory } from 'react-router-dom' 
-import { Row, Col, Typography, Divider, Button, Table, Tabs, Modal, Form, Input, AutoComplete } from 'antd'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { blue, red } from '@ant-design/colors'
+import { Row, Col, Typography, Divider, Button, Table, Tabs, Modal, Form, Input, AutoComplete, Popconfirm } from 'antd'
 import SupplierCreators from 'Redux/supplier'
 import { request } from 'Config/axios'
 import AddSupplierForm from 'Components/AddSupplierForm'
@@ -11,6 +13,30 @@ import toast from 'Helpers/ShowToast'
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
+
+const INITIAL_FILTER =  {
+  search: ''
+}
+
+const FilterPanel = ({ onFilter }) => {
+  const [filter, setFilter] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    INITIAL_FILTER
+  )
+
+  const handleFilterSubmit = () => {
+    onFilter({ search: filter?.search })
+  }
+  
+  return (
+    <Row gutter={[16, 16]} style={{ marginBottom: 8 }} justify="end">
+      <Col span={8}><Input value={filter?.search} onChange={e => setFilter({ search: e.target.value })} placeholder={"Tìm kiếm theo tên, nhóm, số điện thoại hoặc email"} allowClear/></Col>
+      <Col span={2}>
+        <Button type={'primary'} style={{ width: '100%'}} onClick={handleFilterSubmit}>Tìm kiếm</Button>
+      </Col>
+    </Row>
+  )
+}
 
 export const SupplierView = (props) => {
   const [supplierList, setSupplierList] = useState([])
@@ -46,13 +72,24 @@ export const SupplierView = (props) => {
   const handleSupplierSubmit = async (values) => {
     NProgress.start()
     try { 
-      const result = await request.post('/suppliers', values)
-      if(result.code === 200) {
-        toast({ type: 'success', message: 'Tạo nhà cung cấp mới thành công !'})
-        handleHide()
-        form.resetFields()    
-        props.getSupplierStart()
-        fetchAllGroup()
+      if(values?.isEdit) {
+        const result = await request.patch(`/suppliers/${values?._id}`, values)
+        if(result.code === 200) {
+          toast({ type: 'success', message: 'Cập nhật nhà cung cấp mới thành công !'})
+          handleHide()
+          form.resetFields()    
+          props.getSupplierStart()
+          fetchAllGroup()
+        }
+      } else {
+        const result = await request.post('/suppliers', values)
+        if(result.code === 200) {
+          toast({ type: 'success', message: 'Tạo nhà cung cấp mới thành công !'})
+          handleHide()
+          form.resetFields()    
+          props.getSupplierStart()
+          fetchAllGroup()
+        }
       }
     } catch(e) {
       if(e.code === 409) {
@@ -70,7 +107,6 @@ export const SupplierView = (props) => {
       title: 'Tên nhà cung cấp',
       dataIndex: 'name',
       key: 'name',
-      render: (text, record) => <Link to={`/app/products/suppliers/${record._id}`}>{text}</Link>
     },
     {
       title: 'Nhóm nhà cung cấp',
@@ -96,6 +132,27 @@ export const SupplierView = (props) => {
       title: 'Số điện thoại',
       dataIndex: 'phone',
       key: 'phone',
+    },
+    {
+      title: 'Thao tác',
+      dataIndex: 'action',
+      width: 100,
+      key: 'action',
+      render: (_, record) => (
+        <Row justify="space-around" style={{ fontSize: 16}}>
+          <EditOutlined style={{ color: blue[5], cursor: 'pointer' }} onClick={() => {
+            form.setFieldsValue({ ...record, isEdit: true })
+            setShow(true)
+          }}/>
+          {/* <Popconfirm
+            placement={'topRight'}
+            title={"Bạn có chắc chắn muốn xóa nhà cung cấp này ?"}
+            onConfirm={() => {}}
+          >
+            <DeleteOutlined style={{ color: red[5], cursor: 'pointer' }}/>
+          </Popconfirm> */}
+        </Row>
+      )
     },
   ]
 
@@ -125,9 +182,7 @@ export const SupplierView = (props) => {
           <Divider/>  
         </Col>
       </Row>
-      {
-        supplierList.length > 0 ? (
-          <Row 
+        <Row 
             justify={"end"}
             style={{ 
               backgroundColor: '#fff',
@@ -154,31 +209,24 @@ export const SupplierView = (props) => {
               </Tabs>
             </Col>
             <Col span={24}>
+              <FilterPanel
+                onFilter={(filter) => props.getSupplierStart(filter)}
+              />
               <Table 
-                dataSource={supplierList} 
+                dataSource={props?.supplier?.suppliers.map(i => ({ ...i, key: i._id }))} 
                 columns={columns} 
                 bordered
               />
             </Col>
           </Row>
-        ) : (
-          <Row justify={"center"}>
-            <Col span={16} className={"front-text"}>
-              <Text>Cửa hàng của bạn chưa có nhà cung cấp nào</Text> <br/>
-              <Button 
-                type={"primary"} 
-                style={{ marginTop: 50}}
-                onClick={() => setShow(true)}
-              >Tạo nhà cung cấp đầu tiên</Button>
-            </Col>
-          </Row>
-        )
-      }
-       <Modal
-          title={"Tạo mới nhà cung cấp"}
+        <Modal
+          title={!form.getFieldValue('isEdit') ? "Tạo mới nhà cung cấp" : "Chỉnh sửa nhà cung cấp"}
           visible={show}
           width={700}
-          onCancel={() => setShow(false)}
+          onCancel={() => {
+            setShow(false)
+            form.resetFields()
+          }}
           footer={[
             <Button onClick={handleHide}>Cancel</Button>,
             <Button type="primary" htmlType="submit" form={"supplier-form"}>OK</Button>
@@ -213,7 +261,7 @@ export const SupplierView = (props) => {
                   name="phone"
                   label={"Số điện thoại nhà cung cấp"}
                 >
-                  <Input/>
+                  <Input disabled={!!form.getFieldValue('isEdit')}/>
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -232,6 +280,8 @@ export const SupplierView = (props) => {
                   <Input/>
                 </Form.Item>
               </Col>
+              <Form.Item name="isEdit" noStyle/>
+              <Form.Item name="_id" noStyle/>
             </Row>
           </Form>
         </Modal>
@@ -244,7 +294,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getSupplierStart: () => dispatch(SupplierCreators.getSupplierStart()),
+  getSupplierStart: (payload) => dispatch(SupplierCreators.getSupplierStart(payload)),
   addSupplierStart: (payload) => dispatch(SupplierCreators.addSupplierStart(payload))
 })
 

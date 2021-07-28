@@ -12,7 +12,7 @@ export const getToken = (state) => {
 
 export function* getCustomerProcess() {
   try { 
-    const result = yield request.get('/customer')
+    const result = yield request.get('/customers')
     if(result.code === 200) { 
       yield put(Creators.getCustomerSuccess(result.data))
     }
@@ -24,7 +24,7 @@ export function* getCustomerProcess() {
 export function* addCustomerProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.post('/customer', payload)
+    const result = yield request.post('/customers', payload)
     if(result.code === 200) {
       console.log(result.data)
       toast({ type: 'success', message: 'Tạo khách hàng mới thành công !'})

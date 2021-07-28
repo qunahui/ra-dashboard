@@ -15,7 +15,7 @@ const { TabPane } = Tabs
 const INITIAL_FILTER =  {
   dateFrom: new Date(new Date(new Date().setDate(new Date().getDate() - 14)).setHours(0,0,0,0)),
   dateTo: new Date(new Date().setHours(23,59,59,999)),
-  orderStatus: 'Chờ xác nhận',
+  orderStatus: 'Tất cả',
   orderId: '',
   customerName: '',
   customerPhone: '',
@@ -24,7 +24,7 @@ const INITIAL_FILTER =  {
 export const OrderView = (props) => {
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(false)
-  const [activeKey, setActiveKey] = useState("Đặt hàng")
+  const [activeKey, setActiveKey] = useState("Tất cả")
   const [filter, setFilter] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     INITIAL_FILTER
@@ -46,7 +46,7 @@ export const OrderView = (props) => {
     <>
     <Row justify={"center"}>
       <Col span={16}>
-        <Title level={3}>Đơn nhập hàng</Title>
+        <Title level={3}>Đơn xuất hàng</Title>
         <Divider/>  
       </Col>
     </Row>

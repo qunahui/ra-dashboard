@@ -51,7 +51,6 @@ export function* getRefundOrdersProcess() {
   NProgress.start()
   try { 
     const result = yield request.get('/refund-orders')
-    console.log(result)
     if(result.code === 200) {
       yield put(Creators.getRefundOrdersSuccess(result.data))
     }

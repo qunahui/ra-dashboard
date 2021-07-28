@@ -57,7 +57,7 @@ function searchBrandByName(value, callback) {
   curBrandValue = value
 
   function fetch() {
-    request.get(`/brand/search/${value}`)
+    request.get(`/brands/search/${value}`)
       .then(response => {
         if(curBrandValue === value && response.code === 200) {
           callback(response.data)
@@ -567,7 +567,7 @@ export const CreatePlatformStep = (props) => {
   useEffect(() => {
     async function getSendoAttr() {
       try {
-        const response = await request.get(`/api/sendo/attribute/${formValues.sendoCategoryId}`, {
+        const response = await request.get(`/api/sendo/attributes/${formValues.sendoCategoryId}`, {
           headers: {
             'Platform-Token': selectedPlatform.find(i => i.platform_name === 'sendo').access_token
           }
@@ -575,7 +575,7 @@ export const CreatePlatformStep = (props) => {
 
         if(response.code === 200) {
           // console.log("sendo attr: ", response.data.result)
-          let finalSendoAttr = response.data.result
+          let finalSendoAttr = response.data
           let customId = new Date().getTime() % 100000 + parseInt(Math.random()*1000)
           finalSendoAttr.attribute = finalSendoAttr.attribute.concat(formValues.options.filter(cusAt => cusAt.optionName !== 'Màu sắc' && cusAt.optionName !== 'color_family').map(cusAt => ({
             id: customId,
@@ -585,7 +585,7 @@ export const CreatePlatformStep = (props) => {
             is_checkout: false,
             attribute_values: cusAt.optionValue.map((ol, index) => ({ id: customId + parseInt(Math.random()*1000), value: ol, is_selected: true, is_custom: true }))
           })))
-          setSendoAttr(response.data.result)
+          setSendoAttr(response.data)
         }
       } catch(e) {
         console.log(e.message)
@@ -601,11 +601,11 @@ export const CreatePlatformStep = (props) => {
   useEffect(() => {
     async function getLazadaAttr() {
       try {
-        const response = await request.get(`/lazada-attribute/${formValues.categoryId}`)
+        const response = await request.get(`/lazada/attributes/${formValues.categoryId}`)
 
         if(response.code === 200) {
           console.log(response.data)
-          setLazadaAttr(response.data?.db?.attributes)
+          setLazadaAttr(response.data?.attributes)
           // setLazadaAttr(response.data.api)
         }
       } catch(e) {
@@ -664,7 +664,7 @@ export const CreatePlatformStep = (props) => {
         return <ImageUpload key={attr._id}/>
       case 8:
       case 'multiEnumInput':
-        return <Select mode={'tags'} style={{ width: '100%'}} showSearch key={attr._id}
+        return <Select mode={'tags'} style={{ width: '100%'}} showSearch key={attr._id} value={attr?.values || []}
           onChange={(values) => {
             let newAttr = [...lazadaAttr];
             newAttr[index] = {
@@ -747,7 +747,7 @@ export const CreatePlatformStep = (props) => {
               <Col span={24} style={{ marginTop: 16 }}>
                 {
                   selectedPlatform.map(plat => (
-                    <Tag style={{ fontSize: 18, width: 200, height: 40 }} color={'blue'} key={plat.store_name}>
+                    <Tag style={{ fontSize: 18, width: 250, height: 40 }} color={'blue'} key={plat.store_name}>
                       <Row style={{ height: '100%'}} justify={"space-between"}>
                         <Col style={{ display: 'grid', placeItems:'center'}}>
                           <Text>{plat.platform_name === 'sendo' ? <SendoIcon/> : plat.platform_name === 'lazada' ? <LazadaIcon/> : <SystemIcon/>} {plat.store_name}</Text>

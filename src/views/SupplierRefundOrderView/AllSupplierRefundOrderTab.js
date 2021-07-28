@@ -11,11 +11,9 @@ export const AllRefundOrderTab = (props) => {
   const history = useHistory()
   const [dataSource, setDataSource] = useState(props.refundOrders || [])
   const [selectedOrderRowKeys, setSelectedOrderRowKeys] = useState([])
-  
+
   useEffect(() => {
-    if(!_.isEqual(dataSource, props.refundOrders)) {
       setDataSource(props.refundOrders)
-    }
   }, [props.refundOrders])
 
   const columns = [
@@ -107,9 +105,6 @@ export const AllRefundOrderTab = (props) => {
 
   return (
     <Table 
-      rowSelection={{
-        onChange: onRowSelection,
-      }}
       dataSource={dataSource.map(i => ({ key: i._id, ...i}))} 
       columns={columns} 
     />

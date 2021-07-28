@@ -98,7 +98,7 @@ const StorageStatus = props => {
 }
 
 export default connect(state => ({
-  app: state.app.toJS()
+  app: state.app.toJS(),
 }), dispatch => ({
   disconnectStoreStart: (payload) => dispatch(AppCreators.disconnectStoreStart(payload))
 }))(StorageStatus)

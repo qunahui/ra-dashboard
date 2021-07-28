@@ -116,7 +116,7 @@ const MarketplaceProductView = (props) => {
                 type="primary" 
                 key="Tạo sản phẩm"
                 onClick={() => setSyncModalVisible(true)}
-            >Cập nhật dữ liệu sản phẩm</Button>,
+            >Cập nhật dữ liệu</Button>,
             ]}
           >
             <TabPane tab="Tất cả" key="tất cả">

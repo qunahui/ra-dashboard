@@ -49,14 +49,14 @@ const SignIn = (props) => {
             name="email"
             rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
           >
-            <Input size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập email" />
+            <Input size="large" placeholder="Nhập email" />
           </Form.Item>
 
           <Form.Item
             name="password"
             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
-            <Input.Password size="large" style={{ padding: '18.5px 14px' }} placeholder="Nhập mật khẩu" />
+            <Input.Password size="large" placeholder="Nhập mật khẩu" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" style={{ borderRadius: '4px', boxShadow: "5px 8px 24px 5px rgba(208, 216, 243, 0.6)" }} block>

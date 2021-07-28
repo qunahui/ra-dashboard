@@ -17,7 +17,7 @@ export const MarketplaceOrderView = (props) => {
   const INITIAL_FILTER =  {
     dateFrom: new Date(new Date(new Date().setDate(new Date().getDate() - 14)).setHours(0,0,0,0)),
     dateTo: new Date(new Date().setHours(23,59,59,999)),
-    orderStatus: 'Chờ xác nhận',
+    orderStatus: 'Tất cả',
     orderId: '',
     customerName: '',
     customerPhone: '',
@@ -93,6 +93,7 @@ export const MarketplaceOrderView = (props) => {
                 }}
               >
                 <TabPane tab="Tất cả" key="Tất cả"/>
+                <TabPane tab="Hoàn thành" key="Hoàn thành"/>
                 <TabPane tab="Chờ xác nhận" key="Chờ xác nhận"/>
                 <TabPane tab="Đang xử lý" key="Đang xử lý"/>
                 <TabPane tab="Đang giao hàng" key="Đang giao hàng"/>

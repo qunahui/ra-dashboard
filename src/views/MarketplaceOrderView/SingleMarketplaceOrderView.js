@@ -138,24 +138,24 @@ export const SingleOrderView = (props) => {
       const response = await request.get(`/orders/${id}`)
       if(response.code === 200) {
         setOrder({
-          ...response.data[0],
-          paidHistory: response.data[0].paidHistory.reverse(),
-          lineItems: response.data[0].lineItems.map(i => ({
+          ...response.data,
+          paidHistory: response.data.paidHistory.reverse(),
+          lineItems: response.data.lineItems.map(i => ({
             ...i,
             key: i._id
           }))
         })
         let currentStep = 0;
-        response.data[0].step && response.data[0].step.map((i, index) => {
+        response.data.step && response.data.step.map((i, index) => {
           if(i.isCreated === true) {
             currentStep = index
           }
         })
 
-        console.log(response.data[0].step)
+        console.log(response.data.step)
 
         setCurrentStep(currentStep)
-        setIsOrderCanceled(response.data[0].orderStatus === 'Đã hủy')
+        setIsOrderCanceled(response.data.orderStatus === 'Đã hủy')
       }
     } catch(e) { 
       toast({ type: 'error', message: 'Có gì đó sai sai !'})

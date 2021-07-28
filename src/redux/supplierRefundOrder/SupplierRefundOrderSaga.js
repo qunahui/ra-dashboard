@@ -47,10 +47,20 @@ export function* createSupplierRefundOrderProcess({ payload }) {
   }
 }
 
-export function* getSupplierRefundOrdersProcess() {
+export function* getSupplierRefundOrdersProcess({ payload }) {
   NProgress.start()
   try { 
-    const result = yield request.get('/supplier-refund-orders')
+    const result = yield request.get('/supplier-refund-orders', {
+      params: {
+        code: '',
+        dateFrom: null, 
+        dateTo: null,
+        supplierName: '',
+        supplierPhone: '',
+        orderStatus: 'Tất cả',
+        ...payload
+      }
+    })
     console.log(result)
     if(result.code === 200) {
       yield put(Creators.getSupplierRefundOrdersSuccess(result.data))

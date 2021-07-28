@@ -65,8 +65,8 @@ const Employee = props => {
       title: 'Hành động',
       dataIndex: 'action',
       key: 'action',
-      render: (_, record) => (
-          <Dropdown
+      render: (_, record) => {
+        return <Dropdown
             trigger={['click']}
             overlay={(
               <Menu>
@@ -75,9 +75,9 @@ const Employee = props => {
               </Menu>
             )}
           >
-            <a href={'#'}>Chỉnh sửa</a>
+            {props?.user?._id !== record?.userId ? <a href={'#'} >Chỉnh sửa</a> : <></>}
           </Dropdown>
-      ) 
+      } 
     },
   ]
 
@@ -148,7 +148,8 @@ const Employee = props => {
 }
 
 export default connect(state => ({
-  app: state.app.toJS()
+  app: state.app.toJS(),
+  user: state.auth.toJS().user
 }), dispatch => ({
   disconnectStoreStart: (payload) => dispatch(AppCreators.disconnectStoreStart(payload))
 }))(Employee)

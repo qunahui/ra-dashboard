@@ -6,24 +6,16 @@ import { Row, Col, Typography, Divider, Button, Tabs } from 'antd'
 import RefundOrderCreators from 'Redux/refundOrder'
 import AllRefundOrderTab from './AllRefundOrderTab'
 import './RefundOrderView.styles.scss'
+import FilterPanel from './FilterPanel'
 
 
 const { Text, Title } = Typography
 const { TabPane } = Tabs
 
 export const RefundOrderView = (props) => {
-  const [refundOrderList, setRefundOrderList] = useState([])
-
   useEffect(() => {
     props.getRefundOrdersStart()
   }, [])
-
-  useEffect(() => {
-    const { refundOrders, isWorking } = props.refundOrder
-    if(!_.isEqual(refundOrders, refundOrderList) && !isWorking) {
-      setRefundOrderList(refundOrders)
-    }
-  }, [props.refundOrder])
 
   const history = useHistory()
   return (
@@ -34,52 +26,37 @@ export const RefundOrderView = (props) => {
           <Divider/>  
         </Col>
       </Row>
-      {
-        refundOrderList.length > 0 ? (
-          <Row
-            style={{ 
-              backgroundColor: '#fff',
-              padding: '8px 24px',
-              border: '1px solid #ccc',
-              borderRadius: 5
-            }}
+      <Row
+        style={{ 
+          backgroundColor: '#fff',
+          padding: '8px 24px',
+          border: '1px solid #ccc',
+          borderRadius: 5
+        }}
+      >
+        <Col span={24}>
+          <Tabs 
+            defaultActiveKey="tất cả" 
+            destroyInactiveTabPane={true} 
+            tabBarExtraContent={[
+              <Button type="primary" key="Tạo đơn hoàn hàng" onClick={() => history.push('/app/orders/refund/create')}>Tạo đơn hoàn hàng</Button>,
+            ]}
           >
-            <Col span={24}>
-              <Tabs 
-                defaultActiveKey="tất cả" 
-                destroyInactiveTabPane={true} 
-                tabBarExtraContent={[
-                  <Button type="primary" key="Tạo đơn hoàn hàng" onClick={() => history.push('/app/orders/refund/create')}>Tạo đơn hoàn hàng</Button>,
-                ]}
-              >
-                <TabPane tab="Tất cả" key="tất cả">
-                  <AllRefundOrderTab refundOrders={refundOrderList}/>
-                </TabPane>
-                <TabPane tab="Đang giao dịch" key="Đang giao dịch">
-                  {/* <LinkedFailProductTab/> */}
-                </TabPane>
-              </Tabs>
-            </Col>
-          </Row>
-        ) : (
-          <Row justify={"center"}>
-            <Col span={16} className={"front-text"}>
-              <Text>Cửa hàng của bạn chưa có đơn hoàn hàng nào</Text> <br/>
-              <Button 
-                type={"primary"} 
-                style={{ marginTop: 50}}
-                onClick={() => history.push('/app/orders/refund/create')}
-              >Tạo đơn hoàn hàng đầu tiên</Button>
-            </Col>
-          </Row>
-        )
-      }
+            <TabPane tab="Tất cả" key="tất cả"/>
+            <TabPane tab="Đã duyệt" key="Đã duyệt"/>
+            <TabPane tab="Đã nhập kho" key="Đang giao dịch"/>
+            <TabPane tab="Hoàn thành" key="Hoàn thành"/>
+          </Tabs>
+          <FilterPanel/>
+          <AllRefundOrderTab refundOrders={props?.refundOrders}/>
+        </Col>
+      </Row>
     </>
   )
 }
 
 const mapStateToProps = (state) => ({
-  refundOrder: state.refundOrder.toJS()
+  refundOrders: state.refundOrder.toJS()?.refundOrders
 })
 
 const mapDispatchToProps = dispatch => ({
