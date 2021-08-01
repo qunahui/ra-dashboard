@@ -168,6 +168,22 @@ export function* createMultiPlatformProductProcess({ payload }) {
   }
 }
 
+export function* autoLinkDataProcess({ payload }) {
+  Nprogress.start()
+  try { 
+    const response = yield request.post('/variants/auto-link', payload)
+  
+    if(response.code === 200) {
+      yield put(Creators.autoLinkDataSuccess(response.data))
+    }
+  } catch(e) {
+    toast({ type: 'error', message: e.message })
+    yield put(Creators.autoLinkDataFailure())
+  } finally {
+    NProgress.done()
+  }
+}
+
 export function* onGetStoresStart() {
   yield takeLatest(AppTypes.GET_STORES_START, getStoresProcess)
 }
@@ -200,6 +216,10 @@ export function* onCreateMultiPlatformProductStart() {
   yield takeLatest(AppTypes.CREATE_MULTI_PLATFORM_PRODUCT_START, createMultiPlatformProductProcess)
 }
 
+export function* onAutoLinkDataStart() {
+  yield takeLatest(AppTypes.AUTO_LINK_DATA_START, autoLinkDataProcess)
+}
+
 const appRootSagas = [
   call(onGetStoresStart),
   call(onConnectLazadaStart),
@@ -208,7 +228,8 @@ const appRootSagas = [
   call(onSyncDataStart),
   call(onRefreshAllTokenStart),
   call(getPlatformProductAfterSuccessfullySync),
-  call(onCreateMultiPlatformProductStart)
+  call(onCreateMultiPlatformProductStart),
+  call(onAutoLinkDataStart),
 ]
 
 export default appRootSagas

@@ -26,6 +26,10 @@ const { Types, Creators } = createActions({
   createMultiPlatformProductStart: ['payload'],
   createMultiPlatformProductSuccess: ['payload'],
   createMultiPlatformProductFailure: ['payload'],
+  autoLinkDataStart: ['payload'],
+  autoLinkDataSuccess: ['payload'],
+  autoLinkDataFailure: ['payload'],
+  hideMessage: [],
 })
 
 export const AppTypes = Types
@@ -36,7 +40,9 @@ export default Creators
 export const INITIAL_STATE = fromJS({
   storage: {},
   error: null,
-  isWorking: false
+  isWorking: false,
+  isShowMessage: false,
+  messagePayload: ''
 })
 
 /* ------------- Reducers ------------- */
@@ -76,7 +82,6 @@ const connectSendoStart = (state) => state.merge({
 })
 
 const connectSendoSuccess = (state, { payload }) => {
-  console.log("to add: ", payload)
   let sendoCredentials = state.toJS().storage.sendoCredentials
   if(sendoCredentials.length > 0) {
     sendoCredentials = sendoCredentials.concat(payload)
@@ -163,6 +168,25 @@ const createMultiPlatformProductSuccess = (state, { payload }) => state.merge({
 const createMultiPlatformProductFailure = (state, { payload }) => state.merge({
   isWorking: false,
 })
+
+const autoLinkDataStart = (state) => state.merge({
+  isWorking: true,
+})
+
+const autoLinkDataSuccess = (state, { payload }) => state.merge({
+  isWorking: true,
+  isShowMessage: true,
+  message: JSON.stringify(payload)
+})
+
+const autoLinkDataFailure = (state) => state.merge({
+  isWorking: true,
+})
+
+const hideMessage = (state) => state.merge({
+  isShowMessage: false,
+  messagePayload: {}
+})
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -182,10 +206,14 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SYNC_DATA_START] : syncDataStart,
   [Types.SYNC_DATA_SUCCESS] : syncDataSuccess,
   [Types.SYNC_DATA_FAILURE] : syncDataFailure,
+  [Types.AUTO_LINK_DATA_START] : autoLinkDataStart,
+  [Types.AUTO_LINK_DATA_SUCCESS] : autoLinkDataSuccess,
+  [Types.AUTO_LINK_DATA_FAILURE] : autoLinkDataFailure,
   [Types.REFRESH_ALL_TOKEN_START] : refreshAllTokenStart,
   [Types.REFRESH_ALL_TOKEN_SUCCESS] : refreshAllTokenSuccess,
   [Types.REFRESH_ALL_TOKEN_FAILURE] : refreshAllTokenFailure,
   [Types.CREATE_MULTI_PLATFORM_PRODUCT_START] : createMultiPlatformProductStart,
   [Types.CREATE_MULTI_PLATFORM_PRODUCT_SUCCESS] : createMultiPlatformProductSuccess,
   [Types.CREATE_MULTI_PLATFORM_PRODUCT_FAILURE] : createMultiPlatformProductFailure,
+  [Types.HIDE_MESSAGE] : hideMessage,
 })

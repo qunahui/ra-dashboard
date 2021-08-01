@@ -76,7 +76,6 @@ const AllProductTab = (props) => {
       }
     }) 
 
-    console.log("begin fetch platform products, ", sendoStoreIds.concat(lazadaStoreIds).length > 0)
     sendoStoreIds.concat(lazadaStoreIds).length > 0 && props.getPlatformProductStart({ 
       sendoStoreIds,
       lazadaStoreIds,
@@ -124,8 +123,7 @@ const AllProductTab = (props) => {
         })
       })
 
-
-      console.log(transformProducts)
+      props?.onTransformProductsCreated(transformProducts)
       setDataSource([...transformProducts])
     }
   }, [props.platform])
@@ -241,8 +239,9 @@ const AllProductTab = (props) => {
 
   return (
     <>
-      { dataSource.length > 0 ? (
+      {/* { !props?.platform?.isWorking && dataSource.length > 0 ? ( */}
           <Table
+            loading={props?.platform?.isWorking}
             key={"marketplace-product-table"}
             expandable={{
               defaultExpandedRowKeys: dataSource.map(i => i._id),
@@ -276,7 +275,6 @@ const AllProductTab = (props) => {
                       style={{ background: 'white'}}
                       dataSource={record.linkedDetails ? [record, record.linkedDetails] : []}
                       renderItem={item => {
-                        console.log("item : ", item)
                         return (
                           <List.Item>
                             <Row style={{ width: '100%'}}>
@@ -316,7 +314,7 @@ const AllProductTab = (props) => {
             className={"all-marketplace-product-table"}
             rowClassName={(record, index) => record.isChildren === true ? 'marketplace-children-row' : 'marketplace-parent-row'}
           />
-       ) : (
+       {/* ) : (
         <Empty
           image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
           imageStyle={{
@@ -329,7 +327,7 @@ const AllProductTab = (props) => {
           }
         >
         </Empty>
-      )}
+      )} */}
       <SearchProductModal
         visible={showSearchProductModal}
         onCancel={handleHideSearchProductModal}

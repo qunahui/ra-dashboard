@@ -23,6 +23,7 @@ const MarketplaceProductView = (props) => {
   const [syncButtonLoading, setSyncButtonLoading] = React.useState(false)
   const [linkModalVisible, setLinkModalVisible] = React.useState(false)
   const [platformCredentials, setPlatformCredentials] = React.useState([])
+  const [linkableVariants, setLinkableVariants] = React.useState([])
 
   //<----------------------------------------------- sync modal handler ---------------------------------->
   // const [checkedList, setCheckedList] = useState([])
@@ -52,7 +53,7 @@ const MarketplaceProductView = (props) => {
   
   //<----------------------------------------------- auto link handler ---------------------------------->
   const handleLinkData = () => {
-
+    props.autoLinkDataStart(props.platform?.products)
   }
   //<----------------------------------------------- auto link handler ---------------------------------->
   
@@ -87,6 +88,26 @@ const MarketplaceProductView = (props) => {
       }
     }
   }, [props.app])
+
+  //<----------------------------------------------- linkable variants handler ---------------------------------->
+  const handleSetLinkableVariants = (transformProducts) => {
+    let arr = []
+    transformProducts.some(i => {
+      if(i.platform === 'sendo') {
+        if(i?.isChildren === true && !i?.linkedId) {
+          arr.push(i)
+          return;
+        } else if(!!i.children) {
+          arr = arr.concat(i?.children?.filter(i => !i?.linkedId) || [])
+        }
+      } else if(i.platform === 'lazada') {
+        arr = arr.concat(i?.children?.filter(i => !i?.linkedId) || [])
+      }
+    }) 
+    console.log(arr)
+    setLinkableVariants(arr)
+  }
+  //<----------------------------------------------- linkable variants handler ---------------------------------->
 
   return (
     <>
@@ -123,21 +144,13 @@ const MarketplaceProductView = (props) => {
             ]}
           >
             <TabPane tab="Tất cả" key="tất cả">
-              <AllProductTab credentials={platformCredentials}/>
             </TabPane>
-            <TabPane tab="Đang chờ duyệt" key="Đang chờ duyệt">
-              {/* <LinkedSuccessProductTab/> */}
-            </TabPane>
-            <TabPane tab="Hết hàng" key="Hết hàng">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
-            <TabPane tab="Đã tắt kích hoạt" key="Đã tắt kích hoạt">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
-            <TabPane tab="Đã xóa" key="Đã xóa">
-              {/* <LinkedFailProductTab/> */}
-            </TabPane>
+            <TabPane tab="Đang chờ duyệt" key="Đang chờ duyệt"/>
+            <TabPane tab="Hết hàng" key="Hết hàng"/>
+            <TabPane tab="Đã tắt kích hoạt" key="Đã tắt kích hoạt"/>
+            <TabPane tab="Đã xóa" key="Đã xóa"/>
           </Tabs>
+          <AllProductTab credentials={platformCredentials} onTransformProductsCreated={handleSetLinkableVariants}/>
           <Modal
             title="Cập nhật dữ liệu sản phẩm từ gian hàng"
             visible={syncModalVisible}
@@ -184,17 +197,24 @@ const MarketplaceProductView = (props) => {
             width={600}
             footer={[
               <Button 
+                key="cancel-manual-sync"
+                onClick={() => setLinkModalVisible(false)}
+                disabled={false}
+              >
+                Liên kết
+              </Button>,
+              <Button 
                 type="primary"
                 key="manual-sync"
                 onClick={handleLinkData}
                 disabled={false}
               >
                 Liên kết
-              </Button>
+              </Button>,
             ]}
           >
-            <div style={{ padding: '20px 30px'}}>
-              <CheckboxGroup onChange={onChange}>
+            <div >
+              {/* <CheckboxGroup onChange={onChange}>
                   {
                     platformCredentials.length > 0 && platformCredentials.map(i => (
                       <Row key={i._id}>
@@ -202,7 +222,8 @@ const MarketplaceProductView = (props) => {
                       </Row>
                     ))
                   }
-              </CheckboxGroup>
+              </CheckboxGroup> */}
+              Xác nhận liên kết nhanh ? Các biến thể có cùng mã SKU sẽ được tự động liên kết với nhau.
             </div>
           </Modal>
           <Modal
@@ -247,6 +268,8 @@ const MarketplaceProductView = (props) => {
 
 export default connect(state => ({
   app: state.app.toJS(),
+  platform: state.platform.toJS()
 }), dispatch => ({
   syncDataStart: (payload) => dispatch(AppCreators.syncDataStart(payload)),
+  autoLinkDataStart: (payload) => dispatch(AppCreators.autoLinkDataStart(payload)),
 }))(MarketplaceProductView);
