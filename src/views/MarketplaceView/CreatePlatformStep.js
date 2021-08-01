@@ -48,30 +48,10 @@ const sendoUnit = [
 let searchBrandTimeout;
 let curBrandValue;
 
-function searchBrandByName(value, callback) {
-  if (searchBrandTimeout) {
-    clearTimeout(searchBrandTimeout);
-    searchBrandTimeout = null
-  }
-  
-  curBrandValue = value
-
-  function fetch() {
-    request.get(`/brands/search/${value}`)
-      .then(response => {
-        if(curBrandValue === value && response.code === 200) {
-          callback(response.data)
-        }
-      })
-      .catch(e => toast({ type: 'error', message: e.message }))
-  }
-
-  searchBrandTimeout = setTimeout(fetch, 1000);
-}
-
 export const CreatePlatformStep = (props) => {
   //<------------------------------------------------------- form handler --------------------------------------------------------->
-  const [form] = Form.useForm()
+  const { form } = props
+
   const [formValues, setFormValues] = useReducer(
     (state, newState) => ({ ...state, ...newState}),
     {
@@ -82,7 +62,7 @@ export const CreatePlatformStep = (props) => {
   const createSystemVariant = (arr, generalData) => {
     let variants = []
     let n = arr.length
-
+    
     let indices = []
 
     for (let i = 0; i < n; i++) {
@@ -102,10 +82,10 @@ export const CreatePlatformStep = (props) => {
           avatar: '',
           name: generalData.name + variantName,
           key: variantName,
-          sku: generalData.sku + '-' + variantNameArr.map(i => removeVI(i, { replaceSpecialCharacters: false })).join('-'),
+          sku: generalData.sku + '-' + variantNameArr?.map(i => removeVI(i, { replaceSpecialCharacters: false })).join('-'),
           options: variantNameArr,
-          importPrice: generalData.importPrice,
-          wholeSalePrice: generalData.wholeSalePrice,
+          importPrice: generalData.retailPrice,
+          wholeSalePrice: generalData.retailPrice,
           retailPrice: generalData.retailPrice,
           unit: generalData.unit,
           weightValue: generalData.weightValue,
@@ -143,21 +123,16 @@ export const CreatePlatformStep = (props) => {
 
   const createSystemProduct = (generalData) => {
     const { options } = generalData
-    let variants = createSystemVariant(options.map(option => option.optionValue), generalData)
+    let variants = createSystemVariant(options?.map(option => option.optionValue), generalData)
 
 
     const finalData = {
-      ...formValues,
+      ...generalData,
       variants
     }
 
-    delete finalData.fileList
-    delete finalData.importPrice
-    delete finalData.retailPrice
-    delete finalData.wholeSalePrice
-
-    finalData.variants = finalData.variants.map(i => {
-      i.options = i.options.map((option, index) => {
+    finalData.variants = finalData.variants?.map(i => {
+      i.options = i.options?.map((option, index) => {
         return {
           optionName: finalData.options[index].optionName,
           optionValue: option
@@ -275,28 +250,28 @@ export const CreatePlatformStep = (props) => {
       skus.push({
         ...skuAttrs,
         SellerSku: generalData.sku,
-        package_weight: formValues.weight,
-        package_height: formValues.height,
-        package_width: formValues.width,
-        package_length: formValues.length,
+        package_weight: generalData.weight,
+        package_height: generalData.height,
+        package_width: generalData.width,
+        package_length: generalData.length,
         quantity: generalData.quantity,
         price: generalData.retailPrice,
         Images: {
-          Image: formValues.avatar.map(avt => (avt.split('?alt=media')[0] + '?alt=media'))
+          Image: generalData.avatar.map(avt => (avt.split('?alt=media')[0] + '?alt=media'))
         }
       })
     } else {
       skus = createLazadaVariants(options, { 
         ...skuAttrs,
         SellerSku: generalData.sku,
-        package_weight: formValues.weight,
-        package_height: formValues.height,
-        package_width: formValues.width,
-        package_length: formValues.length,
+        package_weight: generalData.weight,
+        package_height: generalData.height,
+        package_width: generalData.width,
+        package_length: generalData.length,
         quantity: generalData.quantity,
         price: generalData.retailPrice,
         Images: {
-          Image: formValues.avatar.map(avt => avt.split('?alt=media')[0] + '?alt=media')
+          Image: generalData.avatar.map(avt => avt.split('?alt=media')[0] + '?alt=media')
         }
       }).map(sku => {
         options.map((i, index) => sku[i.optionName] = sku.options[index])
@@ -311,7 +286,7 @@ export const CreatePlatformStep = (props) => {
     const lazadaProduct = {
       "Request": {
         "Product": {
-          "PrimaryCategory": formValues.categoryId,
+          "PrimaryCategory": generalData.categoryId,
           "SPUId": null,
           "Attributes": {
             ...attrs,
@@ -333,20 +308,19 @@ export const CreatePlatformStep = (props) => {
     let isConfigVariant = sendoAttr.is_config_variant
 
     if(isConfigVariant) {
-      let options = generalData.options.filter(i => i.optionName !== 'Nhóm màu' && i.optionName !== 'color_family')
-      options = options.concat(...sendoAttr.attribute.map(i => {
+      let options = sendoAttr.attribute?.map(i => {
         if(i.is_checkout === true) {
           if(i.control_type === 'ComboBox') {
             let matchedOpt = i.attribute_values.find(i => i.is_selected === true)
             return {
               optionName: i.name,
-              optionValue: [matchedOpt?.value],
+              optionValue: [matchedOpt?.value].filter(v => v),
               additionalData: i,
               isSendoAttr: true
             }
           } else if(i.control_type === 'CheckBox') {
-            let matchedOpt = i.attribute_values.filter(i => i.is_selected === true)
-            let optionValue =  matchedOpt.map(opt => opt?.value)
+            let matchedOpt =i.attribute_values.filter(i => i.is_selected === true)
+            let optionValue =  _.uniq(matchedOpt.map(opt => opt?.value))
 
             return {
               optionName: i.name,
@@ -356,16 +330,15 @@ export const CreatePlatformStep = (props) => {
             }
           }
         }
-      }))
+      })
 
-      let filteredOpt = options.filter(i => i !== undefined)
+      let filteredOpt = options.filter(i => i)
       variants = createSendoVariants(filteredOpt);
       for(let variant of variants) {
         let variant_attributes = []
         filteredOpt.map((i, index) => {
           let isSendoAttr = !!i.isSendoAttr
           let customMatched = sendoAttr.attribute.find(y => y.name === i.optionName)
-          console.log(customMatched)
           let toPush = {
             attribute_id: isSendoAttr ? i.additionalData.id : customMatched?.id,
             attribute_is_custom: !isSendoAttr,
@@ -384,7 +357,7 @@ export const CreatePlatformStep = (props) => {
           variant_attributes.push(toPush)
         })
         variant.variant_attributes = variant_attributes
-        variant.variant_sku = formValues.sku + variant.sku
+        variant.variant_sku = generalData.sku + variant.sku
         variant.variant_price = generalData.retailPrice
         variant.variant_quantity = generalData.quantity
         delete variant.options
@@ -445,7 +418,7 @@ export const CreatePlatformStep = (props) => {
       }
     }
 
-    // .concat(formValues.options.filter(cusAt => cusAt.optionName !== 'Màu sắc' && cusAt.optionName !== 'color_family').map(cusAt => ({
+    // .concat(generalData.options.filter(cusAt => cusAt.optionName !== 'Màu sắc' && cusAt.optionName !== 'color_family').map(cusAt => ({
     //   attribute_id: 10000 + parseInt(Math.random()*10000),
     //   attribute_name: cusAt.optionName,
     //   attribute_code: cusAt.optionName.split(' ').map(i => removeVI(i, { replaceSpecialCharacters: false }).toLowerCase()).join('_'),
@@ -458,10 +431,7 @@ export const CreatePlatformStep = (props) => {
   }
 
   const handleFormSubmit = (values) => {
-    let finalData = {
-      ...formValues,
-      ...values
-    }
+    let finalData = form.getFieldsValue()
 
     let productToPost = []
     const products = form.getFieldValue('products')
@@ -476,6 +446,7 @@ export const CreatePlatformStep = (props) => {
       } else if(item.platform_name === 'lazada' && item.post === true) {
         let lazadaProduct = createLazadaProduct({
           ...finalData,
+          weight: finalData?.weightValue,
           ...item
         })
         productToPost.push({ ...lazadaProduct, ...item })
@@ -488,14 +459,13 @@ export const CreatePlatformStep = (props) => {
       }
     }
 
-
-    // console.log(productToPost)
     props.createMulti(productToPost)
   }
 
   useEffect(() => {
-    form.setFieldsValue(props.initialFormValues)
-    setFormValues(props.initialFormValues)
+    // form.setFieldsValue(props.initialFormValues)
+    // setFormValues(props.initialFormValues)
+    console.log(form.getFieldsValue())
   }, [])
 
   //<------------------------------------------------------- form handler --------------------------------------------------------->
@@ -566,26 +536,28 @@ export const CreatePlatformStep = (props) => {
   const [showMax, setShowMax] = useState(3)
   useEffect(() => {
     async function getSendoAttr() {
+      const { sendoCategoryId, options } = form.getFieldsValue()
       try {
-        const response = await request.get(`/api/sendo/attributes/${formValues.sendoCategoryId}`, {
+        const response = await request.get(`/api/sendo/attributes/${sendoCategoryId}`, {
           headers: {
             'Platform-Token': selectedPlatform.find(i => i.platform_name === 'sendo').access_token
           }
         })
 
         if(response.code === 200) {
-          // console.log("sendo attr: ", response.data.result)
           let finalSendoAttr = response.data
           let customId = new Date().getTime() % 100000 + parseInt(Math.random()*1000)
-          finalSendoAttr.attribute = finalSendoAttr.attribute.concat(formValues.options.filter(cusAt => cusAt.optionName !== 'Màu sắc' && cusAt.optionName !== 'color_family').map(cusAt => ({
-            id: customId,
-            name: cusAt.optionName,
-            is_custom: true,
-            is_required: false,
-            is_checkout: false,
-            attribute_values: cusAt.optionValue.map((ol, index) => ({ id: customId + parseInt(Math.random()*1000), value: ol, is_selected: true, is_custom: true }))
-          })))
-          setSendoAttr(response.data)
+          console.log("aaaaaaaaaaaaaa, ", finalSendoAttr)
+          console.log("bbbbbbbbbbbbbbb, ", options)
+          // finalSendoAttr.attribute = finalSendoAttr.attribute.concat(options.filter(cusAt => cusAt.optionName !== 'Màu sắc' && cusAt.optionName !== 'color_family').map(cusAt => ({
+          //   id: customId,
+          //   name: cusAt.optionName,
+          //   is_custom: true,
+          //   is_required: false,
+          //   is_checkout: false,
+          //   attribute_values: cusAt.optionValue.map((ol, index) => ({ id: customId + parseInt(Math.random()*1000), value: ol, is_selected: true, is_custom: true }))
+          // })))
+          setSendoAttr(finalSendoAttr)
         }
       } catch(e) {
         console.log(e.message)
@@ -596,12 +568,13 @@ export const CreatePlatformStep = (props) => {
     if(isConfigSendoAttr) {
       getSendoAttr()
     }
-  }, [formValues.sendoCategoryId, isConfigSendoAttr])
+  }, [form.getFieldValue('sendoCategoryId'), isConfigSendoAttr])
 
   useEffect(() => {
     async function getLazadaAttr() {
       try {
-        const response = await request.get(`/lazada/attributes/${formValues.categoryId}`)
+        const { categoryId, options } = form.getFieldsValue()
+        const response = await request.get(`/lazada/attributes/${categoryId}`)
 
         if(response.code === 200) {
           console.log(response.data)
@@ -617,7 +590,7 @@ export const CreatePlatformStep = (props) => {
     if(isConfigLazadaAttr) {
       getLazadaAttr()
     }
-  }, [formValues.categoryId, isConfigLazadaAttr])
+  }, [form.getFieldValue('categoryId'), isConfigLazadaAttr])
 
   const lazadaInputTypeSwitch = (attr, index) => {
     switch(attr.input_type) {
@@ -695,11 +668,12 @@ export const CreatePlatformStep = (props) => {
   //<------------------------------------------------------- attribute handler --------------------------------------------------------->
   //<------------------------------------------------------- brand render --------------------------------------------------------->
   const renderSystemBrand = () => {
+    const brand = form.getFieldValue('brand')
     return <BrandSelect
       size={'large'}
-      value={formValues?.brand}
-      onChange={value => {
-        setFormValues({ brand: value })
+      value={brand}
+      onChange={brand => {
+        form.setFieldsValue({ brand })
       }}
     />
   }
@@ -722,16 +696,42 @@ export const CreatePlatformStep = (props) => {
   }
   //<------------------------------------------------------- brand render --------------------------------------------------------->
 
+  //<------------------------------------------------------- handle not required sendo attribute --------------------------------------------------------->
+  const handleNotRequiredSendoAttributeChange = (value, attrName, mode) => {
+    let newSendoAttr = { ...sendoAttr }
+    newSendoAttr.attribute = newSendoAttr.attribute.map((attr, index) => {
+      if(attr.name === attrName) {
+        attr.attribute_values = attr?.attribute_values?.map(attrValue => {
+          if(mode === 'multiple') {
+            if(value.includes(attrValue.value)) {
+              attrValue.is_selected = true
+            } else {
+              attrValue.is_selected = false
+            }
+          } else {
+            if(value === attrValue.value) {
+              attrValue.is_selected = true
+            } else {
+              attrValue.is_selected = false
+            }
+          }
+          return attrValue
+        })
+      }
+      return attr
+    })
+
+    setSendoAttr(newSendoAttr)
+  }
+  //<------------------------------------------------------- handle not required sendo attribute --------------------------------------------------------->
+
   return (
-    <Form
-      {...layout} 
-      form={form}
-      colon={false}
-      initialValues={formValues}
-      onFinishFailed={(err) => console.log("Failed: ", err)}
-      onFinish={handleFormSubmit}
-    >
+    <div className={props.className}>
       <Row>
+        <div style={{ margin: 32 }}>
+          <Button type={"primary"} onClick={() => console.log(form.getFieldsValue())}>Show form</Button>
+          <Button style={{ marginLeft: 16}} type={"primary"} onClick={() => console.log(sendoAttr)}>Show sendo attribute</Button>
+        </div>
         <Col span={21} offset={1}>
           <div className={'basic-marketplace-section'}>
             <Row className={'padding'}>
@@ -771,12 +771,12 @@ export const CreatePlatformStep = (props) => {
               <CateMappingTable 
                 credentials={cateDataSource} 
                 defaultCategory={{
-                  name: formValues.categoryName,
-                  value: formValues.categoryId
+                  name: form.getFieldValue('categoryName'),
+                  value: form.getFieldValue('categoryId')
                 }}
                 sendoCategory={{
-                  name: formValues.sendoCategoryName,
-                  value: formValues.sendoCategoryId,
+                  name: form.getFieldValue('sendoCategoryName'),
+                  value: form.getFieldValue('sendoCategoryId'),
                 }}
                 handleSendoSelect={handleSendoSelect}
                 handleLazadaSelect={handleLazadaSelect}
@@ -795,13 +795,14 @@ export const CreatePlatformStep = (props) => {
                     (fields, { add, remove }, { errors }) => {
                       return (
                           fields.map((field, index) => {
-                            const icon = formValues.products[index].platform_name === 'sendo' ? <SendoIcon/> : formValues.products[index].platform_name === 'lazada' ? <LazadaIcon/> : <SystemIcon/> 
-                            if(formValues.products[index].post === true){
+                            const products = form.getFieldValue('products')
+                            const icon = products[index].platform_name === 'sendo' ? <SendoIcon/> : products[index].platform_name === 'lazada' ? <LazadaIcon/> : <SystemIcon/> 
+                            if(products[index].post === true){
                               return (
                                 <Fragment key={Math.random()}>
                                   <Row>
                                     <Col span={24} style={{ padding: '8px 16px', background: '#fafafa'}}>
-                                      <Text>{icon} {formValues.products[index].store_name}</Text>
+                                      <Text>{icon} {products[index].store_name}</Text>
                                     </Col>
                                   </Row>
                                   <Row gutter={16} type={"flex"} style={{ padding: '8px 16px', marginBottom: 16, height: 100 }}>
@@ -900,7 +901,7 @@ export const CreatePlatformStep = (props) => {
             <Col span={24} style={{ padding: '8px 16px', background: '#fafafa'}}>
               <Text strong>Thương hiệu</Text>
             </Col>
-              { selectedPlatform.length > 0 && formValues.products.map(i => {
+              { selectedPlatform.length > 0 && form.getFieldValue('products').map(i => {
                 if(i.post === true && i.platform_name !== 'sendo') {
                   if(i.platform_name === 'system') {
                     renderSystemBrand()
@@ -921,13 +922,18 @@ export const CreatePlatformStep = (props) => {
                 <Row align="middle" gutter={[16,8]} className={"padding"} style={{ width: '100%'}}>
                   <Col span={8}><Text>{<SendoIcon/>} Đơn vị tính</Text></Col>
                   <Col span={16}>
-                    <Select
-                      defaultActiveFirstOption
-                      onChange={(value) => setFormValues({ ...formValues, sendoUnitId: value })}
-                      style={{ width: '100%'}}
+                    <Form.Item
+                      name={"sendoUnitId"}
+                      label={""}
                     >
-                      {sendoUnit.map((i, index) => <Option key={index + 1} value={index + 1}>{i}</Option>)}
-                    </Select>
+                      <Select
+                        defaultActiveFirstOption
+                        onChange={(value) => form.setFieldsValue({ sendoUnitId: value })}
+                        style={{ width: '100%'}}
+                      >
+                        {sendoUnit.map((i, index) => <Option key={index + 1} value={index + 1}>{i}</Option>)}
+                      </Select>
+                    </Form.Item>
                   </Col>
                 </Row>
               )
@@ -1043,7 +1049,12 @@ export const CreatePlatformStep = (props) => {
                             attr.control_type === 'TextBox' ? 
                               <Input style={{ width: '100%'}}/>
                             : 
-                              <Select style={{ width: '100%'}} mode={attr.control_type === 'CheckBox' && 'multiple'}>
+                              <Select 
+                                value={
+                                  attr.control_type === 'CheckBox' ? (_.uniq(attr?.attribute_values?.filter(i => i.is_selected).map(i => i.value)) || [])
+                                  : (attr?.attribute_values?.find(i => i.is_selected)?.value || '')
+                                } 
+                                style={{ width: '100%'}} mode={attr.control_type === 'CheckBox' && 'multiple'} onChange={(value) => handleNotRequiredSendoAttributeChange(value, attr.name, attr.control_type === 'CheckBox' && 'multiple')}>
                                 {
                                   attr.attribute_values.map(i => <Option key={i.id} value={i.value}>{i.value}</Option>)
                                 }
@@ -1091,7 +1102,7 @@ export const CreatePlatformStep = (props) => {
         <Divider/>
         <Row gutter={8} justify="end" style={{ width: '100%'}}>
           <Col><Button onClick={() => props.prev()}>Quay về</Button></Col>
-          <Col><Button type={"primary"} htmlType={"submit"}>Gửi</Button></Col>
+          <Col><Button type={"primary"} onClick={handleFormSubmit}>Gửi</Button></Col>
         </Row>
       </Row>
       <Form.Item name="categoryId">
@@ -1106,7 +1117,7 @@ export const CreatePlatformStep = (props) => {
       <Form.Item name="sendoCategoryName">
           <Input type={"text"} type={"hidden"}/>
       </Form.Item>
-    </Form>
+    </div>
   )
 }
 

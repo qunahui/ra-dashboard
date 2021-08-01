@@ -4,64 +4,74 @@ import { Row, Col, Typography, Divider, Form, Input, InputNumber, Checkbox, Butt
 import { connect } from 'react-redux'
 import CreateBasicStep from './CreateBasicStep'
 import CreatePlatformStep from './CreatePlatformStep.js'
+import './AllProductTab.styles.scss'
 
 import AppCreators from 'Redux/app'
 
 const { Text, Title } = Typography
 const { Option } = Select
 
+const layout = {
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 19,
+    offset: 1
+  },
+};
+
+
+const INITIAL_VALUES = {
+  productType: 'normal',
+  name: 'Áo phông EAGLES',
+  sku: 'test-sku',
+  categoryName: '',
+  categoryId: 0,
+  sendoCategoryName: '',
+  sendoCategoryId: 0,
+  brand: 'No brand',
+  description: '',
+  retailPrice: 100000, // gia ban le
+  wholeSalePrice: 100000, // gia ban buon
+  importPrice: 100000, //gia nhap
+  specialPrice: 100000, //gia nhap
+  weightValue: 100, //khoi luong
+  width: 100, //khoi luong
+  height: 100, //khoi luong
+  length: 100, //khoi luong
+  weightValue: 100, //khoi luong
+  unit: 'Cái', // don vi tinh
+  weightUnit: 'g', //don vi khoi luong
+  fileList: [],
+  avatar: [],
+  isConfigInventory: true,
+  quantity: 100,
+  initPrice: 0,
+  // options: [
+  //   {
+  //     optionName: 'Kích thước',
+  //     optionValue: ['8', '9'],
+  //   },
+  //   {
+  //     optionName: 'Màu sắc',
+  //     optionValue: ['nâu', 'vàng'],
+  //   },
+  //   {
+  //     optionName: 'Chất liệu',
+  //     optionValue: ['gỗ', 'thép'],
+  //   }
+  // ],
+  products: [],
+}
+
 export const create = (props) => {
   const [form] = Form.useForm()
-  const [formValues, setFormValues] = useReducer(
-    (state, newState) => ({ ...state, ...newState}),
-    {
-      productType: 'normal',
-      name: 'Áo phông EAGLES',
-      sku: 'test-sku',
-      categoryName: '',
-      categoryId: 0,
-      sendoCategoryName: '',
-      sendoCategoryId: 0,
-      brand: 'No brand',
-      description: '',
-      retailPrice: 100000, // gia ban le
-      wholeSalePrice: 100000, // gia ban buon
-      importPrice: 100000, //gia nhap
-      specialPrice: 100000, //gia nhap
-      weight: 100, //khoi luong
-      width: 100, //khoi luong
-      height: 100, //khoi luong
-      length: 100, //khoi luong
-      weightValue: 100, //khoi luong
-      unit: 'Cái', // don vi tinh
-      weightUnit: 'g', //don vi khoi luong
-      fileList: [],
-      avatar: [],
-      isConfigInventory: true,
-      quantity: 100,
-      initPrice: 0,
-      options: [
-        {
-          optionName: 'Kích thước',
-          optionValue: ['8', '9'],
-        },
-        {
-          optionName: 'Màu sắc',
-          optionValue: ['nâu', 'vàng'],
-        },
-        {
-          optionName: 'Chất liệu',
-          optionValue: ['gỗ', 'thép'],
-        }
-      ],
-      products: [],
-    }
-    )
-
   //<---------------------------------------------- refresh all token handler ----------------------------------------->
   const [currentStorage, setCurrentStorage] = useState(props.app.storage || {})
   useEffect(() => {
     props.refreshAllTokenStart()
+    form.setFieldsValue(INITIAL_VALUES)
   }, [])
 
   useEffect(() => {
@@ -74,7 +84,9 @@ export const create = (props) => {
   
   //<---------------------------------------------- init all platformProduct ----------------------------------------->
   const onSelectPLatformToPost = (values) => {
-    formValues.products = formValues.products.map(i => {
+    let products = form.getFieldValue('products')
+
+    products = products.map(i => {
       if(values.map(val => val._id).includes(i._id)) {
         i.post = true
       } else { 
@@ -84,7 +96,7 @@ export const create = (props) => {
       return i
     })
 
-    setFormValues({...formValues})
+    form.setFieldsValue({ products })
   }
   //<---------------------------------------------- init all platformProduct ----------------------------------------->
   //<--------------------------------------page render handler------------------------------------------>
@@ -98,9 +110,8 @@ export const create = (props) => {
     }
   }
 
-  const handleBasicFormSubmit = async (values) => {
-    setFormValues(values)
-
+  const handleBasicFormSubmit = async () => {
+    const values = form.getFieldsValue()
     let initPlatformProduct = []
     initPlatformProduct = initPlatformProduct.concat({
         platform_name: 'system',
@@ -117,38 +128,42 @@ export const create = (props) => {
         post: false
       }))      
 
-    setFormValues({ products: initPlatformProduct })
-
-  
+    form.setFieldsValue({ products: initPlatformProduct } )
+    console.log("form after basic step: ", form.getFieldsValue())
     setCurrentPage(1)
+  }
+
+  const handleFormSubmit = (values) => {
+    console.log("Final form data: ", values)
   }
 
   //<--------------------------------------page render handler------------------------------------------>
     
   return (
-    <>
-      {
-        currentPage === 0 && 
-        (
-          <CreateBasicStep 
-            initialFormValues={formValues} 
-            prev={prev} 
-            handleSubmit={handleBasicFormSubmit}
-          />
-        )
-      }
-      { 
-        currentPage === 1 && 
-        (
-          <CreatePlatformStep
-            initialFormValues={formValues} 
-            prev={prev} 
-            onSelectPLatformToPost={onSelectPLatformToPost}
-            // handleSubmit={handleBasicFormSubmit}
-          />
-        )
-      }
-    </>
+    <Form
+      {...layout} 
+      form={form}
+      colon={false}
+      onFinishFailed={(err) => console.log("Failed: ", err)}
+      onFinish={handleFormSubmit}
+    >
+      <CreateBasicStep 
+        prev={prev} 
+        form={form}
+        handleSubmit={handleBasicFormSubmit}
+        className={`${currentPage !== 0 ? 'hidden' : ''}`}
+      />
+      <CreatePlatformStep
+        prev={prev} 
+        form={form}
+        onSelectPLatformToPost={onSelectPLatformToPost}
+        className={`${currentPage !== 1 ? 'hidden' : ''}`}
+        // handleSubmit={handleBasicFormSubmit}
+      />
+       <Form.Item name="products">
+          <Input type={"text"} type={"hidden"}/>
+      </Form.Item>
+    </Form>
   )
 }
 

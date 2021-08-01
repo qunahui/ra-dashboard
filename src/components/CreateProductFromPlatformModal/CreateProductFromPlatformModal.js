@@ -365,7 +365,7 @@ export const CreateProductFromPlatformModal = (props) => {
           style={{ zIndex: 999999 }}
           id={"download-product-modal"}
           visible={showModal}
-          width={1000}
+          width={1200}
           bodyStyle={{ padding: 0}}
           onCancel={handleHideModal}
           onOk={handleFormSubmit}

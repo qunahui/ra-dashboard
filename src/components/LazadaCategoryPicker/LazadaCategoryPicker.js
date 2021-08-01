@@ -171,7 +171,7 @@ const LazadaCategoryPicker = (props) => {
   return (
     <>
       <div>
-        {renderState.name && <>{renderState.name} &nbsp;</>} 
+        {renderState?.name ? <>{renderState.name} &nbsp;</> : <span>Chưa có ngành hàng</span>} 
         <Cascader 
           options={rootCategory} 
           loadData={loadData} 
@@ -183,7 +183,7 @@ const LazadaCategoryPicker = (props) => {
           }}
           dropdownRender={dropdownRender}
         >
-          {renderState?.name ? <a ref={linkRef} href="#">Edit <EditOutlined /></a> : '--' }
+          <a ref={linkRef} href="#">Thay đổi <EditOutlined /></a> 
         </Cascader>
       </div>
     </>

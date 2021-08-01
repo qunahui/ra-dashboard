@@ -4,23 +4,28 @@ import ReactQuill from 'react-quill'
 import './TextEditor.styles.scss'
 
 const TextEditor = (props) => {
-  const [editorHtml, setEditorHtml] = useState(props.initialValue || '')
+  const [editorHtml, setEditorHtml] = useState(props?.initialValue || '')
+  const [typingTimeout, setTypingTimeout] = useState(0)
+
+  useEffect(() => {
+    props.value && setEditorHtml(props.value)
+  }, [props])
 
   const handleChange = (value) => {
     setEditorHtml(value)
-    props.handleChange && props.handleChange(value)
-  }
-
-  useEffect(() => {
-    const { initialValue } = props
-    if(!_.isEqual(editorHtml, initialValue)) {
-      setEditorHtml(initialValue)
+    if (typingTimeout) {
+      clearTimeout(typingTimeout)
     }
-  }, [props])
+    setTypingTimeout(
+      setTimeout(() => {
+        props.handleChange && props.handleChange(value)
+      }, 500),
+    )
+  }
 
   return (
     <ReactQuill
-      value={editorHtml || ""} 
+      value={editorHtml} 
       onChange={handleChange}
       modules={modules}
       formats={formats}

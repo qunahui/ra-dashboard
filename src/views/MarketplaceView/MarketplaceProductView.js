@@ -90,8 +90,11 @@ const MarketplaceProductView = (props) => {
 
   return (
     <>
-      <Row>
-        <Title level={3} type="secondary">Quản lý sản phẩm TMĐT</Title>
+      <Row justify={"center"}>
+        <Col span={16}>
+          <Title level={3}>Quản lý sản phẩm TMĐT</Title>
+          <Divider/>  
+        </Col>
       </Row>
       <Row
         style={{ 
@@ -154,7 +157,7 @@ const MarketplaceProductView = (props) => {
                 disabled={!chosenCre}
                 loading={syncButtonLoading}
               >
-                Đồng bộ
+                Cập nhật
               </Button>
             ]}
           >

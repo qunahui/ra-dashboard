@@ -18,86 +18,23 @@ const { Option } = Select
 
 const layout = {
   labelCol: {
-    span: 2,
-  },
-  wrapperCol: {
-    span: 21,
-    offset: 1
-  },
-};
-
-const smallLayout = {
-  labelCol: {
     span: 4,
   },
   wrapperCol: {
     span: 19,
     offset: 1
   },
-}
-
-const smallNoOffsetLayout = {
-  labelCol: {
-    span: 4,
-  },
-  wrapperCol: {
-    span: 20,
-  },
-}
+};
 
 export const CreateBasicStep = (props) => {
-  const [form] = Form.useForm()
-  const [formValues, setFormValues] = useReducer(
-    (state, newState) => ({ ...state, ...newState}),
-    {
-      productType: 'normal',
-      name: 'Áo phông EAGLES',
-      sku: 'test-sku',
-      categoryName: '',
-      categoryId: 0,
-      sendoCategoryName: '',
-      sendoCategoryId: 0,
-      // brand: 'No Brand',
-      brand: '',
-      shortDescription: '',
-      description: '',
-      retailPrice: 100000, // gia ban le
-      wholeSalePrice: 100000, // gia ban buon
-      importPrice: 100000, //gia nhap
-      specialPrice: 100000, //gia nhap
-      weight: 100, //khoi luong
-      width: 100, //khoi luong
-      height: 100, //khoi luong
-      length: 100, //khoi luong
-      weightValue: 100, //khoi luong
-      unit: 'Cái', // don vi tinh
-      weightUnit: 'g', //don vi khoi luong
-      fileList: [],
-      avatar: [],
-      isConfigInventory: true,
-      quantity: 100,
-      initPrice: 0,
-      options: [],
-      // variants: [{
-      //   name: '',
-      //   sku: '',
-      //   inventories: [{
-      //     initStock: 0,
-      //     initPrice: 0,
-      //   }],
-      //   sellable: true,
-      // }]
-    }
-  )
-
+  const { form } = props
   //<------------------------------------------------------- category picker handler --------------------------------------------------------->
-  const [requiredSaleProp, setRequiredSaleProp] = useState([])
-  useEffect(() => {
-    form.setFieldsValue({
-      categoryName: 'Electronics Accessories > Phụ kiện máy ảnh chụp lấy ngay',
-      categoryId: 11078
-    })
-  }, [])
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     categoryName: 'Electronics Accessories > Phụ kiện máy ảnh chụp lấy ngay',
+  //     categoryId: 11078
+  //   })
+  // }, [])
 
   async function getSuggestCategory(name) {
     try {
@@ -164,14 +101,7 @@ export const CreateBasicStep = (props) => {
   //<------------------------------------------------------- form handler --------------------------------------------------------->
 
   return (
-    <Form
-      {...layout} 
-      form={form}
-      colon={false}
-      initialValues={formValues}
-      onFinishFailed={(err) => console.log("Failed: ", err)}
-      onFinish={handleFormSubmit}
-    >
+    <div className={props.className}>
       <Row>
         <Col span={21} offset={1}>
           <div className={'basic-marketplace-section'}>
@@ -200,10 +130,8 @@ export const CreateBasicStep = (props) => {
                 <LazadaCategoryPicker 
                   handleSelect={handleSelectCategory}
                   renderState={{
-                    name: form.getFieldValue('categoryName') || 'Electronics Accessories > Phụ kiện máy ảnh chụp lấy ngay',
-                    value: form.getFieldValue('categoryId') || 11078
-                    // name: formState.categoryName,
-                    // value: formState.categoryId
+                    name: form.getFieldValue('categoryName'),
+                    value: form.getFieldValue('categoryId')
                   }}
                 />
               </Form.Item>
@@ -259,7 +187,7 @@ export const CreateBasicStep = (props) => {
             <Row gutter={24} className={'padding'} style={{ width: '97%'}} id={"price-and-stock-section"}>
                 <Col span={12}>
                   <Form.Item 
-                    {...smallLayout}
+                    {...layout}
                     name={"sku"} 
                     label={"Mã SKU"} 
                     rules={[{ required: true, message: 'Trường sku là bắt buộc'}]}
@@ -269,7 +197,7 @@ export const CreateBasicStep = (props) => {
                     <Input />
                   </Form.Item>
                   <Form.Item 
-                    {...smallLayout}
+                    {...layout}
                     name={"quantity"} 
                     label={"Tồn kho"} 
                     rules={[{ required: true, message: 'Trường tồn kho là bắt buộc'}]}
@@ -281,7 +209,7 @@ export const CreateBasicStep = (props) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item 
-                      {...smallLayout}
+                      {...layout}
                       name={"retailPrice"} 
                       label={"Giá gốc"} 
                       rules={[{ required: true, message: 'Trường giá gốc là bắt buộc'}]}
@@ -290,7 +218,7 @@ export const CreateBasicStep = (props) => {
                       <InputNumber formatter={moneyFormatter} parser={moneyParser} style={{ width: '100%'}} placeholder="Nhập vào giá gốc" />
                     </Form.Item>
                     <Form.Item 
-                      {...smallLayout}
+                      {...layout}
                       name={"specialPrice"} 
                       label={"Giá khuyến mãi"} 
                       style={{ width: '100%'}}
@@ -344,7 +272,6 @@ export const CreateBasicStep = (props) => {
                                   noStyle
                                   style={{ marginBottom: 0}}
                                 >
-                                  {console.log(form.getFieldValue('options')[index])}
                                   <Select
                                     options={form.getFieldValue('options')[index]?.required && form.getFieldValue('options')[index].options?.map(i => ({ label: i, value: i }))}
                                     size="large" 
@@ -387,7 +314,7 @@ export const CreateBasicStep = (props) => {
             <Divider style={{ margin: 0}}/>
             <Row className={"padding"}>
               <Form.Item
-                {...smallLayout}
+                {...layout}
                 name={"shortDescription"} 
                 label={<div style={{ whiteSpace: 'pre-wrap', height: '100%', textAlignLast:'left' }}>Mô tả ngắn gọn của sản phẩm (độ dài nên ít hơn 100 ký tự)</div>} 
                 rules={[{ required: true, message: 'Trường mô tả ngắn gọn là bắt buộc'}]}
@@ -397,7 +324,7 @@ export const CreateBasicStep = (props) => {
                 <Input placeholder={'Mô tả ngắn gọn cho sản phẩm.....'}/>
               </Form.Item>
               <Form.Item
-                {...smallLayout}
+                {...layout}
                 name={"description"} 
                 label={<div style={{ whiteSpace: 'pre-wrap', height: '100%', textAlignLast:'left' }}>Mô tả chi tiết của sản phẩm (độ dài nên dài hơn 100 ký tự)</div>} 
                 rules={[{ required: true, message: 'Trường mô tả là bắt buộc'}]}
@@ -405,7 +332,7 @@ export const CreateBasicStep = (props) => {
                 placeholder="Nhập vào tên sản phẩm"
               >
                 <TextEditor
-                  initialValue={'initialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValueinitialValue'}
+                  value={form.getFieldValue('description')}
                   handleChange={(value) => form.setFieldsValue({ description: value })}/>
               </Form.Item>
             </Row>
@@ -417,14 +344,21 @@ export const CreateBasicStep = (props) => {
             <Divider style={{ margin: 0}}/>
             <Row className={'padding'} gutter={16}>
               <Form.Item 
-                {...smallLayout}
-                name={"weight"} 
+                {...layout}
+                name={"weightValue"} 
                 label={<div style={{ whiteSpace: 'pre-wrap', height: '100%', textAlignLast:'left', display: 'grid', placeItems: 'center' }}>Cân nặng (sau khi đóng gói)</div>} 
                 rules={[{ required: true, message: 'Trường cân nặng là bắt buộc'}]}
                 style={{ width: '100%', height: 48}}
                 placeholder="Nhập vào tên sản phẩm"
               >
                 <Input suffix={"gram"}/>
+              </Form.Item>
+              <Form.Item
+                name={"weightUnit"}
+                label={" "}
+                noStyle
+              >
+                <Input type="text" type="hidden"/>
               </Form.Item>  
               <Col span={12}>
                 <Form.Item
@@ -464,9 +398,9 @@ export const CreateBasicStep = (props) => {
       </Row>
       <Divider/>
       <Row gutter={8} justify="end" style={{ width: '100%'}}>
-        <Col><Button type={"primary"} htmlType={"submit"}>Chọn sàn và đăng bán</Button></Col>
+        <Col><Button type={"primary"} onClick={handleFormSubmit}>Chọn sàn và đăng bán</Button></Col>
       </Row>
-    </Form>
+    </div>
   )
 }
 

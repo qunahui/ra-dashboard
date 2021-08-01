@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/charts": "^1.2.4",
     "@ant-design/colors": "^5.0.1",
     "@ant-design/icons": "^4.3.0",
     "@date-io/date-fns": "^1.3.13",
@@ -18,6 +19,7 @@
     "circular-dependency-plugin": "^5.2.0",
     "clsx": "^1.1.1",
     "connected-react-router": "^6.8.0",
+    "copy-webpack-plugin": "6.3.2",
     "css-loader": "^4.2.1",
     "date-fns": "^2.16.1",
     "dotenv-webpack": "^3.0.0",
@@ -58,7 +60,6 @@
     "sass-loader": "^10.1.1",
     "style-loader": "^1.2.1",
     "webpack": "4.44.1",
-    "copy-webpack-plugin": "6.3.2",
     "webpack-cli": "^3.3.12"
   },
   "scripts": {

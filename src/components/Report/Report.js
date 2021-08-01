@@ -6,17 +6,19 @@ import { connect } from 'react-redux'
 import { InfoCircleOutlined, CalendarOutlined } from '@ant-design/icons'
 import './styles.scss'
 import { moneyFormatter } from 'Utils/inputFormatter'
+import { Line } from '@ant-design/charts';
+import _ from 'lodash'
 
 const { Title, Text } = Typography
 const { Option } = Select
 const { SubMenu } = Menu
 
-const dateFormat = "YYYY-DD-MM";
+let d = new Date()
 
 const initialFilter = {
     period: "month",
-    dateFrom: 1622505600*1000,
-    dateTo: 1625097599*1000
+    dateFrom: new Date(d.setDate(d.getDate()- 30)).setHours(0, 0, 0, 0),
+    dateTo: new Date().getTime()
 }
 
 const calcLast = key => {
@@ -28,16 +30,71 @@ const calcLast = key => {
         let lastWeek = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
         return `${new Date().toLocaleDateString()} - ${lastWeek.toLocaleDateString()}`
     }
-    retunr;
+    return;
+}
+
+let getDaysArray = function(start, end) {
+    for(var arr=[],dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1)){
+        arr.push(new Date(dt));
+    }
+    return arr;
+};
+
+const createChartData = (chartData, dateFrom, dateTo) => {
+    let arr = getDaysArray(dateFrom, dateTo)?.map(i => {
+        let date = new Date(i).toLocaleDateString('vi').split('/')
+        return {
+            date: date[0] + '/' + date[1],
+            day: date[0],
+            month: date[1]
+        }
+    })
+
+    let chartArr = []
+    arr?.some(i => {
+        chartArr =chartArr.concat([{
+            date: i.date,
+            day: i.day,
+            month: i.month,
+            orderStatus: 'Đã hủy',
+            value: 0
+        }, {
+            date: i.date,
+            day: i.day,
+            month: i.month,
+            orderStatus: 'Hoàn thành',
+            value: 0
+        }])
+    })
+
+    chartData?.map(i => {
+        let date = new Date(i?.createdAt).toLocaleDateString('vi').split('/')
+        if(i.orderStatus === 'Đã hủy' || i.orderStatus === 'Hoàn thành') {
+            let index = chartArr.findIndex(item => {
+                return item.day === date[0] && item.orderStatus === i.orderStatus
+            })
+
+            chartArr[index] = {
+                ...chartArr[index],
+                value: chartArr[index]?.value + 1
+            }
+        }
+    })
+
+    // return arr
+    return chartArr
 }
 
 export const Report = (props) => {
     const [value, setValue] = useState('last30days')
     const [isShowWeekPicker, setIsShowWeekPicker] = useState(false)
     const [isShowMonthPicker, setIsShowMonthPicker] = useState(false)
-    const [dateFrom, setDateFrom] = useState(null)
-    const [dateTo, setDateTo] = useState(null)
+    const [dateFrom, setDateFrom] = useState(initialFilter?.dateFrom)
+    const [dateTo, setDateTo] = useState(initialFilter?.dateTo)
     const [report, setReport] = useState(null)
+    const [chartData, setChartData] = useState([])
+
+
     async function fetchReport(params = initialFilter) {
         try {
             const result = await request.get('/reports', {
@@ -45,6 +102,7 @@ export const Report = (props) => {
             })
             if(result.code === 200) {
                 setReport(result.data)
+                setChartData(createChartData(result?.data?.listOrder, params?.dateFrom, params?.dateTo))
             }
         } catch(e) {
             console.log(e.message)
@@ -58,13 +116,20 @@ export const Report = (props) => {
         return new Date(year, month, 0).getDate();
     }
 
-    function handleDateChange(date, dateString) {
+    function handleDateMonthChange(date, dateString) {
         const [year, month] = dateString.split('-')
         const lastDayOfMonth = getDaysInMonth(month, year)
         const dateFrom = new Date(`${year}-${month}-${1}`).setHours(0, 0, 0, 0)
         const dateTo = new Date(`${year}-${month}-${lastDayOfMonth}`).setHours(23,59, 59, 59)
         setDateFrom(dateFrom)
         setDateTo(dateTo)
+    }
+
+    function handleDateWeekChange(date, dateString) {
+        const firstDayOfWeek = date.startOf('week').toDate().getTime()
+        const endDayOfWeek = date.endOf('week').toDate().getTime()
+        setDateFrom(firstDayOfWeek)
+        setDateTo(endDayOfWeek)
     }
     
     function handleChange(value) {
@@ -76,6 +141,14 @@ export const Report = (props) => {
             setIsShowWeekPicker(false)
             setIsShowMonthPicker(true)
         } else {
+            if(value === 'last7days') {
+                let now = new Date()
+                setDateFrom(new Date(now.setDate(now.getDate()- 7)).setHours(0, 0, 0, 0))
+                setDateTo( new Date().getTime())
+            } else if(value === 'last30days') {
+                setDateFrom(initialFilter?.dateFrom)
+                setDateTo(initialFilter?.dateTo)
+            }
             setIsShowWeekPicker(false)
             setIsShowMonthPicker(false)
         }
@@ -83,11 +156,38 @@ export const Report = (props) => {
 
     function handleSubmit() {
         if(value !== 'week' && value !== 'month') {
-            fetchReport({ period: value })
-        } else {
+            fetchReport({ period: value, dateFrom, dateTo })
+        } else if(value === 'week') {
+            fetchReport({ period: value, dateFrom, dateTo })
+        } else if(value === 'month') {
             fetchReport({ period: value, dateFrom, dateTo })
         }
     }
+
+    let config = {
+        data: chartData,
+        xField: 'day',
+        yField: 'value',
+        seriesField: 'orderStatus',
+        color: function color(_ref) {
+            let orderStatus = _ref.orderStatus;
+            return orderStatus === 'Đã hủy' ? '#F4664A' : orderStatus === 'Hoàn thành' ? '#30BF78' : '#FAAD14';
+        },
+        legend: { position: 'top' },
+        // smooth: true, 
+        meta: {
+        ['value']: {
+            nice: false,
+            values: [0, 10, 20]
+        }
+        },   
+        animation: {
+          appear: {
+            animation: 'path-in',
+            duration: 2000,
+          },
+        },
+      };
 
     return (
         <>  
@@ -99,10 +199,10 @@ export const Report = (props) => {
                     <Option key={"month"} value={'month'}>Theo tháng</Option>
                 </Select>
                 {
-                    isShowWeekPicker && <DatePicker picker={"week"} style={{ marginLeft: 16 }} onChange={handleDateChange} defaultValue={moment()}/>
+                    isShowWeekPicker && <DatePicker picker={"week"} style={{ marginLeft: 16 }} onChange={handleDateWeekChange} defaultValue={moment()}/>
                 }
                 {
-                    isShowMonthPicker && <DatePicker picker={"month"} style={{ marginLeft: 16 }} onChange={handleDateChange} defaultValue={moment()}/>
+                    isShowMonthPicker && <DatePicker picker={"month"} style={{ marginLeft: 16 }} onChange={handleDateMonthChange} defaultValue={moment()}/>
                 }
                 <Button style={{ marginLeft: 8 }} type={"primary"} onClick={handleSubmit}>Tìm kiếm</Button>
             </Row>
@@ -167,6 +267,9 @@ export const Report = (props) => {
                             <Text secondary style={{ fontSize: 12}}>So với 30 ngày trước</Text>
                     </div>
                 </Col>
+            </Row>
+            <Row gutter={[16, 16]} style={{ margin: '0 8px', width: '100%' }}>
+                <Line {...config} style={{ width: '100%' }}/>
             </Row>
         </>
     )
