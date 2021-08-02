@@ -19,6 +19,8 @@ const Employee = props => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false)
+  const [employeeDetail, setEmployeeDetail] = useState(null)
 
   async function getAllEmployee() {
       try { 
@@ -65,18 +67,25 @@ const Employee = props => {
       title: 'Hành động',
       dataIndex: 'action',
       key: 'action',
+      width: 200,
       render: (_, record) => {
-        return <Dropdown
+        return <>
+          <Dropdown
             trigger={['click']}
             overlay={(
               <Menu>
-                <Menu.Item key={'edit-employee-permission'}>Chỉnh sửa quyền hạn</Menu.Item>
-                <Menu.Item key={'remove-employee'} onClick={() => handleRemoveEmployee(record)}>Xóa nhân viên</Menu.Item>
+                <Menu.Item key={'edit-employee-permission'} onClick={() => {
+                  setShowEmployeeModal(true)
+                  const { roleAccess, ...rest } = record
+                  setEmployeeDetail(record)
+                }}>Xem thông tin chi tiết</Menu.Item>
+                {props?.user?._id !== record?.userId && <Menu.Item key={'remove-employee'} onClick={() => handleRemoveEmployee(record)}>Xóa nhân viên</Menu.Item>}
               </Menu>
             )}
           >
-            {props?.user?._id !== record?.userId ? <a href={'#'} >Chỉnh sửa</a> : <></>}
+            <a href={'#'} >Chỉnh sửa</a>
           </Dropdown>
+        </>
       } 
     },
   ]
@@ -141,6 +150,34 @@ const Employee = props => {
             <Col span={14}>
                 <Input style={{ width: '100%'}} value={email} onChange={(e) => setEmail(e.target.value)}/>
             </Col>
+        </Row>
+      </Modal>
+      <Modal
+        visible={showEmployeeModal}
+        width={800}
+        onCancel={() => setShowEmployeeModal(false)}
+        title={"Thông tin chi tiết"}
+        footer={[
+          <Button onClick={() => setShowEmployeeModal(false)}>Quay lại</Button>
+        ]}
+      >
+        <Row gutter={[16, 16]}>
+           <Col span={12}>
+             <div style={{ marginBottom: 8 }}>Họ và tên</div>
+             <Input value={employeeDetail?.displayName}/>
+           </Col>
+           <Col span={12}>
+            <div style={{ marginBottom: 8 }}>Địa chỉ</div>
+            <Input value={employeeDetail?.address}/>
+           </Col>
+           <Col span={12}>
+            <div style={{ marginBottom: 8 }}>Số điện thoại</div>
+            <Input value={employeeDetail?.phone}/>
+           </Col>
+           <Col span={12}>
+            <div style={{ marginBottom: 8 }}>Email</div>
+            <Input value={employeeDetail?.email}/>
+           </Col>
         </Row>
       </Modal>
     </Card>

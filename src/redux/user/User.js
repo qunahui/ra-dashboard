@@ -22,7 +22,10 @@ const { Types, Creators } = createActions({
   reset: [],
   getWhoAmIStart: [],
   getWhoAmISuccess: ['payload'],
-  getWhoAmIFailure: ['payload']
+  getWhoAmIFailure: ['payload'],
+  updateUserStart: ['payload'],
+  updateUserSuccess: ['payload'],
+  updateUserFailure: ['payload'],
 })
 
 export const UserTypes = Types
@@ -38,6 +41,22 @@ export const INITIAL_STATE = fromJS({
 })
 
 /* ------------- Reducers ------------- */
+const updateUserStart = state => state.merge({
+  isWorking: true,
+})
+
+const updateUserSuccess = (state, { payload }) => {
+  state = state.update('user', user => ({ ...user, ...payload }))
+
+  return state.merge({
+    isWorking: false,
+  })
+}
+
+const updateUserFailure = state => state.merge({
+  isWorking: false,
+})
+
 const signInStart = (state) =>
   state.merge({
     isGettingUser: true,
@@ -105,6 +124,9 @@ const reset = (state) => INITIAL_STATE
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.UPDATE_USER_START]: updateUserStart,
+  [Types.UPDATE_USER_SUCCESS]: updateUserSuccess,
+  [Types.UPDATE_USER_FAILURE]: updateUserFailure,
   [Types.GOOGLE_SIGN_IN_START]: signInStart,
   [Types.FACEBOOK_SIGN_IN_START]: signInStart,
   [Types.EMAIL_SIGN_IN_START]: signInStart,

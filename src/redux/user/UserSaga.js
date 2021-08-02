@@ -121,32 +121,29 @@ export function* onGetWhoAmI() {
   yield takeLatest(UserTypes.GET_WHO_AM_I_START, getWhoAmIProcess)
 }
 
-// export function* onCheckUserSession() {
-//   yield takeLatest(UserTypes.CHECK_USER_SESSION_START, isUserAuthenticated);
-// }
+export function* onUpdateUserStart() {
+  yield takeLatest(UserTypes.UPDATE_USER_START, updateUserProcess)
+}
 
-// function* userRootSagas() {
-//   sagas = [
-//     call(onGoogleSignInStart),
-//     call(onFacebookSignInStart),
-//     call(onEmailSignInStart),
-//     call(onCheckUserSession),
-//     call(onLogoutStart), 
-//     call(onSetTheme),
-//     call(onSignUpStart),
-//     call(onSignUpSuccess),
-//   ]
-//   yield all(sagas)
-//   return sagas
-// }
+export function* updateUserProcess({ payload }) {
+  try {
+    const response = yield request.patch('/users/update', payload)
+    if(response.code === 200) {
+      toast({ type: 'success', message: 'Đổi thông tin thành công!' })
+      yield put(Creators.updateUserSuccess(payload))
+    }
+  } catch(e) {
+    toast({ type: 'error', message: e.message })
+  }
+}
 
 const userRootSagas = [
   call(onEmailSignInStart),
   call(onSignInSuccess),
-  // call(onCheckUserSession),
   call(onLogoutStart), 
   call(onSignUpStart),
   call(onGetWhoAmI),
+  call(onUpdateUserStart),
 ];
 
 export default userRootSagas

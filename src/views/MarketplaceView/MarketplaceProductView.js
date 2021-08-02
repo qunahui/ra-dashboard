@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useReducer } from 'react'
 import _ from 'lodash'
 import { useHistory } from 'react-router-dom'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import AppCreators from 'Redux/app'
 import ProductCreators from 'Redux/product'
 
-import { Row, Col, Typography, Button, Table, Tabs, Form, Input, Divider, Modal, Checkbox, Select } from 'antd'
+import { Row, Col, Typography, Button, Table, Tabs, Form, Tag, Input, Divider, Modal, Checkbox, Select } from 'antd'
 //
 import AllProductTab from './AllProductTab'
 import LazadaCategoryPicker from 'Components/LazadaCategoryPicker'
@@ -18,15 +18,93 @@ const { TabPane } = Tabs
 const { Option } = Select
 const CheckboxGroup = Checkbox.Group
 
+const INITIAL_FILTER =  {
+  name: ''
+}
+
+function tagRender(props) {
+  const { label, value, platform, closable, onClose } = props;
+
+  const onPreventMouseDown = event => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const colorPicker = (value) => {
+    switch(value.platform_name) {
+      case 'lazada':
+        return 'purple'
+      case 'sendo':
+        return 'blue'
+    } 
+  }
+
+  return (
+    <Tag
+      color={colorPicker(JSON.parse(value))}
+      onMouseDown={onPreventMouseDown}
+      closable={closable}
+      onClose={onClose}
+      style={{ marginRight: 3 }}
+    >
+      {JSON.parse(value).platform_name === 'sendo' ? <SendoIcon/> : <LazadaIcon/> } {label}
+    </Tag>
+  );
+}
+
+const FilterPanel = ({ onFilter, platformCredentials }) => {
+  const [filter, setFilter] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    INITIAL_FILTER
+  )
+  const [selectedCreds, setSelectedCreds] = useState(platformCredentials?.map(i => JSON.stringify(i)) || [])
+
+  const handleFilterSubmit = () => {
+    onFilter({ name: filter?.name, selectedCreds: selectedCreds?.map(i => JSON.parse(i)) })
+  }
+  
+  return (
+    <Row gutter={[8, 16]} style={{ marginBottom: 8 }}>
+      <div style={{ display: 'grid', placeItems: 'center', marginLeft: 8 }}>
+        Gian hàng: &nbsp;
+      </div>
+      <div style={{ display: 'grid', placeItems: 'center', marginLeft: 8 }}>
+        <Select
+            value={selectedCreds}
+            tagRender={tagRender}
+            mode={'multiple'}
+            onChange={values => setSelectedCreds(values)}
+            style={{ width: 400 }}
+          >
+            {
+              platformCredentials?.map((i, idx) => (
+                <Option key={idx} value={JSON.stringify(i)}>{i.store_name}</Option>
+              ))
+            }
+          </Select>
+      </div>
+      <div style={{ display: 'grid', placeItems: 'center', margin: '0 16px' }}>
+        Tìm kiếm theo tên: 
+      </div>
+      <div>
+        <Input value={filter?.name} style={{ width: 300, marginRight: 8 }} onChange={e => setFilter({ name: e.target.value })} placeholder={"Tìm kiếm theo tên"} allowClear/>
+      </div>
+      <Col>
+        <Button type={'primary'} onClick={handleFilterSubmit}>Tìm kiếm</Button>
+      </Col>
+    </Row>
+  )
+}
+
 const MarketplaceProductView = (props) => {
   const [syncModalVisible, setSyncModalVisible] = React.useState(false)
   const [syncButtonLoading, setSyncButtonLoading] = React.useState(false)
   const [linkModalVisible, setLinkModalVisible] = React.useState(false)
   const [platformCredentials, setPlatformCredentials] = React.useState([])
   const [linkableVariants, setLinkableVariants] = React.useState([])
+  const [searchCreds, setSearchCreds] = React.useState([])
 
   //<----------------------------------------------- sync modal handler ---------------------------------->
-  // const [checkedList, setCheckedList] = useState([])
   const [chosenCre, setChosenCre] = useState(null)
 
   const onChange = cre => {
@@ -85,6 +163,7 @@ const MarketplaceProductView = (props) => {
 
       if(!_.isEqual(allCredentials, platformCredentials)) {
         setPlatformCredentials(allCredentials)
+        setSearchCreds(allCredentials)
       }
     }
   }, [props.app])
@@ -150,7 +229,10 @@ const MarketplaceProductView = (props) => {
             <TabPane tab="Đã tắt kích hoạt" key="Đã tắt kích hoạt"/>
             <TabPane tab="Đã xóa" key="Đã xóa"/>
           </Tabs>
-          <AllProductTab credentials={platformCredentials} onTransformProductsCreated={handleSetLinkableVariants}/>
+          {
+            platformCredentials?.length > 0 && <FilterPanel onFilter={({ selectedCreds }) => setSearchCreds(selectedCreds) } platformCredentials={platformCredentials}/>
+          }
+          <AllProductTab credentials={searchCreds} onTransformProductsCreated={handleSetLinkableVariants}/>
           <Modal
             title="Cập nhật dữ liệu sản phẩm từ gian hàng"
             visible={syncModalVisible}

@@ -18,7 +18,7 @@ export const MarketplaceOrderView = (props) => {
     dateFrom: new Date(new Date(new Date().setDate(new Date().getDate() - 14)).setHours(0,0,0,0)),
     dateTo: new Date(new Date().setHours(23,59,59,999)),
     orderStatus: 'Tất cả',
-    orderId: '',
+    code: '',
     customerName: '',
     customerPhone: '',
   }
@@ -92,17 +92,15 @@ export const MarketplaceOrderView = (props) => {
                   setActiveKey(key)
                 }}
               >
-                <TabPane tab="Tất cả" key="Tất cả"/>
-                <TabPane tab="Hoàn thành" key="Hoàn thành"/>
-                <TabPane tab="Chờ xác nhận" key="Chờ xác nhận"/>
-                <TabPane tab="Đang xử lý" key="Đang xử lý"/>
-                <TabPane tab="Đang giao hàng" key="Đang giao hàng"/>
-                <TabPane tab="Đã giao hàng" key="Đã giao hàng"/>
-                <TabPane tab="Đã hủy" key="Đã hủy"/>
-                <TabPane tab="Gặp sự cố" key="Gặp sự cố"/>
-                <TabPane tab="Đang hoàn trả" key="Đang hoàn trả"/>
-                <TabPane tab="Đã hoàn trả" key="Đã hoàn trả"/>
-                <TabPane tab="Mất hàng" key="Mất hàng"/>
+                <TabPane tab={"Tất cả"} key={"Tất cả"}/>
+                <TabPane tab={"Đã duyệt"} key={"Duyệt"} />
+                <TabPane tab={"Đóng gói"} key={"Đóng gói"} />
+                <TabPane tab={"Xuất kho/Đang giao hàng"} key={"Xuất kho/Đang giao hàng"}/>
+                <TabPane tab={"Đã giao hàng"} key={"Đã giao hàng"}/>
+                <TabPane tab={"Hoàn thành"} key={"Hoàn thành"}/>
+                <TabPane tab={"Đã hủy"} key={"Đã hủy"}/>
+                <TabPane tab={"Đang hoàn trả"} key={"Đang hoàn trả"}/>
+                <TabPane tab={"Đã hoàn trả"} key={"Đã hoàn trả"}/>
               </Tabs>
               <FilterPanel 
                 filter={filter}

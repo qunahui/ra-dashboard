@@ -61,8 +61,7 @@ export const OrderView = (props) => {
           }}
         >
           <TabPane tab={"Tất cả"} key={"Tất cả"}/>
-          {/* <TabPane tab={"Đặt hàng"} key={"Đặt hàng"} /> */}
-          <TabPane tab={"Duyệt"} key={"Duyệt"} />
+          <TabPane tab={"Đã duyệt"} key={"Duyệt"} />
           <TabPane tab={"Đóng gói"} key={"Đóng gói"} />
           <TabPane tab={"Xuất kho/Đang giao hàng"} key={"Xuất kho/Đang giao hàng"}/>
           <TabPane tab={"Đã giao hàng"} key={"Đã giao hàng"}/>

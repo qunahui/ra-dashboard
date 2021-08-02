@@ -392,7 +392,7 @@ export const SingleProduct = (props) => {
                     }}  
                   />
                 )}
-                <Link to="#">Sửa thuộc tính</Link>
+                {/* <Link to="#">Sửa thuộc tính</Link> */}
               </Col>
             </Row>
             <Row>

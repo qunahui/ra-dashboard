@@ -4,6 +4,9 @@ import { fromJS } from 'immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+  changePasswordStart: ['payload'],
+  changePasswordSuccess: ['payload'],
+  changePasswordFailure: ['payload'],
   getStoresStart: ['payload'],
   getStoresSuccess: ['payload'],
   getStoresFailure: ['payload'],
@@ -46,6 +49,18 @@ export const INITIAL_STATE = fromJS({
 })
 
 /* ------------- Reducers ------------- */
+const changePasswordStart = state => state.merge({
+  isWorking: true,
+})
+
+const changePasswordSuccess = state => state.merge({
+  isWorking: false,
+})
+
+const changePasswordFailure = state => state.merge({
+  isWorking: false,
+})
+
 const getStoresStart = (state) => state.merge({
   isWorking: true
 })
@@ -202,6 +217,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_STORES_START] : getStoresStart,
   [Types.GET_STORES_SUCCESS] : getStoresSuccess,
   [Types.GET_STORES_FAILURE] : getStoresFailure,
+  [Types.CHANGE_PASSWORD_START]: changePasswordStart,
+  [Types.CHANGE_PASSWORD_SUCCESS]: changePasswordSuccess,
+  [Types.CHANGE_PASSWORD_FAILURE]: changePasswordFailure,
   [Types.ADD_PLATFORM_CREDENTIALS] : addPlatformCredentials,
   [Types.SYNC_DATA_START] : syncDataStart,
   [Types.SYNC_DATA_SUCCESS] : syncDataSuccess,

@@ -10,6 +10,7 @@ import { request } from 'Config/axios'
 import AppCreators from 'Redux/app'
 import Credentials from './Credentials'
 import parseQueryString from 'Utils/parseQueryString'
+import MyAccount from 'Components/MyAccount'
 import _ from 'lodash'
 
 const { Option, } = Select
@@ -70,6 +71,7 @@ const ConfigView = props => {
     <Tabs
       activeKey={activeKey}
       onChange={onTabChange}
+      destroyInactiveTabPane
     >
       <TabPane
         key={"general"}
@@ -94,6 +96,12 @@ const ConfigView = props => {
         <StorageStatus />
         <ActivityTable/>
         <Employee/>
+      </TabPane>
+      <TabPane
+        key={"account"}
+        tab={"Thông tin cá nhân"}
+      >
+        <MyAccount/>
       </TabPane>
       {/* <TabPane
         key={"credential"}

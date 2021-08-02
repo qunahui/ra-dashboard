@@ -116,7 +116,6 @@ export function* syncDataProcess({ payload }) {
       yield put(Creators.getStoresStart())
       NProgress.set(0.8)
       yield put(Creators.syncDataSuccess())
-      yield put(push('/app/market_place/products'))
     }
   } catch(e) {
     customToast({ type: 'error', message: e.message })
@@ -184,6 +183,17 @@ export function* autoLinkDataProcess({ payload }) {
   }
 }
 
+export function* changePasswordProcess({ payload }) {
+  try {
+    const response = yield request.post('/users/update-password', payload)
+    if(response.code === 200) {
+      customToast({ type: 'success', message: 'Đổi mật khẩu thành công!' })
+    }
+  } catch(e) {
+    customToast({ type: 'error', message: e.message })
+  }
+}
+
 export function* onGetStoresStart() {
   yield takeLatest(AppTypes.GET_STORES_START, getStoresProcess)
 }
@@ -220,6 +230,10 @@ export function* onAutoLinkDataStart() {
   yield takeLatest(AppTypes.AUTO_LINK_DATA_START, autoLinkDataProcess)
 }
 
+export function* onChangePasswordStart() {
+  yield takeLatest(AppTypes.CHANGE_PASSWORD_START, changePasswordProcess)
+}
+
 const appRootSagas = [
   call(onGetStoresStart),
   call(onConnectLazadaStart),
@@ -230,6 +244,7 @@ const appRootSagas = [
   call(getPlatformProductAfterSuccessfullySync),
   call(onCreateMultiPlatformProductStart),
   call(onAutoLinkDataStart),
+  call(onChangePasswordStart),
 ]
 
 export default appRootSagas

@@ -50,7 +50,7 @@ export const BasicProductInfo = (props) => {
         }
       })
       if(result.code === 200) {
-        alert(JSON.stringify(result.data))
+        // alert(JSON.stringify(result.data))
       }
     }
   }

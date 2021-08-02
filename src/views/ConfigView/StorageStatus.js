@@ -5,7 +5,7 @@ import AppCreators from 'Redux/app'
 import _ from 'lodash'
 import timeDiff from 'Utils/timeDiff'
 import { Table, Space, Typography, Dropdown, Menu, Button, Popconfirm, Row, Col, Card } from 'antd';
-import Icon, { DisconnectOutlined, DownOutlined, PlusCircleOutlined, InfoCircleOutlined, LoginOutlined } from '@ant-design/icons'
+import Icon, { DisconnectOutlined, DownOutlined, PlusCircleOutlined, RollbackOutlined, LoginOutlined } from '@ant-design/icons'
 import { blue, red } from '@ant-design/colors'
 import { cardBorder } from './styles'
 
@@ -57,14 +57,14 @@ const StorageStatus = props => {
       render: (text, record) => {
         const menu = <Menu>
             {
-              record.platform_name === 'lazada' && <Menu.Item key="reconnect"><a  style={{ color: blue[5] }} href={`https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=${window.location.origin}/app/create/lazada&country=vn&client_id=101074&state=`}><LoginOutlined />Kết nối lại</a></Menu.Item>
+              record.platform_name === 'lazada' && <Menu.Item key="reconnect"><a  style={{ color: blue[5] }} href={`https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=${window.location.origin}/app/create/lazada&country=vn&client_id=101074&state=`}><RollbackOutlined />Kết nối lại</a></Menu.Item>
             }
-            <Menu.Item key="manual-sync" style={{ color: blue[5] }} 
-                onClick={() => history.push(`/app/config/${record._id}`, {
-                record
-            })}><InfoCircleOutlined/>
-              Xem cấu hình
-            </Menu.Item>
+            {
+              record.platform_name === 'sendo' && <Menu.Item key="manual-sync" style={{ color: blue[5] }} 
+                  onClick={() => props.syncDataStart(record)}><RollbackOutlined />
+                Kết nối lại
+              </Menu.Item>
+            }
             <Menu.Item key="disconnect" style={{ color: red[5] }}>
               <Popconfirm
                 title={`Xác nhận gỡ gian hàng: ${record.store_name}, điều này sẽ khiến các sản phẩm/đơn hàng liên quan bị xóa.`}
@@ -100,5 +100,6 @@ const StorageStatus = props => {
 export default connect(state => ({
   app: state.app.toJS(),
 }), dispatch => ({
-  disconnectStoreStart: (payload) => dispatch(AppCreators.disconnectStoreStart(payload))
+  disconnectStoreStart: (payload) => dispatch(AppCreators.disconnectStoreStart(payload)),
+  syncDataStart: (payload) => dispatch(AppCreators.syncDataStart(payload)),
 }))(StorageStatus)
