@@ -2,13 +2,14 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
-import { Row, Col, Typography, Divider, Button, Tabs, Input, Select } from 'antd'
+import { Row, Col, Typography, Divider, Button, Tabs, Popconfirm, Select } from 'antd'
 import AllMarketplaceOrderTable from 'Components/AllMarketplaceOrderTable'
 import FilterPanel from 'Components/FilterPanel'
 import './MarketplaceOrderView.styles.scss'
 import { request } from 'Config/axios'
 import toast from 'Components/Helpers/ShowToast'
 import qs from 'qs'
+import AppCreators from 'Redux/app'
 
 const { Text, Title } = Typography
 const { TabPane } = Tabs
@@ -61,6 +62,18 @@ export const MarketplaceOrderView = (props) => {
     }
   }
 
+  const handleSyncOrder = async () => {
+    try {
+      const result = await request.get('/orders/fetch')
+      if(result.code === 200) {
+        toast({ type: 'success', message: 'Cập nhật đơn hàng thành công !'})
+        fetchMarketplaceOrders(filter)
+      }
+    } catch(e) {
+      toast({ type: 'error', message: e.message })
+    }
+  }
+
   const history = useHistory()
   return (
     <>
@@ -85,6 +98,12 @@ export const MarketplaceOrderView = (props) => {
                 activeKey={activeKey}
                 destroyInactiveTabPane={true} 
                 tabBarExtraContent={[
+                  <Popconfirm
+                    title={"Xác nhận cập nhật đơn hàng ?"}
+                    onConfirm={handleSyncOrder}
+                  >
+                    <Button type={"primary"} >Cập nhật đơn hàng</Button>
+                  </Popconfirm>
                 ]}
                 onTabClick={key => {
                   setFilter({ orderStatus: key })
@@ -139,7 +158,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  // getOrdersStart: () => dispatch(OrderCreators.getOrdersStart())
+  syncOrderStart: () => dispatch(AppCreators.syncOrderStart())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MarketplaceOrderView)

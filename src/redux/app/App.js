@@ -33,6 +33,9 @@ const { Types, Creators } = createActions({
   autoLinkDataSuccess: ['payload'],
   autoLinkDataFailure: ['payload'],
   hideMessage: [],
+  syncOrderStart: ['payload'],
+  syncOrderSuccess: ['payload'],
+  syncOrderFailure: ['payload'],
 })
 
 export const AppTypes = Types
@@ -202,6 +205,18 @@ const hideMessage = (state) => state.merge({
   isShowMessage: false,
   messagePayload: {}
 })
+
+const syncOrderStart = (state) => state.merge({
+  isWorking: true
+})
+
+const syncOrderSuccess = (state) => state.merge({
+  isWorking: false
+})
+
+const syncOrderFailure = (state) => state.merge({
+  isWorking: false
+})
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -224,6 +239,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SYNC_DATA_START] : syncDataStart,
   [Types.SYNC_DATA_SUCCESS] : syncDataSuccess,
   [Types.SYNC_DATA_FAILURE] : syncDataFailure,
+  [Types.SYNC_ORDER_START] : syncOrderStart,
+  [Types.SYNC_ORDER_SUCCESS] : syncOrderSuccess,
+  [Types.SYNC_ORDER_FAILURE] : syncOrderFailure,
   [Types.AUTO_LINK_DATA_START] : autoLinkDataStart,
   [Types.AUTO_LINK_DATA_SUCCESS] : autoLinkDataSuccess,
   [Types.AUTO_LINK_DATA_FAILURE] : autoLinkDataFailure,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useReducer } from 'react'
 import { connect } from 'react-redux' 
 import PlatformCreators from 'Redux/platform'
+import AppCreators from 'Redux/app'
 import _ from 'lodash'
 import { Table, Button, Empty, Typography, Tooltip, Row, Col, List, Popconfirm } from 'antd'
 import Icon, { LinkOutlined, PlusCircleOutlined, DownloadOutlined, DoubleRightOutlined, SmileOutlined, DisconnectOutlined } from '@ant-design/icons'
@@ -204,7 +205,7 @@ const AllProductTab = (props) => {
             <>
               <span  style={{ marginRight: 1 }}>
                 <Tooltip placement="topLeft" title="Liên kết sản phẩm tự động" arrowPointAtCenter>
-                  <Button key={`link-${record._id}`}><LinkOutlined style={{ color: blue[5]}}/></Button>
+                  <Button disabled={record.linkedId} key={`link-${record._id}`} onClick={() => props.autoLinkDataStart({ variants: [record] })}><LinkOutlined style={{ color: blue[5]}}/></Button>
                 </Tooltip>
               </span>
               {
@@ -348,6 +349,7 @@ const mapDispatchToProps = dispatch => ({
   getPlatformProductStart: (payload) => dispatch(PlatformCreators.getPlatformProductStart(payload)),
   linkDataStart: (payload) => dispatch(PlatformCreators.linkDataStart(payload)),
   unlinkDataStart: (payload) => dispatch(PlatformCreators.unlinkDataStart(payload)),
+  autoLinkDataStart: (payload) => dispatch(AppCreators.autoLinkDataStart(payload)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllProductTab)

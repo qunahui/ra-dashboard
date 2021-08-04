@@ -131,7 +131,8 @@ const MarketplaceProductView = (props) => {
   
   //<----------------------------------------------- auto link handler ---------------------------------->
   const handleLinkData = () => {
-    props.autoLinkDataStart(props.platform?.products)
+    props.autoLinkDataStart({ variants: linkableVariants })
+    setLinkModalVisible(false)
   }
   //<----------------------------------------------- auto link handler ---------------------------------->
   
@@ -283,7 +284,7 @@ const MarketplaceProductView = (props) => {
                 onClick={() => setLinkModalVisible(false)}
                 disabled={false}
               >
-                Liên kết
+                Quay lại
               </Button>,
               <Button 
                 type="primary"
