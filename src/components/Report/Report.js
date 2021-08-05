@@ -259,7 +259,7 @@ export const Report = (props) => {
                             Doanh thu &nbsp; <Tooltip title={"Tổng doanh thu trong khoảng thời gian đã chọn"} placement="top"><InfoCircleOutlined style={{ cursor: 'pointer' }}/></Tooltip>
                             </div>
                             <div className={"order-count"}>
-                                <Text strong style={{ fontSize: 18 }}>{moneyFormatter(report?.revenue?.value)}</Text> <Text style={{ fontSize: 16}}>đ</Text>
+                                <Text strong style={{ fontSize: 18 }}>{moneyFormatter(report?.revenue?.value || 0)}</Text> <Text style={{ fontSize: 16}}>đ</Text>
                             </div>
                             <div className={"change"}>
                                 {report?.revenue?.status === 'Equal' ? '-- Không đổi' : `${report?.revenue?.status === 'Greater' ? 'Tăng' : 'Giảm'} ${report?.revenue?.percent || 0}%`}

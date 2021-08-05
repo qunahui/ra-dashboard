@@ -24,14 +24,15 @@ const layout = {
 
 const INITIAL_VALUES = {
   productType: 'normal',
-  name: 'Áo phông EAGLES',
-  sku: 'test-sku',
+  name: 'Áo thun ngắn tay nam',
+  sku: 'ao-thun',
   categoryName: '',
   categoryId: 0,
   sendoCategoryName: '',
   sendoCategoryId: 0,
   brand: 'No brand',
-  description: '',
+  shortDescription: 'Áo thun nam ngắn tay',
+  description: "<p><strong>THÔNG TIN SẢN PHẨM</strong></p><p>- Chất Liệu: 95% sợi cotton - 5% sợi Spandex</p><p>- Tính năng: Co dãn 4 chiều</p><p>- Công nghệ: Thêu</p>",
   retailPrice: 100000, // gia ban le
   wholeSalePrice: 100000, // gia ban buon
   importPrice: 100000, //gia nhap

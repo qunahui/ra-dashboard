@@ -728,10 +728,10 @@ export const CreatePlatformStep = (props) => {
   return (
     <div className={props.className}>
       <Row>
-        <div style={{ margin: 32 }}>
+        {/* <div style={{ margin: 32 }}>
           <Button type={"primary"} onClick={() => console.log(form.getFieldsValue())}>Show form</Button>
           <Button style={{ marginLeft: 16}} type={"primary"} onClick={() => console.log(sendoAttr)}>Show sendo attribute</Button>
-        </div>
+        </div> */}
         <Col span={21} offset={1}>
           <div className={'basic-marketplace-section'}>
             <Row className={'padding'}>

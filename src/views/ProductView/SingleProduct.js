@@ -308,7 +308,7 @@ export const SingleProduct = (props) => {
                 <Col span={24} style={{ height: '100%' }}>
                   <TextEditor 
                     handleChange={handleTextEditorChange}
-                    initialValue={description}
+                    value={description}
                   />
                 </Col>
               </>

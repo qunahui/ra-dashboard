@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect, useContext, useRef } from 'react'
 import { connect } from 'react-redux'
-import { Button, Modal, Tooltip, Row, Col, Image, Input, InputNumber, Table, Typography, Form, Checkbox } from 'antd'
+import { Button, Modal, Tooltip, Row, Col, Image, Input, InputNumber, Table, Typography, Form, Checkbox, message } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 import { blue } from '@ant-design/colors'
 import './CreateProductFromPlatformModal.styles.scss'
@@ -8,6 +8,7 @@ import { removeVI } from 'jsrmvi'
 import ProductCreators from 'Redux/product'
 import TextEditor from 'Components/TextEditor'
 import { amountFormatter, amountParser } from 'Utils/inputFormatter'
+import { request } from 'Config/axios'
 
 const { Text, Title } = Typography
 
@@ -30,6 +31,11 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
   const type = restProps.type || 'text'
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+
+  useEffect(() => {
+
+  }, [])
+
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
@@ -46,7 +52,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
   const save = async () => {
     try {
       let values = await form.validateFields();
-      ['retailPrice', 'wholeSalePrice', 'importPrice', 'weightValue', 'initStock', 'initPrice'].map(tag => {
+      ['retailPrice', 'wholeSalePrice', 'importPrice', 'weightValue', 'initStock'].map(tag => {
         values.hasOwnProperty(tag) && (values[tag] = parseFloat(values[tag]))
       })
 
@@ -116,6 +122,7 @@ export const CreateProductFromPlatformModal = (props) => {
   {})
   const [showModal, setShowModal] = useState(false)
   const [firstMount, setFirstMount] = useState(false)
+  const [unableToLink, setUnableToLink] = useState(false)
 
   const createVariantFromSendo = (record) => {
     if(record.variants.length > 0) {
@@ -211,7 +218,7 @@ export const CreateProductFromPlatformModal = (props) => {
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       setSelectedRowKeys(selectedRowKeys)
     },
   };
@@ -269,7 +276,10 @@ export const CreateProductFromPlatformModal = (props) => {
       editable: true,
       width: 200,
       type: "number",
-      render: (value, record) => <div style={{ width: '100%', textAlign: 'right'}}>{amountFormatter(value)}</div>
+      render: (value, record) => {
+        console.log(record)
+        return <div style={{ width: '100%', textAlign: 'right'}}>{amountFormatter(value || 0)}</div>
+      }
     },
   ].map((col) => {
     if (!col.editable) {
@@ -293,14 +303,13 @@ export const CreateProductFromPlatformModal = (props) => {
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
-    console.log(newData)
     setFormValues({ variants: newData });
   };
 
   useEffect(() => {
     if(firstMount) {
       // const sku = record.sku
-      const sku = record.platform === 'sendo' ? record.sku : record.attributes.name.trim().replace('-', '').split(/(\s+)/).filter(e => e.trim().length > 0).map(i => removeVI(i, { replaceSpecialCharacters: false })).join('-')
+      const sku = record.platform === 'sendo' ? record?.sku : record.attributes.name.trim().replace('-', '').split(/(\s+)/).filter(e => e.trim().length > 0).map(i => removeVI(i, { replaceSpecialCharacters: false })).join('-')
       const variants = record.platform === 'sendo' ? createVariantFromSendo(record) : createVariantFromLazada(record)
       setFormValues({
         productType: 'normal',
@@ -328,8 +337,25 @@ export const CreateProductFromPlatformModal = (props) => {
         autoLink: true,
         createFrom: record.platform
       })
+
+      checkSkuExists(sku)
     }
   }, [firstMount])
+
+  const checkSkuExists = async (sku) => {
+    try { 
+      const response = await request.get(`/products/check-sku?sku=${sku}`)
+      if(response.code === 200) {
+        const isSkuExists = response?.data?.isSkuExists
+        if(isSkuExists) {
+          message.error('Mã sku này đã tồn tại. Vui lòng liên kết biến thể này với biến thể đã có trong hệ thống !')
+          setUnableToLink(true)
+        }
+      }
+    } catch(e) {
+      console.log(e.message)
+    }
+  }
 
   const handleShowModal = () => {
     setShowModal(true)
@@ -338,21 +364,33 @@ export const CreateProductFromPlatformModal = (props) => {
 
   const handleHideModal = () => {
     setShowModal(false)
+    setUnableToLink(false)
   }
 
   const handleFormSubmit = () => {
-    console.log("record variants: ", record.variants)
     const finalData = {
       ...formValues,
-      variants: formValues.variants.filter(i => selectedRowKeys.includes(i.key)),
+      variants: formValues.variants?.filter(i => selectedRowKeys.includes(i.key))?.map(i => ({
+        ...i,
+        wholesalePrice: i?.retailPrice,
+        importPrice: i?.retailPrice,
+        initPrice: i?.retailPrice,
+        price: i?.retailPrice,
+        inventories: {
+          ...i?.inventories,
+          onHand: i?.initStock,
+          initPrice: i?.retailPrice,
+        }
+      })),
       platformVariants: !!formValues.autoLink && record.variants.length > 0 ? record.variants.filter(i => selectedRowKeys.includes(i.sku)).map(i => ({ ...i, platform: record.platform })) : [record]
     }
 
 
-    console.log(finalData)
+    // console.log(finalData)
     // props.createProductStart(finalData)
     props.createProductFromPlatformStart(finalData)
     setShowModal(false)
+    setUnableToLink(false)
   }
 
   return (
@@ -369,6 +407,10 @@ export const CreateProductFromPlatformModal = (props) => {
           bodyStyle={{ padding: 0}}
           onCancel={handleHideModal}
           onOk={handleFormSubmit}
+          footer={[
+            <Button onClick={handleHideModal}>Quay lại</Button>,
+            <Button disabled={unableToLink} type={"primary"} onClick={handleFormSubmit}>Tạo</Button>
+          ]}
         >
           <div style={{ padding: '8px 32px'}}>
             <Row gutter={8}> 
@@ -401,7 +443,7 @@ export const CreateProductFromPlatformModal = (props) => {
                     <Text style={{ fontWeight: 400, color: 'black' }}>Mô tả sản phẩm</Text>
                   </div>
                   <TextEditor
-                    initialValue={formValues.description}
+                    value={formValues.description}
                     handleChange={(value) => setFormValues({ description: value })}
                     style={{ maxHeight: 400, overflow: 'scroll' }}
                   />
@@ -417,7 +459,7 @@ export const CreateProductFromPlatformModal = (props) => {
               </Col>
               {
                 formValues.variants?.length > 0 && (
-                  <div style={{ marginTop: 8 }}>
+                  <div style={{ marginTop: 8, width: '100%' }}>
                     <Col span={24}>
                       <Title level={4}>{formValues.variants?.length} phiên bản sản phẩm</Title>
                     </Col>

@@ -10,6 +10,7 @@ import { request } from 'Config/axios'
 import toast from 'Components/Helpers/ShowToast'
 import qs from 'qs'
 import AppCreators from 'Redux/app'
+import NProgress from 'nprogress'
 
 const { Text, Title } = Typography
 const { TabPane } = Tabs
@@ -63,6 +64,7 @@ export const MarketplaceOrderView = (props) => {
   }
 
   const handleSyncOrder = async () => {
+    NProgress.start()
     try {
       const result = await request.get('/orders/fetch')
       if(result.code === 200) {
@@ -71,6 +73,8 @@ export const MarketplaceOrderView = (props) => {
       }
     } catch(e) {
       toast({ type: 'error', message: e.message })
+    } finally {
+      NProgress.done()
     }
   }
 
@@ -112,7 +116,7 @@ export const MarketplaceOrderView = (props) => {
                 }}
               >
                 <TabPane tab={"Tất cả"} key={"Tất cả"}/>
-                <TabPane tab={"Đã duyệt"} key={"Duyệt"} />
+                <TabPane tab={"Đặt hàng"} key={"Đặt hàng"} />
                 <TabPane tab={"Đóng gói"} key={"Đóng gói"} />
                 <TabPane tab={"Xuất kho/Đang giao hàng"} key={"Xuất kho/Đang giao hàng"}/>
                 <TabPane tab={"Đã giao hàng"} key={"Đã giao hàng"}/>

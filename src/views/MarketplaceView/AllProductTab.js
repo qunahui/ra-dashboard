@@ -9,6 +9,9 @@ import { blue, red } from '@ant-design/colors'
 import './AllProductTab.styles.scss'
 import SendoIcon from 'Assets/sendo-icon.svg'
 import LazadaIcon from 'Assets/lazada-icon.svg'
+import { request } from 'Config/axios'
+import toast from 'Helpers/ShowToast'
+import NProgress from 'nprogress'
 
 import SearchProductModal from 'Components/SearchProductModal'
 import CreateProductFromPlatformModal from 'Components/CreateProductFromPlatformModal'
@@ -238,6 +241,24 @@ const AllProductTab = (props) => {
     },
   ]
 
+  const handleSyncStock = async (record) => {
+    try {
+      NProgress.start()
+      console.log("RecorD: ", record)
+      const response = await request.post('/variants/push-api', { variant: record?.linkedDetails })
+      
+      if(response.code === 200) {
+        toast({ type: 'success', message: 'Đồng bộ tồn kho thành công!' })
+        console.log("kết quả: ", response.data)
+      }
+
+    } catch(e) {
+      toast({ type: 'error', message: 'Đồng bộ tồn kho thất bại. Vui lòng thử lại sau!' })
+    } finally {
+      NProgress.done()
+    }
+  }
+
   return (
     <>
       {/* { !props?.platform?.isWorking && dataSource.length > 0 ? ( */}
@@ -269,22 +290,23 @@ const AllProductTab = (props) => {
                           >
                             <Button type={"primary"} danger style={{ marginRight: 8, }}>Gỡ liên kết</Button>
                           </Popconfirm>
-                          <Button type={"primary"} style={{ marginRight: 8}}>Đồng bộ tồn kho</Button>
+                          <Button type={"primary"} style={{ marginRight: 8}} onClick={() => handleSyncStock(record)}>Đồng bộ tồn kho</Button>
                         </Row>
                       }
                       bordered
                       style={{ background: 'white'}}
                       dataSource={record.linkedDetails ? [record, record.linkedDetails] : []}
                       renderItem={item => {
+                        console.log("itemmmmmmm, ", item)
                         return (
                           <List.Item>
                             <Row style={{ width: '100%'}}>
                               <Col style={{ paddingLeft: 16}} span={3}><img style={{ height: 30}} src={item.platform === 'sendo' ? '/assets/sendo-banner.jpg' : item.platform === 'lazada' ? '/assets/lazada-banner.jpg' : '/assets/system.svg'}/></Col>
-                              <Col span={4}>{item.sku}</Col>
-                              <Col span={5}>{item.name}</Col>
-                              <Col span={4}>{amountFormatter(item.retailPrice || item.price)}</Col>
-                              <Col span={4}>{item.quantity || item.inventories?.onHand || item.stock_quantity}</Col>
-                              <Col span={4}>{item.Status ? item.Status === 'active' ? 'Đang giao dịch' : 'Ngừng giao dịch' : item.sellable ? item.sellable === true ? 'Đang giao dịch' : 'Ngừng giao dịch': item.status ? item.status === '2' ? 'Đang giao dịch' : 'Ngừng giao dịch' : ' --- '  }</Col>
+                              <Col span={4}>{item?.sku || 0}</Col>
+                              <Col span={5}>{item?.name || 0}</Col>
+                              <Col span={4}>{amountFormatter(item?.retailPrice || item?.price || 0)}</Col>
+                              <Col span={4}>{item?.quantity || item.inventories?.onHand || item?.stock_quantity || 0}</Col>
+                              <Col span={4}>{item?.Status ? item.Status === 'active' ? 'Đang giao dịch' : 'Ngừng giao dịch' : item.sellable ? item.sellable === true ? 'Đang giao dịch' : 'Ngừng giao dịch': item.status ? item.status === '2' ? 'Đang giao dịch' : 'Ngừng giao dịch' : ' --- '  }</Col>
                             </Row>
                           </List.Item>
                         )
