@@ -36,6 +36,7 @@ const { Types, Creators } = createActions({
   syncOrderStart: ['payload'],
   syncOrderSuccess: ['payload'],
   syncOrderFailure: ['payload'],
+  clearCreateResult: [],
 })
 
 export const AppTypes = Types
@@ -48,10 +49,15 @@ export const INITIAL_STATE = fromJS({
   error: null,
   isWorking: false,
   isShowMessage: false,
-  messagePayload: ''
+  messagePayload: '',
+  createResult: null
 })
 
 /* ------------- Reducers ------------- */
+const clearCreateResult = state => state.merge({
+  createResult: null
+})
+
 const changePasswordStart = state => state.merge({
   isWorking: true,
 })
@@ -181,6 +187,7 @@ const createMultiPlatformProductStart = (state, { payload }) => state.merge({
 
 const createMultiPlatformProductSuccess = (state, { payload }) => state.merge({
   isWorking: false,
+  createResult: payload
 })
 
 const createMultiPlatformProductFailure = (state, { payload }) => state.merge({
@@ -226,6 +233,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CONNECT_SENDO_START]: connectSendoStart,
   [Types.CONNECT_SENDO_SUCCESS]: connectSendoSuccess,
   [Types.CONNECT_SENDO_FAILURE]: connectSendoFailure,
+  [Types.CLEAR_CREATE_RESULT]: clearCreateResult,
   [Types.DISCONNECT_STORE_START]: disconnectStoreStart,
   [Types.DISCONNECT_STORE_SUCCESS]: disconnectStoreSuccess,
   [Types.DISCONNECT_STORE_FAILURE]: disconnectStoreFailure,

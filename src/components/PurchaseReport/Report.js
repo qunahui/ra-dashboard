@@ -116,12 +116,12 @@ export const Report = (props) => {
 
     async function fetchReport(params = initialFilter) {
         try {
-            const result = await request.get('/reports', {
+            const result = await request.get('/reports/purchase', {
                 params
             })
             if(result.code === 200) {
                 setReport(result.data)
-                setChartData(createChartData(result?.data?.listOrder?.order, params?.dateFrom, params?.dateTo))
+                setChartData(createChartData(result?.data?.listOrder?.purchaseOrder, params?.dateFrom, params?.dateTo))
             }
         } catch(e) {
             console.log(e.message)
@@ -216,13 +216,13 @@ export const Report = (props) => {
       };
 
     const calcRefundOrderNumber = () => {
-        let total = parseInt(report?.listOrder?.supplierRefundOrder?.length)
-        total += parseInt(report?.listOrder?.order.reduce((acc, i) => { if(i.orderStatus === 'Đã hoàn trả') { acc++ } return acc }, [0]))
+        let total = parseInt(report?.listOrder?.refundOrder?.length)
+        total += parseInt(report?.listOrder?.purchaseOrder.reduce((acc, i) => { if(i.orderStatus === 'Đã hoàn trả') { acc++ } return acc }, [0]))
         return total
     }
 
     return (
-        <Card style={{...cardBorder, width: '100%' }} title={"Khoảng thu"}>  
+        <Card style={{...cardBorder, width: '100%' }} title={"Khoảng chi"}>  
             <Row style={{ margin: '0 8px', width: '100%', marginBottom: 8 }}>
                 <Select defaultValue={value} style={{ minWidth: 200 }} onChange={handleChange}>
                     <Option key={"last7days"} value={'last7days'}>7 ngày gần nhất</Option>
@@ -291,7 +291,7 @@ export const Report = (props) => {
                             Đơn hàng đang xử lý &nbsp; <Tooltip title={"Tổng các đơn hàng đang được xử lý trong khoảng thời gian đã chọn"} placement="top"><InfoCircleOutlined style={{ cursor: 'pointer' }}/></Tooltip>
                             </div>
                         <div className={"order-count"}>
-                            <Text strong style={{ fontSize: 18 }}>{report?.listOrder?.order?.reduce((acc, i) => { if(!['Đã hủy', 'Đã hoàn trả', 'Hoàn thành'].includes(i.orderStatus)) { acc++ } return acc }, [0])}</Text> <Text style={{ fontSize: 16}}>đ</Text>
+                            <Text strong style={{ fontSize: 18 }}>{report?.listOrder?.purchaseOrder?.reduce((acc, i) => { if(!['Đã hủy', 'Đã hoàn trả', 'Hoàn thành'].includes(i.orderStatus)) { acc++ } return acc }, [0])}</Text> <Text style={{ fontSize: 16}}>đ</Text>
                         </div>
                         <div className={"change"}>
                             {report?.revenue?.status === 'Equal' ? '-- Không đổi' : `${report?.revenue?.status === 'Greater' ? 'Tăng' : 'Giảm'} ${report?.revenue?.percent || 0}%`}

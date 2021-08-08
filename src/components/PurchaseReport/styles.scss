@@ -1,0 +1,19 @@
+.grid-report {
+    display: grid;
+    grid-template-columns: repeat(6, 16.6667%);
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    .grid-item {
+        padding: 10px;
+        .title {
+            font-weight: 500;
+            padding-bottom: 5px;
+        }
+        .change {
+            padding: 5px 0;
+        }
+    }
+    .grid-item:not(:last-child) {
+        border-right: 1px solid #d9d9d9;
+    }
+}

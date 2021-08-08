@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { push } from 'connected-react-router'
 import Report from 'Components/Report'
+import PurchaseReport from 'Components/PurchaseReport'
 import theme from 'Theme'
 
 //ant ui
@@ -62,6 +63,7 @@ function DashboardView(props) {
       </Row>
       <Row gutter={[16,16]} style={{ marginTop: '16px'}}>
         <Report/>
+        <PurchaseReport/>
       </Row>
     </>
   )

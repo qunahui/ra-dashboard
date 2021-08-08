@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { request } from 'Config/axios'
 import { removeVI } from 'jsrmvi'
-import { Row, Col, Typography, Divider, Form, Input, Tag, InputNumber, Checkbox, Button, AutoComplete, Select, Table } from 'antd'
+import { Row, Col, Typography, Divider, Form, Input, Tag, InputNumber, Checkbox, Button, AutoComplete, Select, Modal } from 'antd'
 import { amountFormatter, amountParser, moneyFormatter, moneyParser } from 'Utils/inputFormatter'
 import CateMappingTable from 'Components/CateMappingTable'
 import AddPlatformForm from 'Components/AddPlatformForm'
@@ -12,9 +12,10 @@ import toast from 'Components/Helpers/ShowToast'
 import TextEditor from 'Components/TextEditor'
 import ImageUpload from 'Components/ImageUpload'
 import AppCreators from 'Redux/app'
+import { useHistory } from 'react-router-dom'
 
 import Icon, { CloseOutlined, DoubleRightOutlined } from '@ant-design/icons'
-import { blue } from '@ant-design/colors'
+import { blue, green, red } from '@ant-design/colors'
 import SendoIcon from 'Assets/sendo-icon.svg'
 import LazadaIcon from 'Assets/lazada-icon.svg'
 import SystemIcon from 'Assets/system.svg'
@@ -49,6 +50,13 @@ let searchBrandTimeout;
 let curBrandValue;
 
 export const CreatePlatformStep = (props) => {
+  const history = useHistory()
+  const [resultVisible, setResultVisible] = useState(false)
+  useEffect(() => {
+    if(props?.createResult && Object.keys(props?.createResult)?.length > 0) {
+      setResultVisible(true)
+    }
+  }, [props])
   //<------------------------------------------------------- form handler --------------------------------------------------------->
   const { form } = props
 
@@ -273,10 +281,13 @@ export const CreatePlatformStep = (props) => {
         Images: {
           Image: generalData.avatar.map(avt => avt.split('?alt=media')[0] + '?alt=media')
         }
-      }).map(sku => {
+      })
+
+      skus = skus.map(sku => {
         options.map((i, index) => sku[i.optionName] = sku.options[index])
         delete sku.options
         delete sku.options_en
+        sku.quantity = Math.round(sku.quantity/(skus?.length || 1))
         return sku
       })
     }
@@ -289,7 +300,7 @@ export const CreatePlatformStep = (props) => {
           "PrimaryCategory": generalData.categoryId,
           "SPUId": null,
           "Attributes": {
-            ...attrs,
+            ..._.pickBy(attrs, _.identity),
             'name': generalData.name,
             'short_description': generalData.shortDescription
           },
@@ -458,7 +469,6 @@ export const CreatePlatformStep = (props) => {
         productToPost.push({ ...sendoProduct , ...item})
       }
     }
-
     props.createMulti(productToPost)
   }
 
@@ -750,7 +760,7 @@ export const CreatePlatformStep = (props) => {
                     <Tag style={{ fontSize: 18, width: 250, height: 40 }} color={'blue'} key={plat.store_name}>
                       <Row style={{ height: '100%'}} justify={"space-between"}>
                         <Col style={{ display: 'grid', placeItems:'center'}}>
-                          <Text>{plat.platform_name === 'sendo' ? <SendoIcon/> : plat.platform_name === 'lazada' ? <LazadaIcon/> : <SystemIcon/>} {plat.store_name}</Text>
+                          <Text>{plat?.platform_name === 'sendo' ? <SendoIcon/> : plat?.platform_name === 'lazada' ? <LazadaIcon/> : <SystemIcon/>} {plat?.store_name}</Text>
                         </Col>
                         <Col style={{ display: 'grid', placeItems:'center'}}>
                           <CloseOutlined onClick={() => handleRemoveSelectedPlatform(plat)}/>
@@ -1054,7 +1064,9 @@ export const CreatePlatformStep = (props) => {
                                   attr.control_type === 'CheckBox' ? (_.uniq(attr?.attribute_values?.filter(i => i.is_selected).map(i => i.value)) || [])
                                   : (attr?.attribute_values?.find(i => i.is_selected)?.value || '')
                                 } 
-                                style={{ width: '100%'}} mode={attr.control_type === 'CheckBox' && 'multiple'} onChange={(value) => handleNotRequiredSendoAttributeChange(value, attr.name, attr.control_type === 'CheckBox' && 'multiple')}>
+                                style={{ width: '100%'}} mode={attr.control_type === 'CheckBox' && 'multiple'} 
+                                onChange={(value) => handleNotRequiredSendoAttributeChange(value, attr.name, attr.control_type === 'CheckBox' && 'multiple')}
+                              >
                                 {
                                   attr.attribute_values.map(i => <Option key={i.id} value={i.value}>{i.value}</Option>)
                                 }
@@ -1117,15 +1129,41 @@ export const CreatePlatformStep = (props) => {
       <Form.Item name="sendoCategoryName">
           <Input type={"text"} type={"hidden"}/>
       </Form.Item>
+      <Modal
+        title={"Kết quả"}
+        visible={resultVisible}
+        onCancel={() => setResultVisible(false)}
+        onOk={() => {
+          setResultVisible(false);
+          props.clearCreateResult()
+          history.push('/app/products')
+        }}
+      >
+        {props?.createResult && (
+          <Row>
+            <Col span={24} style={{ marginBottom: 8, display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: 16, fontWeight: 500}}><SystemIcon/>&nbsp;&nbsp;Hệ thống: </span>&nbsp;<span style={{ color: props?.createResult?.['system'] === 'Thành công' ? green[5] : red[5] }}>{props?.createResult?.['system'] || ''}</span>
+            </Col>
+            <Col span={24} style={{ marginBottom: 8, display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: 16, fontWeight: 500}}><LazadaIcon/>&nbsp;&nbsp;Lazada: </span>&nbsp;<span style={{ color: props?.createResult?.['lazada'] === 'Thành công' ? green[5] : red[5] }}>{props?.createResult?.['lazada'] || ''}</span>
+            </Col>
+            <Col span={24} style={{ marginBottom: 8, display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: 16, fontWeight: 500}}><SendoIcon/>&nbsp;&nbsp;Sendo: </span>&nbsp;<span style={{color: props?.createResult?.['sendo'] === 'Thành công' ? green[5] : red[5] }}>{props?.createResult?.['sendo'] || ''}</span>
+            </Col>
+          </Row>
+        )}
+      </Modal>
     </div>
   )
 }
 
 const mapStateToProps = (state) => ({
+  createResult: state.app.toJS()?.createResult
 })
 
 const mapDispatchToProps = dispatch => ({
-  createMulti: payload => dispatch(AppCreators.createMultiPlatformProductStart(payload))
+  createMulti: payload => dispatch(AppCreators.createMultiPlatformProductStart(payload)),
+  clearCreateResult: () => dispatch(AppCreators.clearCreateResult()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePlatformStep)

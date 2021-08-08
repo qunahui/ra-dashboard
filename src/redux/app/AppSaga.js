@@ -155,8 +155,7 @@ export function* createMultiPlatformProductProcess({ payload }) {
 
     if(response.code === 200) {
       toast({ type: 'success', message: 'Đăng bán sản phẩm thành công !'})
-      yield put(Creators.createMultiPlatformProductSuccess())
-      yield put(push('/app/products'))
+      yield put(Creators.createMultiPlatformProductSuccess(response.data))
     }
 
   } catch(e) {
