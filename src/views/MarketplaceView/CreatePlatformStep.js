@@ -147,6 +147,12 @@ export const CreatePlatformStep = (props) => {
         }
       })
 
+      i.initStock = Math.round(i.initStock/(finalData.variants?.length || 1))
+      i.inventories = {
+        ...i.inventories,
+        onHand: i.initStock
+      }
+
       return i
     })
 
@@ -370,7 +376,7 @@ export const CreatePlatformStep = (props) => {
         variant.variant_attributes = variant_attributes
         variant.variant_sku = generalData.sku + variant.sku
         variant.variant_price = generalData.retailPrice
-        variant.variant_quantity = generalData.quantity
+        variant.variant_quantity = Math.round(generalData.quantity/(variants?.length || 1))
         delete variant.options
         delete variant.sku
         // variant.variant_is_promotion = 0 
@@ -469,6 +475,7 @@ export const CreatePlatformStep = (props) => {
         productToPost.push({ ...sendoProduct , ...item})
       }
     }
+
     props.createMulti(productToPost)
   }
 
